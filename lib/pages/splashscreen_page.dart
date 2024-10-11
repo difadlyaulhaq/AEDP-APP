@@ -23,14 +23,25 @@ class _SplashscreenState extends State<Splashscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: whiteColor,
-      body: Center(
-        child: Image.asset(
-          "assets/LOGO-AEDP.jpg",
-          width: 120,
-          height: 120,
-        ),     
-    )
+      backgroundColor: primaryColor1,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            "/assets/logo.png",
+            width: 120,
+            height: 120,
+          ),
+          Text(
+            "Al Farooq Center:",
+            style: blackColorTextStyle.copyWith(fontSize: 16),
+          ),
+          Text(
+            " Omar Bin Al Khattab School",
+            style: blackColorTextStyle.copyWith(fontSize: 16),
+          )
+        ],
+      )
     );
   }
 }
