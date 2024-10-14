@@ -14,34 +14,39 @@ class _SplashscreenState extends State<Splashscreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3),
-    () {
-      router.goNamed(Routesnames.login);
-    },
-    );
+    Future.delayed(const Duration(seconds: 3), () {
+      router.goNamed(Routesnames.selectrole); 
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primaryColor1,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            "/assets/logo.png",
-            width: 120,
-            height: 120,
-          ),
-          Text(
-            "Al Farooq Center:",
-            style: blackColorTextStyle.copyWith(fontSize: 16),
-          ),
-          Text(
-            " Omar Bin Al Khattab School",
-            style: blackColorTextStyle.copyWith(fontSize: 16),
-          )
-        ],
-      )
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              "assets/logo.png",
+              width: 120,
+              height: 120,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "Al Farooq Center:",
+              style: blackColorTextStyle.copyWith(fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              "Omar Bin Al Khattab School",
+              style: blackColorTextStyle.copyWith(fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

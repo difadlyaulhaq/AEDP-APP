@@ -19,3 +19,6 @@ TextStyle whiteColorTextStyle = GoogleFonts.inter(
 TextStyle blackColorTextStyle = GoogleFonts.inter(
   color: blackColor,
 );
+TextStyle bluecolorTextstyle = GoogleFonts.inter(
+  color: bluecolor
+);
