@@ -132,11 +132,11 @@ class SignupPageByRole extends StatelessWidget {
                   onPressed: () {
                     // Trigger the signup event
                     context.read<AuthBloc>().add(AuthSignupRequested(
-                      email: emailController.text,
-                      password: passwordController.text,
-                      confirmPassword: confirmPasswordController.text,
-                      role: role, // Pass the selected role if needed
-                    ));
+                            email: emailController.text,
+                            password: passwordController.text,
+                            role: role,
+                          ));
+
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: bluecolor,

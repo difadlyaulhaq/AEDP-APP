@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:project_aedp/theme/theme.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class DashboardStudents extends StatefulWidget {
+  const DashboardStudents({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<DashboardStudents> createState() => _DashboardStudentsState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _DashboardStudentsState extends State<DashboardStudents> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
