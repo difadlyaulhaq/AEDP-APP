@@ -4,6 +4,7 @@ import 'package:project_aedp/bloc/auth/auth_repository.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
+
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
 
@@ -16,9 +17,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           password: event.password,
           role: event.role,
         );
-        emit(AuthSuccess());
+        emit(AuthSignupSuccess()); // Emit success state
       } catch (e) {
-        emit(AuthFailure(e.toString())); // Pass the message here
+        emit(AuthFailure(e.toString())); // Pass the error message
       }
     });
 

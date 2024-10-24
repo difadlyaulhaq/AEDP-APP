@@ -20,19 +20,21 @@ class SignupPageByRole extends StatelessWidget {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthSignupSuccess) {
-            // Navigate to the home page after signup
-            context.go(Routesnames.home);
+            // // Navigasi ke halaman login atau home setelah signup berhasil
+            GoRouter.of(context).go(Routesnames.homestudent);
           } else if (state is AuthFailure) {
+            // Menampilkan pesan error jika signup gagal
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Signup failed: ${state.message}')),
             );
           }
         },
         child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 60),
+            shrinkWrap: true, // Makes ListView adapt to its content size
             children: [
+              const SizedBox(height: 40),
               Image.asset(
                 "assets/logo.png",
                 width: 132,
@@ -41,23 +43,27 @@ class SignupPageByRole extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 role,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: bluecolor,
                 ),
               ),
+              const SizedBox(height: 8),
               Text(
                 "Create an account to continue",
+                textAlign: TextAlign.center,
                 style: bluecolorTextstyle.copyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 20),
+
               // Email TextField
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 12),
                 child: TextField(
                   controller: emailController,
                   decoration: InputDecoration(
@@ -77,9 +83,10 @@ class SignupPageByRole extends StatelessWidget {
                   ),
                 ),
               ),
+
               // Password TextField
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 12),
                 child: TextField(
                   controller: passwordController,
                   obscureText: true,
@@ -100,9 +107,10 @@ class SignupPageByRole extends StatelessWidget {
                   ),
                 ),
               ),
+
               // Confirm Password TextField
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 12),
                 child: TextField(
                   controller: confirmPasswordController,
                   obscureText: true,
@@ -123,20 +131,22 @@ class SignupPageByRole extends StatelessWidget {
                   ),
                 ),
               ),
+
               const SizedBox(height: 26),
+
               // Signup Button
               SizedBox(
-                width: 290,
+                width: double.infinity,
                 height: 45,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Trigger the signup event
-                    context.read<AuthBloc>().add(AuthSignupRequested(
-                            email: emailController.text,
-                            password: passwordController.text,
-                            role: role,
-                          ));
-
+                    // // Trigger the signup event
+                    // context.read<AuthBloc>().add(AuthSignupRequested(
+                    //       email: emailController.text,
+                    //       password: passwordController.text,
+                    //       role: role,
+                    //     ));
+                    router.goNamed(Routesnames.homestudent);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: bluecolor,

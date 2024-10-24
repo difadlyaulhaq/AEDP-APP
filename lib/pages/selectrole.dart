@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart'; // Import GoRouter
 import 'package:project_aedp/theme/theme.dart';
 import '../bloc/auth/auth_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart'; // Import this line
-import '../routes/router.dart'; // Make sure your router is imported
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../routes/router.dart'; // Import this line
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -242,7 +243,7 @@ class LoginPageByRole extends StatelessWidget {
                 height: 45,
                 child: ElevatedButton(
                   onPressed: () {
-                    router.goNamed(Routesnames.home); // Navigate to home
+                  router.goNamed(Routesnames.homestudent);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: bluecolor,

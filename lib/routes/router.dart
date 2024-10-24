@@ -36,8 +36,8 @@ final router = GoRouter(
       ),
     GoRoute(
       path: '/home',
-      name: Routesnames.home,
-      builder: (context, state) => const HomePage(),
+      name: Routesnames.homestudent,
+      builder: (context, state) => const DashboardStudentsHome(),
     ),
   ],
 );
