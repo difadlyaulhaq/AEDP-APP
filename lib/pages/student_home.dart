@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:project_aedp/pages/dashboard_students.dart';
 import 'package:project_aedp/pages/invoice_page.dart';
 import 'package:project_aedp/pages/profile_page.dart';
-import 'package:project_aedp/theme/theme.dart';
 import 'package:project_aedp/widget/bottom_navbar.dart';
 
-class GradesPage extends StatefulWidget {
-  const GradesPage({super.key});
+class StudentHome extends StatefulWidget {
+  const StudentHome({super.key});
 
   @override
-  State<GradesPage> createState() => _GradesPageState();
+  State<StudentHome> createState() => _StudentHomeState();
 }
 
-class _GradesPageState extends State<GradesPage> {
+class _StudentHomeState extends State<StudentHome> {
   int _selectedIndex = 0; // Track the selected tab index
   final String name = "Difa Dlyaul Haq"; // Store the user's name
 
@@ -73,34 +73,6 @@ class _GradesPageState extends State<GradesPage> {
     );
   }
 }
-
-// Your DashboardStudentsHome widget
-class DashboardStudentsHome extends StatelessWidget {
-  const DashboardStudentsHome({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "Grades Page Content",
-              style: blackColorTextStyle.copyWith(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        // Additional content for the grades can go here
-      ],
-    );
-  }
-}
-
 // Custom clipper class to define the rounded corners for AppBar
 class CustomAppBarClipper extends CustomClipper<Path> {
   @override
