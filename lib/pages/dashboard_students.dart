@@ -3,6 +3,7 @@ import 'package:project_aedp/pages/GradesPage.dart';
 import 'package:project_aedp/pages/invoice_page.dart';
 import 'package:project_aedp/pages/materialpage.dart';
 import 'package:project_aedp/pages/profile_page.dart';
+import 'package:project_aedp/pages/schedulepage.dart';
 import 'package:project_aedp/theme/theme.dart';
 
 class DashboardStudents extends StatefulWidget {
@@ -125,7 +126,10 @@ class DashboardStudentsHome extends StatelessWidget {
             crossAxisCount: 3,
             children: [
               _buildIconButton(Icons.calendar_today, "Schedule", () {
-                // Navigate or display message for "Schedule"
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>  SchedulePage()),
+                );
               }),
               _buildIconButton(Icons.book, "Materials", () {
                 // Navigate to Material_page
