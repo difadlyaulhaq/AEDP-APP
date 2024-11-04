@@ -43,11 +43,11 @@ class Material_page extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0), // Reduced padding for compactness
         child: GridView.count(
           crossAxisCount: 2, // 2 items in each row
-          crossAxisSpacing: 16.0, // Space between columns
-          mainAxisSpacing: 16.0, // Space between rows
+          crossAxisSpacing: 8.0, // Reduced space between columns
+          mainAxisSpacing: 8.0, // Reduced space between rows
           children: [
             _buildTextItem(context, 'History'),
             _buildTextItem(context, 'Math'),
@@ -56,7 +56,7 @@ class Material_page extends StatelessWidget {
             _buildTextItem(context, "Arabic"),
             _buildTextItem(context, "Music"),
             _buildTextItem(context, 'Geography'),
-            _buildTextItem(context, 'english')
+            _buildTextItem(context, 'English')
           ],
         ),
       ),
@@ -71,16 +71,18 @@ class Material_page extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: const Color(0xFF1E70A0), // Background color
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(10), // Smaller corner radius
         ),
         alignment: Alignment.center,
+        padding: const EdgeInsets.all(8.0), // Reduced padding inside the box
         child: Text(
           subject,
           style: const TextStyle(
             color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
+            fontSize: 16, // Smaller font size for compact display
+            fontWeight: FontWeight.w500, // Lighter font weight for smaller text
           ),
+          textAlign: TextAlign.center, // Center align the text
         ),
       ),
     );

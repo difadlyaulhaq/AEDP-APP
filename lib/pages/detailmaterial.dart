@@ -35,7 +35,7 @@ class Detail_material extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 fontSize: 24,
               ),
-            ),S
+            ),
             centerTitle: true,
           ),
         ),
