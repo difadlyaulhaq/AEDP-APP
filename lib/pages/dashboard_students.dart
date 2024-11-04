@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_aedp/pages/GradesPage.dart';
 import 'package:project_aedp/pages/invoice_page.dart';
+import 'package:project_aedp/pages/materialpage.dart';
 import 'package:project_aedp/pages/profile_page.dart';
 import 'package:project_aedp/theme/theme.dart';
 
@@ -13,13 +14,12 @@ class DashboardStudents extends StatefulWidget {
 
 class _DashboardStudentsState extends State<DashboardStudents> {
   int _selectedIndex = 0; // Track the selected tab index
-  final String name = "Students"; // Store the user's name
 
   // List of all the pages to navigate between
   final List<Widget> _pages = const [
     DashboardStudentsHome(), // Home page
-    InvoicePage(),          // Invoice page
-    ProfilePage(),          // Profile page
+    InvoicePage(), // Invoice page
+    ProfilePage(), // Profile page
   ];
 
   // Logic for onTap navigation
@@ -56,7 +56,8 @@ class _DashboardStudentsState extends State<DashboardStudents> {
           child: BottomNavigationBar(
             currentIndex: _selectedIndex, // Track the selected page index
             onTap: _onNavbarTap, // Triggered when an item is tapped
-            backgroundColor: Colors.transparent, // Make background transparent for gradient effect
+            backgroundColor: Colors
+                .transparent, // Make background transparent for gradient effect
             selectedItemColor: Colors.white,
             unselectedItemColor: Colors.white70,
             items: const [
@@ -127,7 +128,11 @@ class DashboardStudentsHome extends StatelessWidget {
                 // Navigate or display message for "Schedule"
               }),
               _buildIconButton(Icons.book, "Materials", () {
-                // Navigate or display message for "Materials"
+                // Navigate to Material_page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Material_page()),
+                );
               }),
               _buildIconButton(Icons.check_circle_outline, "Grades", () {
                 // Navigate to GradesPage
