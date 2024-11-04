@@ -44,14 +44,14 @@ class _StudentHomeState extends State<StudentHome> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Color(0xFF4A90E2), // Light blue color
-                    Color(0xFF003C8F), // Darker blue color
+                   Color.fromRGBO(30, 113, 162, 1), 
+                   Color.fromRGBO(11, 42, 60, 1), 
                   ],
                 ),
               ),
             ),
             title: const Text(
-              'Grades', // Title can be dynamic based on _selectedIndex if needed
+              'wellcome, Students', // Title can be dynamic based on _selectedIndex if needed
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,

@@ -13,7 +13,7 @@ class DashboardStudents extends StatefulWidget {
 
 class _DashboardStudentsState extends State<DashboardStudents> {
   int _selectedIndex = 0; // Track the selected tab index
-  final String name = "Difa Dlyaul Haq"; // Store the user's name
+  final String name = "Students"; // Store the user's name
 
   // List of all the pages to navigate between
   final List<Widget> _pages = const [
@@ -33,39 +33,6 @@ class _DashboardStudentsState extends State<DashboardStudents> {
   Widget build(BuildContext context) {
     return Material(
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(120.0), // Adjust the height as needed
-          child: ClipPath(
-            clipper: CustomAppBarClipper(), // Custom clipper for rounded corners
-            child: AppBar(
-              automaticallyImplyLeading: false, // Removes the back button if any
-              flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFF4A90E2), // Light blue color
-                      Color(0xFF003C8F), // Darker blue color
-                    ],
-                  ),
-                ),
-              ),
-              title: Text(
-                _selectedIndex == 0
-                    ? 'Welcome $name'
-                    : _selectedIndex == 1
-                        ? 'Invoices'
-                        : 'Profile',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-          ),
-        ),
         body: IndexedStack(
           index: _selectedIndex,
           children: _pages, // Use IndexedStack to load the appropriate page
@@ -188,6 +155,7 @@ class DashboardStudentsHome extends StatelessWidget {
   // Helper function to build To-Do list items
   Widget _buildTodoItem(String title, String deadline) {
     return Material(
+      color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
