@@ -8,6 +8,7 @@ class SchedulePage extends StatefulWidget {
 class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
+  // Schedule data for each day
   final Map<String, List<Map<String, String>>> scheduleData = {
     'Monday': [
       {'subject': 'English', 'time': '07:00 - 08:40', 'class': 'Class 6.2.1'},
@@ -41,6 +42,7 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
     super.dispose();
   }
 
+  // Widget for each class card
   Widget _buildClassCard(Map<String, String> classInfo) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -89,7 +91,7 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Icon(Icons.location_on, color: Colors.white, size: 16),
+                    const Icon(Icons.location_on, color: Colors.white, size: 16),
                     const SizedBox(width: 4),
                     Text(
                       classInfo['class']!,
@@ -140,9 +142,16 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
           final daySchedule = scheduleData[day]!;
           return Padding(
             padding: const EdgeInsets.all(16.0),
-            child: ListView(
-              children: daySchedule.map((classInfo) => _buildClassCard(classInfo)).toList(),
-            ),
+            child: daySchedule.isNotEmpty
+                ? ListView(
+                    children: daySchedule.map((classInfo) => _buildClassCard(classInfo)).toList(),
+                  )
+                : const Center(
+                    child: Text(
+                      'No schedule available',
+                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                    ),
+                  ),
           );
         }).toList(),
       ),
