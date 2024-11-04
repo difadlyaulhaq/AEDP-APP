@@ -53,7 +53,7 @@ class _GradespageState extends State<Gradespage> {
 }
 
 class GradesWidget extends StatelessWidget {
-  const GradesWidget({Key? key}) : super(key: key);
+  const GradesWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +72,8 @@ class GradesWidget extends StatelessWidget {
               height: 80.0, // Height of the circular container
               width: 80.0, // Width of the circular container
               
-              decoration: BoxDecoration(
-                color: const Color(0xFF1E70A0), // Background color of the circle
+              decoration: const BoxDecoration(
+                color: Color(0xFF1E70A0), // Background color of the circle
                 shape: BoxShape.circle,
               ),
               alignment: Alignment.center,
@@ -95,7 +95,7 @@ class GradesWidget extends StatelessWidget {
                 "List of Subjects",
                 style: blackColorTextStyle.copyWith(
                   fontSize: 18,
-                  color: Color.fromRGBO(13, 49, 70, 1),
+                  color: const Color.fromRGBO(13, 49, 70, 1),
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -105,17 +105,17 @@ class GradesWidget extends StatelessWidget {
                   color: const Color(0xFF1E70A0), // Background color for the filter
                   borderRadius: BorderRadius.circular(8), // Rounded corners
                 ),
-                child: Row(
+                child: const Row(
                   children: [
                     Text(
                       "Filter Year/Semester",
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                       ),
                     ),
-                    const SizedBox(width: 4), // Space between text and icon
-                    const Icon(
+                    SizedBox(width: 4), // Space between text and icon
+                    Icon(
                       Icons.filter_list, // Filter icon
                       color: Colors.white, // Icon color
                       size: 20,
@@ -166,8 +166,8 @@ class GradesWidget extends StatelessWidget {
           Text(subject, style: const TextStyle(fontSize: 18, color: Colors.white)), // Subject name
           // Circular container for the grade
           Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFF1E70A0), // Circle color
+            decoration: const BoxDecoration(
+              color: Color(0xFF1E70A0), // Circle color
               shape: BoxShape.circle, // Make it circular
             ),
             padding: const EdgeInsets.all(8.0), // Padding inside the circle
@@ -197,8 +197,8 @@ class GradesWidget extends StatelessWidget {
           Text(subject, style: const TextStyle(fontSize: 18, color: Colors.white)), // Subject name
           // Circular container for the grade
           Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFF1E70A0), // Circle color
+            decoration: const BoxDecoration(
+              color: Color(0xFF1E70A0), // Circle color
               shape: BoxShape.circle, // Make it circular
             ),
             padding: const EdgeInsets.all(8.0), // Padding inside the circle
