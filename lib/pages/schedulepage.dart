@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:project_aedp/theme/theme.dart';
 
 class SchedulePage extends StatefulWidget {
+  const SchedulePage({super.key});
+
   @override
   _SchedulePageState createState() => _SchedulePageState();
 }
@@ -46,63 +49,39 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
   Widget _buildClassCard(Map<String, String> classInfo) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      clipBehavior: Clip.antiAlias,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Stack(
-        children: [
-          // Background image for each class card
-          Image.asset(
-            'assets/classroom.jpg', // Replace with your asset image path
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: 120,
-          ),
-          // Overlay for gradient effect
-          Container(
-            width: double.infinity,
-            height: 120,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.black.withOpacity(0.6), Colors.transparent],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              classInfo['subject']!,
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(height: 4),
+            Text(
+              classInfo['time']!,
+              style: const TextStyle(color: Colors.black54, fontSize: 14),
+            ),
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                const Icon(Icons.location_on, color: Colors.black54, size: 16),
+                const SizedBox(width: 4),
                 Text(
-                  classInfo['subject']!,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  classInfo['time']!,
-                  style: const TextStyle(color: Colors.white, fontSize: 14),
-                ),
-                const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const Icon(Icons.location_on, color: Colors.white, size: 16),
-                    const SizedBox(width: 4),
-                    Text(
-                      classInfo['class']!,
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  ],
+                  classInfo['class']!,
+                  style: const TextStyle(color: Colors.black54, fontSize: 14),
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -111,7 +90,10 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Schedule'),
+        title: Text(
+          'Schedule',
+          style: whiteColorTextStyle,
+        ),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -130,6 +112,7 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
         ),
         bottom: TabBar(
           controller: _tabController,
+          isScrollable: true,
           tabs: scheduleData.keys.map((day) => Tab(text: day)).toList(),
           indicatorColor: Colors.white,
           labelColor: Colors.white,
@@ -161,7 +144,7 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
           BottomNavigationBarItem(icon: Icon(Icons.receipt), label: 'Invoice'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Color(0xFF1E71A2),
         unselectedItemColor: Colors.grey,
         backgroundColor: Colors.white,
       ),
