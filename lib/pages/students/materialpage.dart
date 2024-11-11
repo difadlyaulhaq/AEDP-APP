@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_aedp/pages/detailmaterial.dart';
+import 'package:project_aedp/pages/students/detailmaterial.dart';
 
 class Material_page extends StatelessWidget {
   const Material_page({super.key});

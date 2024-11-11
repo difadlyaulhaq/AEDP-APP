@@ -31,6 +31,11 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
       {'subject': 'English', 'time': '07:00 - 08:40', 'class': 'Class 6.2.1'},
       {'subject': 'Science', 'time': '08:50 - 10:30', 'class': 'Class 6.2.1'},
     ],
+    'Friday': [
+      {'subject': 'English', 'time': '07:00 - 08:40', 'class': 'Class 6.2.1'},
+      {'subject': 'Science', 'time': '08:50 - 10:30', 'class': 'Class 6.2.1'},
+    ],
+    
   };
 
   @override
@@ -144,7 +149,7 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
           BottomNavigationBarItem(icon: Icon(Icons.receipt), label: 'Invoice'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
-        selectedItemColor: Color(0xFF1E71A2),
+        selectedItemColor: const Color(0xFF1E71A2),
         unselectedItemColor: Colors.grey,
         backgroundColor: Colors.white,
       ),

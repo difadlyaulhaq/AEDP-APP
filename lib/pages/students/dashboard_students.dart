@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:project_aedp/pages/GradesPage.dart';
-import 'package:project_aedp/pages/invoice_page.dart';
-import 'package:project_aedp/pages/materialpage.dart';
-import 'package:project_aedp/pages/profile_page.dart';
-import 'package:project_aedp/pages/schedulepage.dart';
+import 'package:project_aedp/pages/students/GradesPage.dart';
+import 'package:project_aedp/pages/students/invoice_page.dart';
+import 'package:project_aedp/pages/students/materialpage.dart';
+import 'package:project_aedp/pages/students/profile_page.dart';
+import 'package:project_aedp/pages/students/schedulepage.dart';
 import 'package:project_aedp/theme/theme.dart';
 
 class DashboardStudents extends StatefulWidget {
@@ -128,7 +128,7 @@ class DashboardStudentsHome extends StatelessWidget {
               _buildIconButton(Icons.calendar_today, "Schedule", () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) =>  SchedulePage()),
+                  MaterialPageRoute(builder: (context) =>  const SchedulePage()),
                 );
               }),
               _buildIconButton(Icons.book, "Materials", () {
