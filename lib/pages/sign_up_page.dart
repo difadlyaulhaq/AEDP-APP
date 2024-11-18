@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:project_aedp/bloc/auth/auth_bloc.dart';
-import 'package:project_aedp/routes/router.dart';
 import 'package:project_aedp/theme/theme.dart';
 
 class SignupPageByRole extends StatelessWidget {
@@ -19,16 +18,33 @@ class SignupPageByRole extends StatelessWidget {
     return Scaffold(
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthSignupSuccess) {
-            // // Navigasi ke halaman login atau home setelah signup berhasil
-            GoRouter.of(context).go(Routesnames.homestudent);
-          } else if (state is AuthFailure) {
-            // Menampilkan pesan error jika signup gagal
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Signup failed: ${state.errorMessage}')),
-            );
-          }
-        },
+  if (state is AuthSignupSuccess) {
+    print("Signup successful, navigating to the home page for role: $role"); // Debug log
+
+    // Redirect based on the role after successful signup
+    switch (role) {
+      case 'Student':
+        context.go('/student-home');
+        break;
+      case 'Parent':
+        context.go('/parentHomePage');
+        break;
+      case 'Teacher':
+        context.go('/teacher-dashboard');
+        break;
+      default:
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Unknown role')),
+        );
+        break;
+    }
+  } else if (state is AuthFailure) {
+    // Show error message on signup failure
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Signup failed: ${state.errorMessage}')),
+    );
+  }
+},
         child: Center(
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 60),
@@ -140,13 +156,15 @@ class SignupPageByRole extends StatelessWidget {
                 height: 45,
                 child: ElevatedButton(
                   onPressed: () {
-                    // // Trigger the signup event
-                    // context.read<AuthBloc>().add(AuthSignupRequested(
-                    //       email: emailController.text,
-                    //       password: passwordController.text,
-                    //       role: role,
-                    //     ));
-                    router.goNamed(Routesnames.homestudent);
+                    // Dispatch signup event to Bloc
+                    context.read<AuthBloc>().add(
+                          AuthSignupRequested(
+                            email: emailController.text,
+                            password: passwordController.text,
+                            // confirmPassword: confirmPasswordController.text,
+                            role: role,
+                          ),
+                        );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: bluecolor,

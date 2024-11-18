@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:project_aedp/bloc/auth/auth_repository.dart';
 
@@ -17,18 +17,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await authRepository.signUp(
           email: event.email,
           password: event.password,
-          role: event.role, // Ensure 'role' is passed
+          role: event.role,
         );
         // Emit success state after successful signup
         emit(AuthSignupSuccess(message: 'Signup successful'));
       } catch (e) {
         // Emit failure state in case of an error
-        emit(AuthFailure(e.toString()));
+        emit(AuthFailure('Signup failed: ${e.toString()}'));
       }
     });
-    
+
     // Handling login event
-    on<LoginEvent>((event, emit) async {
+    on<AuthLoginRequested>((event, emit) async {
       emit(AuthLoading());
       try {
         // Attempt to log in the user with provided credentials
@@ -42,13 +42,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(AuthLoginSuccess(role: role));
         } else {
           // If no role is found, emit failure state
-          emit(AuthFailure('Role not found'));
+          emit(AuthFailure('No role assigned to this user'));
         }
       } catch (e) {
         // Emit failure state in case of an error
-        emit(AuthFailure(e.toString()));
+        emit(AuthFailure('Login failed: ${e.toString()}'));
       }
     });
-  
-  } 
+  }
 }

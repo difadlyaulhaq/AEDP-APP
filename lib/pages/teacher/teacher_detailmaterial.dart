@@ -31,7 +31,7 @@ class TeacherDetailmaterial extends StatelessWidget {
             ),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => TeacherDashboard())),
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const TeacherDashboard())),
             ),
             title: const Text(
               'Math',
@@ -176,7 +176,7 @@ class TeacherDetailmaterial extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(title),
-          content: Column(
+          content: const Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
@@ -185,7 +185,7 @@ class TeacherDetailmaterial extends StatelessWidget {
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               TextField(
                 decoration: InputDecoration(
                   labelText: 'Description',

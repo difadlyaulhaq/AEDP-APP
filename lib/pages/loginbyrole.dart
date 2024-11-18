@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:project_aedp/routes/router.dart';
 import '../bloc/auth/auth_bloc.dart';
 import '../theme/theme.dart'; // Assuming your theme is defined here
 
@@ -20,12 +19,21 @@ class LoginPageByRole extends StatelessWidget {
         listener: (context, state) {
           if (state is AuthLoginSuccess) {
             // Redirect based on the role after successful login
-            if (state.role == 'Student') {
-              context.go(Routesnames.homestudent); // Navigate to student home
-            } else if (state.role == 'Parent') {
-              context.go('/parentHomePage'); // Navigate to parent home
-            } else if (state.role == 'Teacher') {
-              context.go(Routesnames.teacherdash); // Navigate to teacher home
+            switch (state.role) {
+              case 'Signup as Student':
+                context.go('/student-home');
+                break;
+              case 'Parent':
+                context.go('/parentHomePage');
+                break;
+              case 'Signup as Teacher':
+                context.go('/teacher-dashboard');
+                break;
+              default:
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Unknown role')),
+                );
+                break;
             }
           } else if (state is AuthFailure) {
             // Show error message on authentication failure
@@ -62,26 +70,19 @@ class LoginPageByRole extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              TextField(
+              _buildTextField(
                 controller: emailController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: bluecolor,
-                  label: Text("email", style: whiteColorTextStyle.copyWith(fontSize: 16, fontWeight: FontWeight.w700)),
-                  prefixIcon: Icon(Icons.person, color: whiteColor),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                ),
+                label: "email",
+                icon: Icons.person,
+                themeStyle: whiteColorTextStyle,
               ),
               const SizedBox(height: 12),
-              TextField(
+              _buildTextField(
                 controller: passwordController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: bluecolor,
-                  label: Text("password", style: whiteColorTextStyle.copyWith(fontSize: 16, fontWeight: FontWeight.w700)),
-                  prefixIcon: Icon(Icons.lock, color: whiteColor),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                ),
+                label: "password",
+                icon: Icons.lock,
+                themeStyle: whiteColorTextStyle,
+                isPassword: true,
               ),
               const SizedBox(height: 26),
               SizedBox(
@@ -104,13 +105,40 @@ class LoginPageByRole extends StatelessWidget {
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                  child: Text('Login', style: whiteColorTextStyle.copyWith(fontSize: 15)),
+                  child: Text(
+                    'Login',
+                    style: whiteColorTextStyle.copyWith(fontSize: 15),
+                  ),
                 ),
               ),
               const SizedBox(height: 40),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// Helper method to build a text field
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    required TextStyle themeStyle,
+    bool isPassword = false,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: isPassword,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: bluecolor,
+        label: Text(
+          label,
+          style: themeStyle.copyWith(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+        prefixIcon: Icon(icon, color: whiteColor),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
       ),
     );
   }

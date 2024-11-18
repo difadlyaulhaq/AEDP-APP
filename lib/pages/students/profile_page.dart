@@ -18,7 +18,7 @@ class ProfilePage extends StatelessWidget {
               // Profile Picture and Name
               CircleAvatar(
                 radius: screenWidth * 0.15, // Adjust size based on screen width
-                backgroundImage: AssetImage('assets/profile_picture.png'), // Update with your image asset
+                backgroundImage: const AssetImage('assets/profile_picture.png'), // Update with your image asset
               ),
               const SizedBox(height: 8),
               Text(

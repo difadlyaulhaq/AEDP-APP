@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import '../routes/router.dart';
 import '../theme/theme.dart';
 
 class Splashscreen extends StatefulWidget {
@@ -15,7 +15,8 @@ class _SplashscreenState extends State<Splashscreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      router.goNamed(Routesnames.selectrole); 
+      context.go('/select-role');
+
     });
   }
 

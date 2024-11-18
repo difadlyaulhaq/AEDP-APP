@@ -6,7 +6,7 @@ abstract class AuthEvent {}
 class AuthSignupRequested extends AuthEvent {
   final String email;
   final String password;
-  final String role; // Ensure 'role' is required
+  final String role;
 
   AuthSignupRequested({
     required this.email,
@@ -15,24 +15,14 @@ class AuthSignupRequested extends AuthEvent {
   });
 }
 
-class LoginEvent extends AuthEvent {
-  final String email;
-  final String password;
-
-  LoginEvent({
-    required this.email,
-    required this.password,
-  });
-}
-
 class AuthLoginRequested extends AuthEvent {
   final String email;
   final String password;
-  final String role;
+  final String role; // Ensure this is defined
 
   AuthLoginRequested({
     required this.email,
     required this.password,
-    required this.role,
+    required this.role, // Include this in the constructor
   });
 }
