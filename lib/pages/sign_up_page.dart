@@ -25,7 +25,7 @@ class SignupPageByRole extends StatelessWidget {
           } else if (state is AuthFailure) {
             // Menampilkan pesan error jika signup gagal
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Signup failed: ${state.message}')),
+              SnackBar(content: Text('Signup failed: ${state.errorMessage}')),
             );
           }
         },

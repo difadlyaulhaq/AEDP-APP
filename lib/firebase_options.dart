@@ -52,15 +52,15 @@ class DefaultFirebaseOptions {
     messagingSenderId: '40978170905',
     projectId: 'aedp-project-app',
     authDomain: 'aedp-project-app.firebaseapp.com',
-    storageBucket: 'aedp-project-app.appspot.com',
+    storageBucket: 'aedp-project-app.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCRRfJd6U4J8YM7i5K69-Bg7np7PhpdRLk',
-    appId: '1:40978170905:android:8fc1cf5878b8267c41d688',
+    appId: '1:40978170905:android:9c1f4d5552e2402d41d688',
     messagingSenderId: '40978170905',
     projectId: 'aedp-project-app',
-    storageBucket: 'aedp-project-app.appspot.com',
+    storageBucket: 'aedp-project-app.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -68,7 +68,7 @@ class DefaultFirebaseOptions {
     appId: '1:40978170905:ios:d1a5814022de673941d688',
     messagingSenderId: '40978170905',
     projectId: 'aedp-project-app',
-    storageBucket: 'aedp-project-app.appspot.com',
+    storageBucket: 'aedp-project-app.firebasestorage.app',
     iosBundleId: 'com.example.projectAedp',
   );
 

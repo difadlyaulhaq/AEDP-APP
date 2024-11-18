@@ -1,41 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:project_aedp/pages/students/detailmaterial.dart';
 
-class Material_page extends StatelessWidget {
-  const Material_page({super.key});
+class Student_MaterialPage extends StatelessWidget {
+  const Student_MaterialPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize:
-            const Size.fromHeight(120.0), // Adjust the height as needed
+        preferredSize: Size.fromHeight(screenHeight * 0.15), // Responsif tinggi AppBar
         child: ClipPath(
-          clipper: CustomAppBarClipper(), // Custom clipper for rounded corners
+          clipper: CustomAppBarClipper(),
           child: AppBar(
-            automaticallyImplyLeading: true, // Removes the back button if any
+            automaticallyImplyLeading: true,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Color.fromRGBO(30, 113, 162, 1), // Light blue color
-                    Color.fromRGBO(11, 42, 60, 1), // Darker blue color
+                    Color.fromRGBO(30, 113, 162, 1), // Warna biru terang
+                    Color.fromRGBO(11, 42, 60, 1), // Warna biru gelap
                   ],
                 ),
               ),
             ),
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.pop(context), // Use pop to go back
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+                size: screenWidth * 0.07, // Responsif ukuran icon
+              ),
+              onPressed: () => Navigator.pop(context),
             ),
-            title: const Text(
-              'Material', // Title can be dynamic based on _selectedIndex if needed
+            title: Text(
+              'Material',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
-                fontSize: 24,
+                fontSize: screenWidth * 0.06, // Responsif ukuran teks
               ),
             ),
             centerTitle: true,
@@ -43,11 +49,11 @@ class Material_page extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0), // Reduced padding for compactness
+        padding: EdgeInsets.all(screenWidth * 0.03), // Responsif padding
         child: GridView.count(
-          crossAxisCount: 2, // 2 items in each row
-          crossAxisSpacing: 8.0, // Reduced space between columns
-          mainAxisSpacing: 8.0, // Reduced space between rows
+          crossAxisCount: screenWidth > 600 ? 3 : 2, // Sesuaikan jumlah kolom berdasarkan lebar layar
+          crossAxisSpacing: screenWidth * 0.02, // Responsif jarak antar kolom
+          mainAxisSpacing: screenHeight * 0.02, // Responsif jarak antar baris
           children: [
             _buildTextItem(context, 'History'),
             _buildTextItem(context, 'Math'),
@@ -56,7 +62,7 @@ class Material_page extends StatelessWidget {
             _buildTextItem(context, "Arabic"),
             _buildTextItem(context, "Music"),
             _buildTextItem(context, 'Geography'),
-            _buildTextItem(context, 'English')
+            _buildTextItem(context, 'English'),
           ],
         ),
       ),
@@ -64,25 +70,30 @@ class Material_page extends StatelessWidget {
   }
 
   Widget _buildTextItem(BuildContext context, String subject) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const Detail_material()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Detail_material()),
+        );
       },
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF1E70A0), // Background color
-          borderRadius: BorderRadius.circular(10), // Smaller corner radius
+          color: const Color(0xFF1E70A0), // Warna latar
+          borderRadius: BorderRadius.circular(screenWidth * 0.03), // Responsif radius
         ),
         alignment: Alignment.center,
-        padding: const EdgeInsets.all(8.0), // Reduced padding inside the box
+        padding: EdgeInsets.all(screenWidth * 0.03), // Responsif padding
         child: Text(
           subject,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
-            fontSize: 16, // Smaller font size for compact display
-            fontWeight: FontWeight.w500, // Lighter font weight for smaller text
+            fontSize: screenWidth * 0.04, // Responsif ukuran teks
+            fontWeight: FontWeight.w500,
           ),
-          textAlign: TextAlign.center, // Center align the text
+          textAlign: TextAlign.center,
         ),
       ),
     );
@@ -93,20 +104,20 @@ class CustomAppBarClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.lineTo(0, size.height - 40); // Start from the bottom-left corner
+    path.lineTo(0, size.height - 40); // Mulai dari kiri bawah
     path.quadraticBezierTo(
-        0, size.height, 40, size.height); // Left corner curve
+        0, size.height, 40, size.height); // Lengkungan di pojok kiri
     path.lineTo(
-        size.width - 40, size.height); // Straight line at the bottom middle
+        size.width - 40, size.height); // Garis lurus di bawah tengah
     path.quadraticBezierTo(size.width, size.height, size.width,
-        size.height - 40); // Right corner curve
-    path.lineTo(size.width, 0); // Go to the top-right corner
-    path.close(); // Close the path
+        size.height - 40); // Lengkungan di pojok kanan
+    path.lineTo(size.width, 0); // Menuju ke kanan atas
+    path.close(); // Menutup jalur
     return path;
   }
 
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return false; // No need to reclip as the shape doesn't change dynamically
+    return false; // Tidak perlu reclip
   }
 }

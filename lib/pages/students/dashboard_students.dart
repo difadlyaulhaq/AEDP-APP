@@ -14,16 +14,14 @@ class DashboardStudents extends StatefulWidget {
 }
 
 class _DashboardStudentsState extends State<DashboardStudents> {
-  int _selectedIndex = 0; // Track the selected tab index
+  int _selectedIndex = 0;
 
-  // List of all the pages to navigate between
   final List<Widget> _pages = const [
-    DashboardStudentsHome(), // Home page
-    InvoicePage(), // Invoice page
-    ProfilePage(), // Profile page
+    DashboardStudentsHome(),
+    InvoicePage(),
+    ProfilePage(),
   ];
 
-  // Logic for onTap navigation
   void _onNavbarTap(int index) {
     setState(() {
       _selectedIndex = index;
@@ -32,81 +30,78 @@ class _DashboardStudentsState extends State<DashboardStudents> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Scaffold(
-        body: IndexedStack(
-          index: _selectedIndex,
-          children: _pages, // Use IndexedStack to load the appropriate page
-        ),
-        // Bottom Navigation Bar
-        bottomNavigationBar: Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(25),
-              bottomRight: Radius.circular(25),
-            ),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF4A90E2), // Light blue color
-                Color(0xFF003C8F), // Darker blue color
-              ],
-            ),
+    return Scaffold(
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
           ),
-          child: BottomNavigationBar(
-            currentIndex: _selectedIndex, // Track the selected page index
-            onTap: _onNavbarTap, // Triggered when an item is tapped
-            backgroundColor: Colors
-                .transparent, // Make background transparent for gradient effect
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.white70,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.receipt_long),
-                label: 'Invoice',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
-              ),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF4A90E2),
+              Color(0xFF003C8F),
             ],
           ),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: _onNavbarTap,
+          backgroundColor: Colors.transparent,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white70,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.receipt_long),
+              label: 'Invoice',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-// A separate widget for the Dashboard's Home Page
 class DashboardStudentsHome extends StatelessWidget {
   const DashboardStudentsHome({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Column(
       children: [
-        // To-Do Section
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(screenWidth * 0.04),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
               "To-Do:",
               style: blackColorTextStyle.copyWith(
-                fontSize: 22,
+                fontSize: screenWidth * 0.06,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
         ),
         Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16.0),
-          padding: const EdgeInsets.all(16.0),
+          margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+          padding: EdgeInsets.all(screenWidth * 0.04),
           decoration: BoxDecoration(
             color: Colors.grey[300],
             borderRadius: BorderRadius.circular(15),
@@ -119,39 +114,39 @@ class DashboardStudentsHome extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 20),
-        // Icon Buttons
+        SizedBox(height: screenHeight * 0.03),
         Expanded(
           child: GridView.count(
-            crossAxisCount: 3,
+            crossAxisCount: screenWidth > 600 ? 4 : 3,
+            crossAxisSpacing: screenWidth * 0.03,
+            mainAxisSpacing: screenWidth * 0.03,
+            padding: EdgeInsets.all(screenWidth * 0.04),
             children: [
-              _buildIconButton(Icons.calendar_today, "Schedule", () {
+              _buildIconButton(context, Icons.calendar_today, "Schedule", () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) =>  const SchedulePage()),
+                  MaterialPageRoute(builder: (context) => const SchedulePage()),
                 );
               }),
-              _buildIconButton(Icons.book, "Materials", () {
-                // Navigate to Material_page
+              _buildIconButton(context, Icons.book, "Materials", () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Material_page()),
+                  MaterialPageRoute(builder: (context) => const Student_MaterialPage()),
                 );
               }),
-              _buildIconButton(Icons.check_circle_outline, "Grades", () {
-                // Navigate to GradesPage
+              _buildIconButton(context, Icons.check_circle_outline, "Grades", () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const Gradespage()),
                 );
               }),
-              _buildIconButton(Icons.insert_drive_file, "Reports", () {
+              _buildIconButton(context, Icons.insert_drive_file, "Reports", () {
                 // Navigate or display message for "Reports"
               }),
-              _buildIconButton(Icons.notifications, "Notifications", () {
+              _buildIconButton(context, Icons.notifications, "Notifications", () {
                 // Navigate or display message for "Notifications"
               }),
-              _buildIconButton(Icons.library_books, "E-Library", () {
+              _buildIconButton(context, Icons.library_books, "E-Library", () {
                 // Navigate or display message for "E-Library"
               }),
             ],
@@ -161,7 +156,6 @@ class DashboardStudentsHome extends StatelessWidget {
     );
   }
 
-  // Helper function to build To-Do list items
   Widget _buildTodoItem(String title, String deadline) {
     return Material(
       color: Colors.transparent,
@@ -170,13 +164,15 @@ class DashboardStudentsHome extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              title,
-              style: blackColorTextStyle.copyWith(fontSize: 16),
+            Flexible(
+              child: Text(
+                title,
+                style: blackColorTextStyle.copyWith(fontSize: 16),
+              ),
             ),
             Text(
               deadline,
-              style: blackColorTextStyle.copyWith(fontSize: 16),
+              style: blackColorTextStyle.copyWith(fontSize: 14),
             ),
           ],
         ),
@@ -184,48 +180,33 @@ class DashboardStudentsHome extends StatelessWidget {
     );
   }
 
-  // Helper function to build icon buttons with onTap functionality
-  Widget _buildIconButton(IconData icon, String label, VoidCallback onTap) {
+  Widget _buildIconButton(BuildContext context, IconData icon, String label, VoidCallback onTap) {
     return Material(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           InkWell(
-            onTap: onTap, // Action when the icon is tapped
-            borderRadius: BorderRadius.circular(30), // Match CircleAvatar radius
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(30),
             child: CircleAvatar(
               backgroundColor: bluecolor,
-              radius: 30,
-              child: Icon(icon, color: Colors.white, size: 30),
+              radius: MediaQuery.of(context).size.width * 0.08,
+              child: Icon(
+                icon,
+                color: Colors.white,
+                size: MediaQuery.of(context).size.width * 0.06,
+              ),
             ),
           ),
           const SizedBox(height: 8),
           Text(
             label,
-            style: blackColorTextStyle.copyWith(fontSize: 14),
+            style: blackColorTextStyle.copyWith(
+              fontSize: MediaQuery.of(context).size.width * 0.035,
+            ),
           ),
         ],
       ),
     );
   }
-
-
-}
-
-// Custom clipper class to define the rounded corners for AppBar
-class CustomAppBarClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.lineTo(0, size.height - 40); // Start from the bottom-left corner
-    path.quadraticBezierTo(0, size.height, 40, size.height); // Left corner curve
-    path.lineTo(size.width - 40, size.height); // Straight line at the bottom middle
-    path.quadraticBezierTo(size.width, size.height, size.width, size.height - 40); // Right corner curve
-    path.lineTo(size.width, 0); // Straight line at the top-right corner
-    path.close(); // Close the path
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => true; // Always reclip
 }

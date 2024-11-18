@@ -5,20 +5,19 @@ abstract class AuthState {}
 
 class AuthInitial extends AuthState {}
 
-final class AuthStateLogin extends AuthState{}
-
 class AuthLoading extends AuthState {}
 
-class AuthSuccess extends AuthState {}
-
-class AuthSignupSuccess extends AuthState {} // Add this line
+class AuthSignupSuccess extends AuthState {
+  final String message; // Add necessary fields
+  AuthSignupSuccess({required this.message});
+}
 
 class AuthLoginSuccess extends AuthState {
-  final String role;
+  final String role; // Add necessary fields
   AuthLoginSuccess({required this.role});
 }
 
 class AuthFailure extends AuthState {
-  final String message;
-  AuthFailure(this.message);
+  final String errorMessage;
+  AuthFailure(this.errorMessage);
 }

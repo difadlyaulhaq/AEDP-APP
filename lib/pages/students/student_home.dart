@@ -31,9 +31,13 @@ class _StudentHomeState extends State<StudentHome> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the screen width and height using MediaQuery
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(120.0), // Adjust the height as needed
+        preferredSize: Size.fromHeight(screenHeight * 0.15), // Adjust AppBar height based on screen height
         child: ClipPath(
           clipper: CustomAppBarClipper(), // Custom clipper for rounded corners
           child: AppBar(
@@ -44,18 +48,18 @@ class _StudentHomeState extends State<StudentHome> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                   Color.fromRGBO(30, 113, 162, 1), 
-                   Color.fromRGBO(11, 42, 60, 1), 
+                    Color.fromRGBO(30, 113, 162, 1), 
+                    Color.fromRGBO(11, 42, 60, 1), 
                   ],
                 ),
               ),
             ),
-            title: const Text(
-              'wellcome, Students', // Title can be dynamic based on _selectedIndex if needed
+            title: Text(
+              'Welcome, $name', // Use dynamic name here
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
-                fontSize: 24,
+                fontSize: screenWidth * 0.06, // Adjust title font size based on screen width
               ),
             ),
           ),
@@ -73,6 +77,7 @@ class _StudentHomeState extends State<StudentHome> {
     );
   }
 }
+
 // Custom clipper class to define the rounded corners for AppBar
 class CustomAppBarClipper extends CustomClipper<Path> {
   @override

@@ -9,8 +9,8 @@ class Gradespage extends StatefulWidget {
 }
 
 class _GradespageState extends State<Gradespage> {
-  String selectedYear = '2024'; // Default year
-  String selectedSemester = 'Odd'; // Default semester
+  String selectedYear = '2024';
+  String selectedSemester = 'Odd';
 
   List<Map<String, dynamic>> gradesData = [
     {"subject": "Mathematics", "grade": 82, "year": "2024", "semester": "Odd"},
@@ -20,10 +20,8 @@ class _GradespageState extends State<Gradespage> {
     {"subject": "Art", "grade": 19, "year": "2024", "semester": "Odd"},
     {"subject": "English", "grade": 100, "year": "2024", "semester": "Even"},
     {"subject": "Arabic", "grade": 100, "year": "2024", "semester": "Odd"},
-    // Add more subjects as needed
   ];
 
-  // Filtered grades based on selected year and semester
   List<Map<String, dynamic>> get filteredGrades {
     return gradesData
         .where((grade) =>
@@ -33,6 +31,8 @@ class _GradespageState extends State<Gradespage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     double gpa = _calculateGPA(filteredGrades);
 
     return Scaffold(
@@ -58,12 +58,12 @@ class _GradespageState extends State<Gradespage> {
               icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () => Navigator.pushNamed(context, '/student_home'),
             ),
-            title: const Text(
+            title: Text(
               'Your Grades',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
-                fontSize: 24,
+                fontSize: screenWidth * 0.05, // Adjust size dynamically
               ),
             ),
             centerTitle: true,
@@ -71,14 +71,14 @@ class _GradespageState extends State<Gradespage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
               child: Container(
-                height: 80.0,
-                width: 80.0,
+                height: screenHeight * 0.1,
+                width: screenHeight * 0.1,
                 decoration: const BoxDecoration(
                   color: Color(0xFF1E70A0),
                   shape: BoxShape.circle,
@@ -86,22 +86,22 @@ class _GradespageState extends State<Gradespage> {
                 alignment: Alignment.center,
                 child: Text(
                   gpa.toStringAsFixed(2),
-                  style: const TextStyle(
-                    fontSize: 24,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.06,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: screenHeight * 0.02),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "List of Subjects",
                   style: blackColorTextStyle.copyWith(
-                    fontSize: 18,
+                    fontSize: screenWidth * 0.045,
                     color: const Color.fromRGBO(13, 49, 70, 1),
                     fontWeight: FontWeight.w600,
                   ),
@@ -122,7 +122,7 @@ class _GradespageState extends State<Gradespage> {
                               ))
                           .toList(),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: screenWidth * 0.02),
                     DropdownButton<String>(
                       value: selectedSemester,
                       onChanged: (newValue) {
@@ -141,7 +141,7 @@ class _GradespageState extends State<Gradespage> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: screenHeight * 0.02),
             Expanded(
               child: ListView.builder(
                 itemCount: filteredGrades.length,
@@ -150,6 +150,7 @@ class _GradespageState extends State<Gradespage> {
                   return _buildGradeItem(
                     gradeItem["subject"],
                     gradeItem["grade"].toString(),
+                    screenWidth,
                   );
                 },
               ),
@@ -166,27 +167,37 @@ class _GradespageState extends State<Gradespage> {
     return total / grades.length;
   }
 
-  Widget _buildGradeItem(String subject, String grade) {
+  Widget _buildGradeItem(String subject, String grade, double screenWidth) {
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF0D3146),
         borderRadius: BorderRadius.circular(15),
       ),
-      padding: const EdgeInsets.all(3.0),
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: EdgeInsets.all(screenWidth * 0.02),
+      margin: EdgeInsets.symmetric(vertical: screenWidth * 0.02),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(subject, style: const TextStyle(fontSize: 18, color: Colors.white)),
+          Text(
+            subject,
+            style: TextStyle(
+              fontSize: screenWidth * 0.04,
+              color: Colors.white,
+            ),
+          ),
           Container(
             decoration: const BoxDecoration(
               color: Color(0xFF1E70A0),
               shape: BoxShape.circle,
             ),
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(screenWidth * 0.03),
             child: Text(
               grade,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+              style: TextStyle(
+                fontSize: screenWidth * 0.045,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
@@ -199,17 +210,17 @@ class CustomAppBarClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.lineTo(0, size.height - 40); // Start from the bottom-left corner
-    path.quadraticBezierTo(0, size.height, 40, size.height); // Left corner curve
-    path.lineTo(size.width - 40, size.height); // Straight line at the bottom middle
-    path.quadraticBezierTo(size.width, size.height, size.width, size.height - 40); // Right corner curve
-    path.lineTo(size.width, 0); // Go to the top-right corner
-    path.close(); // Close the path
+    path.lineTo(0, size.height - 40);
+    path.quadraticBezierTo(0, size.height, 40, size.height);
+    path.lineTo(size.width - 40, size.height);
+    path.quadraticBezierTo(size.width, size.height, size.width, size.height - 40);
+    path.lineTo(size.width, 0);
+    path.close();
     return path;
   }
 
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return false; // No need to reclip as the shape doesn't change dynamically
+    return false;
   }
 }

@@ -6,32 +6,50 @@ class InvoicePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView( // Makes the body scrollable
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "2023/2024",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final screenWidth = MediaQuery.of(context).size.width;
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "2023/2024",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                buildInvoiceSection(
+                  title: "Even",
+                  items: [
+                    InvoiceItem("Tuition Fee", "February 18 2024", "AED 96,140"),
+                    InvoiceItem("Administrative Fee", "February 18 2024", "AED 1,000"),
+                  ],
+                  isWide: screenWidth > 600, // Adapt layout for wide screens
+                ),
+                const SizedBox(height: 16),
+                buildInvoiceSection(
+                  title: "Odd",
+                  items: [
+                    InvoiceItem("Tuition Fee", "August 18 2024", "AED 96,140"),
+                    InvoiceItem("Administrative Fee", "August 18 2024", "AED 1,000"),
+                  ],
+                  isWide: screenWidth > 600, // Adapt layout for wide screens
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            buildInvoiceSection("Even", [
-              InvoiceItem("Tuition Fee", "February 18 2024", "AED 96,140"),
-              InvoiceItem("Administrative Fee", "February 18 2024", "AED 1,000"),
-            ]),
-            const SizedBox(height: 16),
-            buildInvoiceSection("Odd", [
-              InvoiceItem("Tuition Fee", "August 18 2024", "AED 96,140"),
-              InvoiceItem("Administrative Fee", "August 18 2024", "AED 1,000"),
-            ]),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget buildInvoiceSection(String title, List<InvoiceItem> items) {
+  Widget buildInvoiceSection({
+    required String title,
+    required List<InvoiceItem> items,
+    required bool isWide,
+  }) {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -61,19 +79,47 @@ class InvoicePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          ...items.map((item) => buildInvoiceItem(item)),
+          isWide
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Column(
+                        children: items
+                            .sublist(0, (items.length / 2).ceil())
+                            .map((item) => buildInvoiceItem(item, isWide))
+                            .toList(),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Flexible(
+                      child: Column(
+                        children: items
+                            .sublist((items.length / 2).ceil())
+                            .map((item) => buildInvoiceItem(item, isWide))
+                            .toList(),
+                      ),
+                    ),
+                  ],
+                )
+              : Column(
+                  children: items.map((item) => buildInvoiceItem(item, isWide)).toList(),
+                ),
         ],
       ),
     );
   }
 
-  Widget buildInvoiceItem(InvoiceItem item) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
+  Widget buildInvoiceItem(InvoiceItem item, bool isWide) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            flex: isWide ? 3 : 5,
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -84,7 +130,9 @@ class InvoicePage extends StatelessWidget {
                 Text(item.amount),
               ],
             ),
-            CircleAvatar(
+          ),
+          Flexible(
+            child: CircleAvatar(
               backgroundColor: const Color(0xFF0075A2),
               child: IconButton(
                 icon: const Icon(Icons.file_download, color: Colors.white),
@@ -93,10 +141,9 @@ class InvoicePage extends StatelessWidget {
                 },
               ),
             ),
-          ],
-        ),
-        const Divider(thickness: 1, height: 20),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }

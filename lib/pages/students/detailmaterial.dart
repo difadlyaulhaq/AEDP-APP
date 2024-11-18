@@ -5,11 +5,15 @@ class Detail_material extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get screen width and height for responsive design
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(120.0), // Adjust the height as needed
+        preferredSize: Size.fromHeight(screenHeight * 0.15), // Adjust height dynamically
         child: ClipPath(
-          clipper: CustomAppBarClipper(), // Custom clipper for rounded corners
+          clipper: CustomAppBarClipper(),
           child: AppBar(
             automaticallyImplyLeading: true,
             flexibleSpace: Container(
@@ -18,8 +22,8 @@ class Detail_material extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Color.fromRGBO(30, 113, 162, 1), // Light blue color
-                    Color.fromRGBO(11, 42, 60, 1), // Darker blue color
+                    Color.fromRGBO(30, 113, 162, 1),
+                    Color.fromRGBO(11, 42, 60, 1),
                   ],
                 ),
               ),
@@ -41,27 +45,31 @@ class Detail_material extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
         child: ListView(
           children: [
-            _buildMaterialCard('New Material', 'Integers and Their Operations'),
-            _buildAssignmentCard('New Assignment', 'Exercise 2: Linear Equations in One Variable'),
-            _buildMaterialCard('New Material', 'The Pythagorean Theorem'),
-            _buildAssignmentCard('New Assignment', 'Exercise 1: Polygons: Triangles and Quadrilaterals'),
-            _buildMaterialCard('New Material', 'Elementary Geometry'),
+            _buildMaterialCard(context, 'New Material', 'Integers and Their Operations'),
+            _buildAssignmentCard(context, 'New Assignment', 'Exercise 2: Linear Equations in One Variable'),
+            _buildMaterialCard(context, 'New Material', 'The Pythagorean Theorem'),
+            _buildAssignmentCard(context, 'New Assignment', 'Exercise 1: Polygons: Triangles and Quadrilaterals'),
+            _buildMaterialCard(context, 'New Material', 'Elementary Geometry'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildMaterialCard(String title, String subtitle) {
+  Widget _buildMaterialCard(BuildContext context, String title, String subtitle) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+        padding: EdgeInsets.symmetric(
+          vertical: screenWidth * 0.04,
+          horizontal: screenWidth * 0.05,
+        ), // Dynamic padding
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -70,35 +78,39 @@ class Detail_material extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.045, // Dynamic font size
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: screenWidth * 0.02), // Dynamic spacing
                 Text(
                   subtitle,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.04,
                     color: Colors.black54,
                   ),
                 ),
               ],
             ),
-            const Icon(Icons.file_download, color: Colors.black54),
+            Icon(Icons.file_download, color: Colors.black54, size: screenWidth * 0.06), // Dynamic icon size
           ],
         ),
       ),
     );
   }
 
-  Widget _buildAssignmentCard(String title, String subtitle) {
+  Widget _buildAssignmentCard(BuildContext context, String title, String subtitle) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+        padding: EdgeInsets.symmetric(
+          vertical: screenWidth * 0.04,
+          horizontal: screenWidth * 0.05,
+        ), // Dynamic padding
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -107,22 +119,22 @@ class Detail_material extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.045, // Dynamic font size
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: screenWidth * 0.02), // Dynamic spacing
                 Text(
                   subtitle,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.04,
                     color: Colors.black54,
                   ),
                 ),
               ],
             ),
-            const Icon(Icons.file_download, color: Colors.black54),
+            Icon(Icons.file_download, color: Colors.black54, size: screenWidth * 0.06), // Dynamic icon size
           ],
         ),
       ),

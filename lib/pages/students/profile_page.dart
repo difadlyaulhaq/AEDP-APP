@@ -5,6 +5,9 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get the screen size using MediaQuery
+    var screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Center(
         child: SingleChildScrollView( // Enables scrolling
@@ -14,14 +17,14 @@ class ProfilePage extends StatelessWidget {
             children: [
               // Profile Picture and Name
               CircleAvatar(
-                radius: 50,
+                radius: screenWidth * 0.15, // Adjust size based on screen width
                 backgroundImage: AssetImage('assets/profile_picture.png'), // Update with your image asset
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 "Difa Dlyaul Haq",
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: screenWidth * 0.06, // Adjust font size based on screen width
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -37,10 +40,10 @@ class ProfilePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "Data",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: screenWidth * 0.05, // Adjust font size based on screen width
                         fontWeight: FontWeight.bold,
                         color: Colors.blue,
                       ),
@@ -48,27 +51,27 @@ class ProfilePage extends StatelessWidget {
                     const Divider(),
 
                     // User Information
-                    ListTile(
+                    const ListTile(
                       leading: Icon(Icons.person),
                       title: Text("Name:"),
                       subtitle: Text("Difa Dlyaul Haq"),
                     ),
-                    ListTile(
+                    const ListTile(
                       leading: Icon(Icons.email),
                       title: Text("Email:"),
                       subtitle: Text("difadlyaulhaq@students.ac.ae"),
                     ),
-                    ListTile(
+                    const ListTile(
                       leading: Icon(Icons.badge),
                       title: Text("Student ID:"),
                       subtitle: Text("24.1234.07"),
                     ),
-                    ListTile(
+                    const ListTile(
                       leading: Icon(Icons.person_outline),
                       title: Text("Parents Name:"),
                       subtitle: Text("Difa Dlyaul Haq Father"),
                     ),
-                    ListTile(
+                    const ListTile(
                       leading: Icon(Icons.email_outlined),
                       title: Text("Parent Email:"),
                       subtitle: Text("difasfather@gmail.com"),

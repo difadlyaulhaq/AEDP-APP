@@ -2,9 +2,28 @@
   "project_info": {
     "project_number": "40978170905",
     "project_id": "aedp-project-app",
-    "storage_bucket": "aedp-project-app.appspot.com"
+    "storage_bucket": "aedp-project-app.firebasestorage.app"
   },
   "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:40978170905:android:9c1f4d5552e2402d41d688",
+        "android_client_info": {
+          "package_name": "com.android.application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRRfJd6U4J8YM7i5K69-Bg7np7PhpdRLk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:40978170905:android:8fc1cf5878b8267c41d688",
