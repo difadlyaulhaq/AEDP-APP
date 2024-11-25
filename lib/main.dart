@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp.router(
         routerConfig: router, // Ensure your router configuration is correctly set up
-        title: 'Project AEDP', // Add a title for your app
+        title: 'AEDP', // Add a title for your app
         theme: ThemeData(
           primarySwatch: Colors.blue, // You can customize the theme
         ),
