@@ -3,6 +3,7 @@ import 'package:project_aedp/pages/students/student_home.dart';
 import 'package:project_aedp/pages/teacher/teacher_dashboard.dart';
 import '../pages/loginbyrole.dart';
 import '../pages/notfound.dart';
+import '../pages/otpverification.dart';
 import '../pages/selectrole.dart';
 import '../pages/sign_up_page.dart';
 import '../pages/splashscreen_page.dart';
@@ -53,7 +54,15 @@ final router = GoRouter(
         return SignupPageByRole(role: role);
       },
     ),
-
+      GoRoute(
+      path: '/verify-otp/:email/:role',
+      name: Routesnames.otpVerification,
+      builder: (context, state) {
+        final email = state.pathParameters['email']!;
+        final role = state.pathParameters['role']!;
+        return OTPVerificationPage(email: email, role: role);
+      },
+    ),
     // Student Home Route
     GoRoute(
       path: '/student-home',

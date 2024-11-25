@@ -1,71 +1,109 @@
+import 'dart:convert';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:crypto/crypto.dart';
 
 class AuthRepository {
-  final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
 
-  AuthRepository(this._firebaseAuth, this._firestore);
+  AuthRepository(this._firestore);
 
-  /// Sign up method with role assignment
+  /// Helper method: Fetch user document
+  Future<DocumentSnapshot<Map<String, dynamic>>> _getUserDoc(String email) async {
+    return await _firestore.collection('users').doc(email).get();
+  }
+
+  /// Generate OTP (6 digits)
+  String _generateOTP() {
+    final random = Random();
+    return List.generate(6, (_) => random.nextInt(10)).join();
+  }
+
+  /// Hash OTP using SHA-256
+  String _hashOTP(String otp) {
+    final bytes = utf8.encode(otp);
+    return sha256.convert(bytes).toString();
+  }
+
+  /// Sign up a user
   Future<void> signUp({
     required String email,
-    required String password,
     required String role,
   }) async {
     try {
-      // Ensure role is valid
-      const validRoles = ['admin', 'user', 'guest'];
-      if (!validRoles.contains(role)) {
-        throw Exception('Invalid role. Accepted roles are: $validRoles');
+      final userDoc = await _getUserDoc(email);
+
+      if (userDoc.exists) {
+        throw Exception('Email already registered.');
       }
 
-      // Create user with Firebase Authentication
-      UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      // Generate and hash OTP
+      final otp = _generateOTP();
+      final hashedOTP = _hashOTP(otp);
 
-      // Save user details and role in Firestore
-      await _firestore.collection('users').doc(userCredential.user?.uid).set({
+      // Save user data to Firestore
+      await _firestore.collection('users').doc(email).set({
         'email': email,
         'role': role,
+        'otp': hashedOTP,
+        'isVerified': false,
+        'createdAt': FieldValue.serverTimestamp(),
       });
+
+      // Mocked OTP sending (replace with real service)
+      //print('OTP for $email: $otp');
     } catch (e) {
-      throw Exception('Failed to create account: ${e.toString()}');
+      throw Exception('Failed to sign up: ${e.toString()}');
     }
   }
 
-  /// Login method with role verification
-  Future<String?> logIn({
+  /// Verify OTP
+  Future<void> verifyOTP({
     required String email,
-    required String password,
+    required String otp,
   }) async {
     try {
-      // Authenticate user with Firebase Authentication
-      UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final userDoc = await _getUserDoc(email);
 
-      // Fetch user role from Firestore
-      final userId = userCredential.user?.uid;
-      if (userId == null) {
-        throw Exception('User ID is null');
+      if (!userDoc.exists) {
+        throw Exception('User does not exist.');
       }
 
-      DocumentSnapshot<Map<String, dynamic>> userDoc =
-          await _firestore.collection('users').doc(userId).get();
+      final data = userDoc.data();
+      final hashedOTP = _hashOTP(otp);
 
-      if (userDoc.exists) {
-        final role = userDoc.data()?['role'];
-        if (role == null) {
-          throw Exception('Role is not assigned for this user.');
-        }
-        return role;
-      } else {
-        throw Exception('No user data found in Firestore.');
+      if (data?['otp'] != hashedOTP) {
+        throw Exception('Invalid OTP.');
       }
+
+      // Update user as verified
+      await _firestore.collection('users').doc(email).update({
+        'isVerified': true,
+        'otp': null, // Clear OTP after verification
+      });
+    } catch (e) {
+      throw Exception('Failed to verify OTP: ${e.toString()}');
+    }
+  }
+
+  /// Login user
+  Future<String?> logIn({
+    required String email,
+  }) async {
+    try {
+      final userDoc = await _getUserDoc(email);
+
+      if (!userDoc.exists) {
+        throw Exception('User does not exist.');
+      }
+
+      final data = userDoc.data();
+
+      if (data?['isVerified'] != true) {
+        throw Exception('Email is not verified.');
+      }
+
+      return data?['role'];
     } catch (e) {
       throw Exception('Failed to log in: ${e.toString()}');
     }

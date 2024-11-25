@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,9 +9,12 @@ import 'package:project_aedp/routes/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(const MyApp());
 }
 
@@ -26,14 +28,17 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthBloc>(
           create: (context) => AuthBloc(
             authRepository: AuthRepository(
-              FirebaseAuth.instance, // Pass FirebaseAuth instance
-              FirebaseFirestore.instance, // Pass FirebaseFirestore instance
+              FirebaseFirestore.instance, // Pass FirebaseFirestore instance only
             ),
           ),
         ),
       ],
       child: MaterialApp.router(
-        routerConfig: router,
+        routerConfig: router, // Ensure your router configuration is correctly set up
+        title: 'Project AEDP', // Add a title for your app
+        theme: ThemeData(
+          primarySwatch: Colors.blue, // You can customize the theme
+        ),
       ),
     );
   }
