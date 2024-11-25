@@ -6,7 +6,6 @@ import 'package:project_aedp/theme/theme.dart';
 
 import '../bloc/auth/auth_event.dart';
 import '../bloc/auth/auth_state.dart';
-
 class SignupPageByRole extends StatelessWidget {
   final String role;
 
@@ -24,13 +23,13 @@ class SignupPageByRole extends StatelessWidget {
           if (state is AuthSignupSuccess) {
             // Redirect based on the role after successful signup
             switch (role) {
-              case 'Student':
+              case 'Signup as Student':
                 context.go('/student-home');
                 break;
-              case 'Parent':
+              case 'Signup as Parent':
                 context.go('/parent-home');
                 break;
-              case 'Teacher':
+              case 'Signup as Teacher':
                 context.go('/teacher-dashboard');
                 break;
               default:
@@ -49,7 +48,7 @@ class SignupPageByRole extends StatelessWidget {
         child: Center(
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 60),
-            shrinkWrap: true, // Makes ListView adapt to its content size
+            shrinkWrap: true,
             children: [
               const SizedBox(height: 40),
               Image.asset(
@@ -78,80 +77,12 @@ class SignupPageByRole extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Email TextField
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: bluecolor,
-                    label: Text(
-                      "Email",
-                      style: whiteColorTextStyle.copyWith(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    prefixIcon: Icon(Icons.email, color: whiteColor),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                ),
-              ),
-
-              // Password TextField
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: TextField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: bluecolor,
-                    label: Text(
-                      "Password",
-                      style: whiteColorTextStyle.copyWith(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    prefixIcon: Icon(Icons.lock, color: whiteColor),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                ),
-              ),
-
-              // Confirm Password TextField
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: TextField(
-                  controller: confirmPasswordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: bluecolor,
-                    label: Text(
-                      "Confirm Password",
-                      style: whiteColorTextStyle.copyWith(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    prefixIcon: Icon(Icons.lock_outline, color: whiteColor),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                ),
-              ),
+              _buildTextField(emailController, "Email", Icons.email),
+              _buildTextField(passwordController, "Password", Icons.lock, isPassword: true),
+              _buildTextField(confirmPasswordController, "Confirm Password", Icons.lock_outline, isPassword: true),
 
               const SizedBox(height: 26),
 
-              // Signup Button
               SizedBox(
                 width: double.infinity,
                 height: 45,
@@ -201,6 +132,31 @@ class SignupPageByRole extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label, IconData icon, {bool isPassword = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: TextField(
+        controller: controller,
+        obscureText: isPassword,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: bluecolor,
+          label: Text(
+            label,
+            style: whiteColorTextStyle.copyWith(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          prefixIcon: Icon(icon, color: whiteColor),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
           ),
         ),
       ),

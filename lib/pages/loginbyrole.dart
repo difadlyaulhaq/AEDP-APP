@@ -20,15 +20,15 @@ class LoginPageByRole extends StatelessWidget {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthLoginSuccess) {
-            // Redirect based on the role after successful login
-            switch (state.role) {
-              case 'Signup as Student':
+            // Navigate based on the role after login success
+            switch (role) {
+              case 'Login as Student':
                 context.go('/student-home');
                 break;
-              case 'Parent':
-                context.go('/parentHomePage');
+              case 'Login as Parent':
+                context.go('/parent-home');
                 break;
-              case 'Signup as Teacher':
+              case 'Login as Teacher':
                 context.go('/teacher-dashboard');
                 break;
               default:
@@ -38,7 +38,6 @@ class LoginPageByRole extends StatelessWidget {
                 break;
             }
           } else if (state is AuthFailure) {
-            // Show error message on authentication failure
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Login failed: ${state.errorMessage}')),
             );
@@ -46,60 +45,68 @@ class LoginPageByRole extends StatelessWidget {
         },
         child: Center(
           child: ListView(
-            shrinkWrap: true,
             padding: const EdgeInsets.symmetric(horizontal: 60),
+            shrinkWrap: true,
             children: [
-              const SizedBox(height: 80),
-              Image.asset("assets/logo.png", width: 132, height: 131),
+              const SizedBox(height: 40),
+              Image.asset(
+                "assets/logo.png",
+                width: 132,
+                height: 131,
+              ),
               const SizedBox(height: 12),
-              Center(
-                child: Text(
-                  role,
-                  style: bluecolorTextstyle.copyWith(
-                    fontSize: 34,
-                    fontWeight: FontWeight.w800,
-                  ),
+              Text(
+                role,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: bluecolor,
                 ),
               ),
               const SizedBox(height: 8),
-              Center(
-                child: Text(
-                  "Login to continue using the app",
-                  style: bluecolorTextstyle.copyWith(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
+              Text(
+                "Login to your account to continue",
+                textAlign: TextAlign.center,
+                style: bluecolorTextstyle.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 24),
-              _buildTextField(
-                controller: emailController,
-                label: "email",
-                icon: Icons.person,
-                themeStyle: whiteColorTextStyle,
-              ),
-              const SizedBox(height: 12),
-              _buildTextField(
-                controller: passwordController,
-                label: "password",
-                icon: Icons.lock,
-                themeStyle: whiteColorTextStyle,
-                isPassword: true,
-              ),
+              const SizedBox(height: 20),
+
+              _buildTextField(emailController, "Email", Icons.email),
+              _buildTextField(passwordController, "Password", Icons.lock, isPassword: true),
+
               const SizedBox(height: 26),
+
               SizedBox(
                 width: double.infinity,
                 height: 45,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Dispatch login event to Bloc
+                    if (emailController.text.isEmpty || !emailController.text.contains('@')) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Please enter a valid email address.')),
+                      );
+                      return;
+                    }
+
+                    if (passwordController.text.isEmpty || passwordController.text.length < 6) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Password must be at least 6 characters.')),
+                      );
+                      return;
+                    }
+
+                    // Dispatch login event
                     context.read<AuthBloc>().add(
-                          AuthLoginRequested(
-                            email: emailController.text,
-                            password: passwordController.text,
-                            role: role,
-                          ),
-                        );
+                      AuthLoginRequested(
+                        email: emailController.text,
+                        password: passwordController.text,
+                        role: role,
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: bluecolor,
@@ -109,11 +116,10 @@ class LoginPageByRole extends StatelessWidget {
                   ),
                   child: Text(
                     'Login',
-                    style: whiteColorTextStyle.copyWith(fontSize: 15),
+                    style: whiteColorTextStyle.copyWith(fontSize: 16),
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
             ],
           ),
         ),
@@ -122,13 +128,7 @@ class LoginPageByRole extends StatelessWidget {
   }
 
   /// Helper method to build a text field
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    required TextStyle themeStyle,
-    bool isPassword = false,
-  }) {
+  Widget _buildTextField(TextEditingController controller, String label, IconData icon, {bool isPassword = false}) {
     return TextField(
       controller: controller,
       obscureText: isPassword,
@@ -137,7 +137,7 @@ class LoginPageByRole extends StatelessWidget {
         fillColor: bluecolor,
         label: Text(
           label,
-          style: themeStyle.copyWith(fontSize: 16, fontWeight: FontWeight.w700),
+          style: whiteColorTextStyle.copyWith(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         prefixIcon: Icon(icon, color: whiteColor),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart'; // Import GoRouter
 
-// Import router for navigation
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -42,7 +40,6 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo Image
             Image.asset(
               'assets/logo.png', // Replace with your actual image path
               width: 150,

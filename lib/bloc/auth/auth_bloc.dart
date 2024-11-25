@@ -11,8 +11,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSignupRequested>((event, emit) async {
       emit(AuthLoading());
       try {
-        await authRepository.signUp(email: event.email, role: event.role);
-        emit(AuthSignupSuccess(message: 'Signup successful. OTP has been sent to your email.'));
+        await authRepository.signUp(
+          email: event.email,
+          password: event.password,
+          role: event.role,
+        );
+        emit(AuthSignupSuccess(message: 'Signup successful.'));
       } catch (e) {
         emit(AuthFailure('Signup failed: ${e.toString()}'));
       }
@@ -22,25 +26,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLoginRequested>((event, emit) async {
       emit(AuthLoading());
       try {
-        final role = await authRepository.logIn(email: event.email);
+        final role = await authRepository.logIn(
+          email: event.email,
+          password: event.password,
+        );
         if (role != null) {
           emit(AuthLoginSuccess(role: role));
         } else {
-          emit(AuthFailure('Login failed: Email is not verified.'));
+          emit(AuthFailure('Login failed: Invalid credentials.'));
         }
       } catch (e) {
         emit(AuthFailure('Login failed: ${e.toString()}'));
-      }
-    });
-
-    // Handle OTP verification
-    on<AuthVerifyOTPRequested>((event, emit) async {
-      emit(AuthLoading());
-      try {
-        await authRepository.verifyOTP(email: event.email, otp: event.otp);
-        emit(AuthOTPVerificationSuccess(message: 'OTP verified successfully.'));
-      } catch (e) {
-        emit(AuthFailure('OTP verification failed: ${e.toString()}'));
       }
     });
   }
