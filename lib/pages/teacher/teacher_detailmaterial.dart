@@ -85,7 +85,6 @@ class TeacherDetailmaterial extends StatelessWidget {
                   _buildMaterialCard('New Material', 'Integers and Their Operations', screenWidth),
                   _buildAssignmentCard('New Assignment', 'Exercise 2: Linear Equations in One Variable', screenWidth),
                   _buildMaterialCard('New Material', 'The Pythagorean Theorem', screenWidth),
-                  _buildAssignmentCard('New Assignment', 'Exercise 1: Polygons: Triangles and Quadrilaterals', screenWidth),
                   _buildMaterialCard('New Material', 'Elementary Geometry', screenWidth),
                 ],
               ),

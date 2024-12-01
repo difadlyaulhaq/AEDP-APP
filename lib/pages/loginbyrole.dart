@@ -76,6 +76,7 @@ class LoginPageByRole extends StatelessWidget {
               const SizedBox(height: 20),
 
               _buildTextField(emailController, "Email", Icons.email),
+              const SizedBox(height: 12),
               _buildTextField(passwordController, "Password", Icons.lock, isPassword: true),
 
               const SizedBox(height: 26),
