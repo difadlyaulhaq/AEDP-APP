@@ -36,12 +36,12 @@ class AuthRepository {
 
       // Save user data to Firestore
       await _firestore.collection('users').doc(email).set({
-        'email': email,
-        'role': role,
-        'password': hashedPassword,  // Store the hashed password
-        'isVerified': false,  // By default, set as not verified
-        'createdAt': FieldValue.serverTimestamp(),
-      });
+      'email': email,
+      'role': role.toLowerCase().replaceAll('signup as ', ''), // Simpan role sebagai nilai standar
+      'password': hashedPassword,
+      'isVerified': false,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
 
     } catch (e) {
       throw Exception('Failed to sign up: ${e.toString()}');
@@ -49,7 +49,7 @@ class AuthRepository {
   }
 
   /// Login user
-  Future<String?> logIn({
+    Future<String?> logIn({
     required String email,
     required String password,
   }) async {
@@ -61,15 +61,13 @@ class AuthRepository {
       }
 
       final data = userDoc.data();
-
-      // Check if password matches the stored hash
       final hashedPassword = _hashPassword(password);
 
       if (data?['password'] != hashedPassword) {
         throw Exception('Invalid password.');
       }
 
-      // Return role if password matches
+      // Return the actual role
       return data?['role'];
     } catch (e) {
       throw Exception('Failed to log in: ${e.toString()}');

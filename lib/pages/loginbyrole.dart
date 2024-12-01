@@ -19,30 +19,34 @@ class LoginPageByRole extends StatelessWidget {
     return Scaffold(
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthLoginSuccess) {
-            // Navigate based on the role after login success
-            switch (role) {
-              case 'Login as Student':
-                context.go('/student-home');
-                break;
-              case 'Login as Parent':
-                context.go('/parent-home');
-                break;
-              case 'Login as Teacher':
-                context.go('/teacher-dashboard');
-                break;
-              default:
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Unknown role')),
-                );
-                break;
-            }
-          } else if (state is AuthFailure) {
+              if (state is AuthLoginSuccess) {
+        // Validate role
+        if (state.role != role.toLowerCase().replaceAll('login as ', '')) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Access denied: Incorrect role.')),
+          );
+          return;
+        }
+
+        // Navigate to the respective dashboard
+        switch (state.role) {
+          case 'student':
+            context.go('/student-home');
+            break;
+          case 'parent':
+            context.go('/parent-home');
+            break;
+          case 'teacher':
+            context.go('/teacher-dashboard');
+            break;
+          default:
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Login failed: ${state.errorMessage}')),
+              const SnackBar(content: Text('Unknown role')),
             );
-          }
-        },
+            break;
+        }
+      }
+    },
         child: Center(
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 60),

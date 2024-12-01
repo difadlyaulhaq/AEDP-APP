@@ -9,28 +9,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String selectedLoginRole = 'Login as Student'; // Default selected value for login dropdown
-  List<String> loginRoles = [
-    'Login as Student',
-    'Login as Parent',
-    'Login as Teacher'
-  ]; // Login dropdown options
+List<String> loginRoles = ['student', 'parent', 'teacher'];
+List<String> signupRoles = ['student', 'parent', 'teacher'];
 
-  String selectedSignupRole = 'Signup as Student'; // Default selected value for signup dropdown
-  List<String> signupRoles = [
-    'Signup as Student',
-    'Signup as Parent',
-    'Signup as Teacher'
-  ]; // Signup dropdown options
+String selectedLoginRole = 'student'; // Default value for login
+String selectedSignupRole = 'student'; // Default value for signup
 
   // Navigate to login page based on role
   void _navigateToLoginPage(String role) {
-    context.go('/login/$role'); // Include the role in the navigation
-  }
+  context.go('/login/$role'); // Role is now 'student', 'parent', or 'teacher'
+}
 
-  void _navigateToSignupPage(String role) {
-    context.go('/signup/$role'); // Modify path and pass the role for signup
-  }
+void _navigateToSignupPage(String role) {
+  context.go('/signup/$role'); // Role is now 'student', 'parent', or 'teacher'
+}
 
   @override
   Widget build(BuildContext context) {
@@ -56,28 +48,29 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: Colors.blue,
               ),
               child: DropdownButton<String>(
-                value: selectedLoginRole,
-                icon: const Icon(Icons.keyboard_arrow_down_outlined, color: Colors.white),
-                isExpanded: true,
-                dropdownColor: Colors.white,
-                underline: const SizedBox(),
-                style: const TextStyle(color: Colors.white, fontSize: 18),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedLoginRole = newValue!;
-                  });
-                  _navigateToLoginPage(selectedLoginRole); // GoRouter navigation for login
-                },
-                items: loginRoles.map<DropdownMenuItem<String>>((String role) {
-                  return DropdownMenuItem<String>(
-                    value: role,
-                    child: Text(
-                      role,
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                  );
-                }).toList(),
-              ),
+              value: selectedLoginRole,
+              icon: const Icon(Icons.keyboard_arrow_down_outlined, color: Colors.white),
+              isExpanded: true,
+              dropdownColor: Colors.white,
+              underline: const SizedBox(),
+              style: const TextStyle(color: Colors.white, fontSize: 18),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedLoginRole = newValue!;
+                });
+                _navigateToLoginPage(selectedLoginRole); // Navigate with selected role
+              },
+              items: loginRoles.map<DropdownMenuItem<String>>((String role) {
+                return DropdownMenuItem<String>(
+                  value: role, // Use standardized role value
+                  child: Text(
+                    'Login as ${role[0].toUpperCase()}${role.substring(1)}', // Human-readable label
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                );
+              }).toList(),
+            ),
+
             ),
             const SizedBox(height: 20),
 
@@ -91,28 +84,29 @@ class _LoginScreenState extends State<LoginScreen> {
                 border: Border.all(color: Colors.blue),
               ),
               child: DropdownButton<String>(
-                value: selectedSignupRole,
-                icon: const Icon(Icons.keyboard_arrow_down_outlined, color: Colors.blue),
-                isExpanded: true,
-                dropdownColor: Colors.white,
-                underline: const SizedBox(),
-                style: const TextStyle(color: Colors.blue, fontSize: 18),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedSignupRole = newValue!;
-                  });
-                  _navigateToSignupPage(selectedSignupRole); // GoRouter navigation for signup
-                },
-                items: signupRoles.map<DropdownMenuItem<String>>((String role) {
-                  return DropdownMenuItem<String>(
-                    value: role,
-                    child: Text(
-                      role,
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                  );
-                }).toList(),
-              ),
+              value: selectedSignupRole,
+              icon: const Icon(Icons.keyboard_arrow_down_outlined, color: Colors.blue),
+              isExpanded: true,
+              dropdownColor: Colors.white,
+              underline: const SizedBox(),
+              style: const TextStyle(color: Colors.blue, fontSize: 18),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedSignupRole = newValue!;
+                });
+                _navigateToSignupPage(selectedSignupRole); // Navigate with selected role
+              },
+              items: signupRoles.map<DropdownMenuItem<String>>((String role) {
+                return DropdownMenuItem<String>(
+                  value: role, // Use standardized role value
+                  child: Text(
+                    'Signup as ${role[0].toUpperCase()}${role.substring(1)}', // Human-readable label
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                );
+              }).toList(),
+            ),
+
             ),
           ],
         ),
