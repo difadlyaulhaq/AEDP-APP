@@ -1,43 +1,59 @@
 import 'package:flutter/material.dart';
 
-class Detail_material extends StatelessWidget {
-  const Detail_material({super.key});
+class DetailMaterial extends StatelessWidget {
+  const DetailMaterial({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Get screen width and height for responsive design
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(screenHeight * 0.15), // Adjust height dynamically
+        preferredSize: Size.fromHeight(screenHeight * 0.2), // Tinggi AppBar responsif
         child: ClipPath(
           clipper: CustomAppBarClipper(),
           child: AppBar(
             automaticallyImplyLeading: true,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color.fromRGBO(30, 113, 162, 1),
-                    Color.fromRGBO(11, 42, 60, 1),
-                  ],
+            flexibleSpace: Stack(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xFF1E70A0), // Biru terang
+                        Color(0xFF0B2A3C), // Biru gelap
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
                 ),
-              ),
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Icon(
+                    Icons.school,
+                    size: screenWidth * 0.3,
+                    color: Colors.white.withOpacity(0.1),
+                  ),
+                ),
+              ],
             ),
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.pushNamed(context, '/student_home'),
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+                size: screenWidth * 0.07,
+              ),
+              onPressed: () => Navigator.pop(context),
             ),
-            title: const Text(
-              'Math',
+            title: Text(
+              'Math Materials',
               style: TextStyle(
                 color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                fontSize: screenWidth * 0.06,
               ),
             ),
             centerTitle: true,
@@ -45,99 +61,118 @@ class Detail_material extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
+        padding: EdgeInsets.all(screenWidth * 0.04),
         child: ListView(
           children: [
-            _buildMaterialCard(context, 'New Material', 'Integers and Their Operations'),
-            _buildAssignmentCard(context, 'New Assignment', 'Exercise 2: Linear Equations in One Variable'),
-            _buildMaterialCard(context, 'New Material', 'The Pythagorean Theorem'),
-            _buildAssignmentCard(context, 'New Assignment', 'Exercise 1: Polygons: Triangles and Quadrilaterals'),
-            _buildMaterialCard(context, 'New Material', 'Elementary Geometry'),
+            _buildMaterialCard(
+              context,
+              title: 'New Material',
+              subtitle: 'Integers and Their Operations',
+              color: Colors.blue.shade100,
+              icon: Icons.book,
+            ),
+            _buildAssignmentCard(
+              context,
+              title: 'New Assignment',
+              subtitle: 'Exercise 2: Linear Equations',
+              color: Colors.orange.shade100,
+              icon: Icons.assignment,
+            ),
+            _buildMaterialCard(
+              context,
+              title: 'New Material',
+              subtitle: 'The Pythagorean Theorem',
+              color: Colors.blue.shade100,
+              icon: Icons.book,
+            ),
+            _buildAssignmentCard(
+              context,
+              title: 'New Assignment',
+              subtitle: 'Exercise 1: Geometry Basics',
+              color: Colors.orange.shade100,
+              icon: Icons.assignment,
+            ),
+            _buildMaterialCard(
+              context,
+              title: 'New Material',
+              subtitle: 'Elementary Geometry',
+              color: Colors.blue.shade100,
+              icon: Icons.book,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildMaterialCard(BuildContext context, String title, String subtitle) {
+  Widget _buildMaterialCard(BuildContext context,
+      {required String title,
+      required String subtitle,
+      required Color color,
+      required IconData icon}) {
     final screenWidth = MediaQuery.of(context).size.width;
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: screenWidth * 0.04,
-          horizontal: screenWidth * 0.05,
-        ), // Dynamic padding
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.045, // Dynamic font size
-                    fontWeight: FontWeight.bold,
+
+    return InkWell(
+      onTap: () {
+        // Implementasi saat kartu ditekan
+      },
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(screenWidth * 0.03),
+        ),
+        color: color,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: screenWidth * 0.04,
+            horizontal: screenWidth * 0.05,
+          ),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: Colors.blueAccent,
+                size: screenWidth * 0.1,
+              ),
+              SizedBox(width: screenWidth * 0.04),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.045,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                SizedBox(height: screenWidth * 0.02), // Dynamic spacing
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.04,
-                    color: Colors.black54,
+                  SizedBox(height: screenWidth * 0.02),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.04,
+                      color: Colors.black54,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Icon(Icons.file_download, color: Colors.black54, size: screenWidth * 0.06), // Dynamic icon size
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildAssignmentCard(BuildContext context, String title, String subtitle) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: screenWidth * 0.04,
-          horizontal: screenWidth * 0.05,
-        ), // Dynamic padding
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.045, // Dynamic font size
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: screenWidth * 0.02), // Dynamic spacing
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.04,
-                    color: Colors.black54,
-                  ),
-                ),
-              ],
-            ),
-            Icon(Icons.file_download, color: Colors.black54, size: screenWidth * 0.06), // Dynamic icon size
-          ],
-        ),
-      ),
+  Widget _buildAssignmentCard(BuildContext context,
+      {required String title,
+      required String subtitle,
+      required Color color,
+      required IconData icon}) {
+    return _buildMaterialCard(
+      context,
+      title: title,
+      subtitle: subtitle,
+      color: color,
+      icon: icon,
     );
   }
 }
@@ -147,9 +182,8 @@ class CustomAppBarClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     final path = Path();
     path.lineTo(0, size.height - 40);
-    path.quadraticBezierTo(0, size.height, 40, size.height);
-    path.lineTo(size.width - 40, size.height);
-    path.quadraticBezierTo(size.width, size.height, size.width, size.height - 40);
+    path.quadraticBezierTo(size.width / 2, size.height, size.width,
+        size.height - 40); // Desain lengkungan
     path.lineTo(size.width, 0);
     path.close();
     return path;

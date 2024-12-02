@@ -131,7 +131,7 @@ class DashboardStudentsHome extends StatelessWidget {
               _buildIconButton(context, Icons.book, "Materials", () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Student_MaterialPage()),
+                  MaterialPageRoute(builder: (context) => const StudentMaterialPage()),
                 );
               }),
               _buildIconButton(context, Icons.check_circle_outline, "Grades", () {
