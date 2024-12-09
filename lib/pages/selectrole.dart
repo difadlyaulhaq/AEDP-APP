@@ -114,7 +114,18 @@ String signupAsRoleText(BuildContext context, String role) {
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 90),
+                  child: Text(
+                    S.of(context).login,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
             // Login Dropdown button
             _buildRoleDropdown(
               context: context,
@@ -134,7 +145,18 @@ String signupAsRoleText(BuildContext context, String role) {
             ),
 
             const SizedBox(height: 20),
-
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 90),
+                  child: Text(
+                    S.of(context).signup,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+             const SizedBox(height: 10),
             // Signup Dropdown button
             _buildRoleDropdown(
               context: context,

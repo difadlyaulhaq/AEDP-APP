@@ -229,6 +229,196 @@ class S {
       args: [],
     );
   }
+
+  /// `Email`
+  String get emailLabel {
+    return Intl.message(
+      'Email',
+      name: 'emailLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password`
+  String get passwordLabel {
+    return Intl.message(
+      'Password',
+      name: 'passwordLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Login`
+  String get loginButton {
+    return Intl.message(
+      'Login',
+      name: 'loginButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid email address.`
+  String get invalidEmailMessage {
+    return Intl.message(
+      'Please enter a valid email address.',
+      name: 'invalidEmailMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password must be at least 6 characters.`
+  String get shortPasswordMessage {
+    return Intl.message(
+      'Password must be at least 6 characters.',
+      name: 'shortPasswordMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{role} Login`
+  String roleHeader(Object role) {
+    return Intl.message(
+      '$role Login',
+      name: 'roleHeader',
+      desc: '',
+      args: [role],
+    );
+  }
+
+  /// `Login to your account to continue`
+  String get loginSubtitle {
+    return Intl.message(
+      'Login to your account to continue',
+      name: 'loginSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Access denied: Incorrect role.`
+  String get accessDeniedMessage {
+    return Intl.message(
+      'Access denied: Incorrect role.',
+      name: 'accessDeniedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown role`
+  String get unknownRoleMessage {
+    return Intl.message(
+      'Unknown role',
+      name: 'unknownRoleMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Login failed: {errorMessage}`
+  String loginFailedMessage(Object errorMessage) {
+    return Intl.message(
+      'Login failed: $errorMessage',
+      name: 'loginFailedMessage',
+      desc: '',
+      args: [errorMessage],
+    );
+  }
+
+  /// `Access denied: Incorrect role.`
+  String get accessDeniedIncorrectRole {
+    return Intl.message(
+      'Access denied: Incorrect role.',
+      name: 'accessDeniedIncorrectRole',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown role`
+  String get unknownRole {
+    return Intl.message(
+      'Unknown role',
+      name: 'unknownRole',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Login failed`
+  String get loginFailed {
+    return Intl.message(
+      'Login failed',
+      name: 'loginFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Login to your account to continue`
+  String get loginPrompt {
+    return Intl.message(
+      'Login to your account to continue',
+      name: 'loginPrompt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email`
+  String get email {
+    return Intl.message(
+      'Email',
+      name: 'email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password`
+  String get password {
+    return Intl.message(
+      'Password',
+      name: 'password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid email address.`
+  String get invalidEmail {
+    return Intl.message(
+      'Please enter a valid email address.',
+      name: 'invalidEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password must be at least 6 characters.`
+  String get passwordRequirement {
+    return Intl.message(
+      'Password must be at least 6 characters.',
+      name: 'passwordRequirement',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Authenticating login request`
+  String get AuthLoginRequested {
+    return Intl.message(
+      'Authenticating login request',
+      name: 'AuthLoginRequested',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

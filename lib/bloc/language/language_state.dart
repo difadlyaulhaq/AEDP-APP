@@ -28,38 +28,33 @@ abstract class LanguageState {
 
 class LanguageInitial extends LanguageState {
   const LanguageInitial({
-    required Locale locale,
+    required super.locale,
   }) : super(
-    locale: locale,
     isLoading: false,
   );
 }
 
 class LanguageLoading extends LanguageState {
   const LanguageLoading({
-    required Locale locale,
+    required super.locale,
   }) : super(
-    locale: locale,
     isLoading: true,
   );
 }
 
 class LanguageChanged extends LanguageState {
   const LanguageChanged({
-    required Locale locale,
+    required super.locale,
   }) : super(
-    locale: locale,
     isLoading: false,
   );
 }
 
 class LanguageError extends LanguageState {
   const LanguageError({
-    required Locale locale,
-    required String error,
+    required super.locale,
+    required String super.error,
   }) : super(
-    locale: locale,
     isLoading: false,
-    error: error,
   );
 }

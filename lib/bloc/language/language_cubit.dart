@@ -11,7 +11,7 @@ class LanguageInitialState extends LanguageState {
 }
 
 class LanguageChangedState extends LanguageState {
-  const LanguageChangedState(Locale locale) : super(locale);
+  const LanguageChangedState(super.locale);
 }
 
 class LanguageCubit extends Cubit<LanguageState> {

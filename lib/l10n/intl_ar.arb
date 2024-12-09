@@ -1,5 +1,6 @@
 {
-  "@@locale": "ar", "select_your_role": "اختر دورك",
+  "@@locale": "ar",
+  "select_your_role": "اختر دورك",
   "login_as_role": "تسجيل الدخول كـ {role}",
   "signup_as_role": "إنشاء حساب كـ {role}",
   "language_english": "الإنجليزية",
@@ -16,5 +17,24 @@
   "parent": "والد/والدة",
   "teacher": "معلم",
   "hello": "مرحبًا",
-  "welcome": "مرحبًا بك في التطبيق!"
+  "welcome": "مرحبًا بك في التطبيق!",
+  "emailLabel": "البريد الإلكتروني",
+  "passwordLabel": "كلمة المرور",
+  "loginButton": "تسجيل الدخول",
+  "invalidEmailMessage": "يرجى إدخال عنوان بريد إلكتروني صالح.",
+  "shortPasswordMessage": "يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل.",
+  "roleHeader": "تسجيل الدخول كـ {role}",
+  "loginSubtitle": "قم بتسجيل الدخول إلى حسابك للمتابعة",
+  "accessDeniedMessage": "تم الرفض: دور غير صحيح.",
+  "unknownRoleMessage": "دور غير معروف",
+  "loginFailedMessage": "فشل تسجيل الدخول: {errorMessage}",
+  "accessDeniedIncorrectRole": "تم رفض الوصول: الدور غير صحيح.",
+  "unknownRole": "دور غير معروف",
+  "loginFailed": "فشل تسجيل الدخول",
+  "loginPrompt": "تسجيل الدخول إلى حسابك للمتابعة",
+  "email": "البريد الإلكتروني",
+  "password": "كلمة المرور",
+  "invalidEmail": "يرجى إدخال عنوان بريد إلكتروني صالح.",
+  "passwordRequirement": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.",
+  "AuthLoginRequested": "طلب تسجيل الدخول جار التحقق"
 }

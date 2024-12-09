@@ -20,28 +20,62 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'pt';
 
-  static String m0(role) => "Entrar como ${role}";
+  static String m0(errorMessage) => "Falha no login: ${errorMessage}";
 
-  static String m1(role) => "Registrar como ${role}";
+  static String m1(role) => "Entrar como ${role}";
+
+  static String m2(role) => "Login de ${role}";
+
+  static String m3(role) => "Registrar como ${role}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "AuthLoginRequested": MessageLookupByLibrary.simpleMessage(
+            "Solicitação de login em autenticação"),
+        "accessDeniedIncorrectRole": MessageLookupByLibrary.simpleMessage(
+            "Acesso negado: Função incorreta."),
+        "accessDeniedMessage": MessageLookupByLibrary.simpleMessage(
+            "Acesso negado: Função incorreta."),
+        "email": MessageLookupByLibrary.simpleMessage("E-mail"),
+        "emailLabel": MessageLookupByLibrary.simpleMessage("Email"),
         "hello": MessageLookupByLibrary.simpleMessage("Olá"),
+        "invalidEmail": MessageLookupByLibrary.simpleMessage(
+            "Por favor, insira um endereço de e-mail válido."),
+        "invalidEmailMessage": MessageLookupByLibrary.simpleMessage(
+            "Por favor, insira um endereço de email válido."),
         "language": MessageLookupByLibrary.simpleMessage("Idioma"),
         "language_arabic": MessageLookupByLibrary.simpleMessage("Árabe"),
         "language_english": MessageLookupByLibrary.simpleMessage("Inglês"),
         "language_portuguese":
             MessageLookupByLibrary.simpleMessage("Português"),
         "login": MessageLookupByLibrary.simpleMessage("Entrar"),
-        "login_as_role": m0,
+        "loginButton": MessageLookupByLibrary.simpleMessage("Entrar"),
+        "loginFailed": MessageLookupByLibrary.simpleMessage("Falha no login"),
+        "loginFailedMessage": m0,
+        "loginPrompt": MessageLookupByLibrary.simpleMessage(
+            "Faça login na sua conta para continuar"),
+        "loginSubtitle": MessageLookupByLibrary.simpleMessage(
+            "Faça login na sua conta para continuar"),
+        "login_as_role": m1,
         "parent": MessageLookupByLibrary.simpleMessage("Pai/Mãe"),
+        "password": MessageLookupByLibrary.simpleMessage("Senha"),
+        "passwordLabel": MessageLookupByLibrary.simpleMessage("Senha"),
+        "passwordRequirement": MessageLookupByLibrary.simpleMessage(
+            "A senha deve ter pelo menos 6 caracteres."),
+        "roleHeader": m2,
         "select_role": MessageLookupByLibrary.simpleMessage("Escolher o papel"),
         "select_your_role":
             MessageLookupByLibrary.simpleMessage("Selecione o seu papel"),
+        "shortPasswordMessage": MessageLookupByLibrary.simpleMessage(
+            "A senha deve ter pelo menos 6 caracteres."),
         "signup": MessageLookupByLibrary.simpleMessage("Cadastrar-se"),
-        "signup_as_role": m1,
+        "signup_as_role": m3,
         "student": MessageLookupByLibrary.simpleMessage("Estudante"),
         "teacher": MessageLookupByLibrary.simpleMessage("Professor"),
+        "unknownRole":
+            MessageLookupByLibrary.simpleMessage("Função desconhecida"),
+        "unknownRoleMessage":
+            MessageLookupByLibrary.simpleMessage("Função desconhecida"),
         "welcome":
             MessageLookupByLibrary.simpleMessage("Bem-vindo ao aplicativo!")
       };
