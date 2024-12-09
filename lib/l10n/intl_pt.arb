@@ -1,0 +1,18 @@
+{
+  "@@locale": "pt",
+  "select_your_role": "Selecione o seu papel",
+  "login_as_role": "Entrar como {role}",
+  "signup_as_role": "Registrar como {role}",
+  "language_english": "Inglês",
+  "language_portuguese": "Português",
+  "language_arabic": "Árabe",
+  "login": "Entrar",
+  "signup": "Cadastrar-se",
+  "select_role": "Escolher o papel",
+  "language": "Idioma",
+  "student": "Estudante",
+  "parent": "Pai/Mãe",
+  "teacher": "Professor",
+  "hello": "Olá",
+  "welcome": "Bem-vindo ao aplicativo!"
+}

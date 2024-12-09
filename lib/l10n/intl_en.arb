@@ -1,0 +1,21 @@
+{
+  "@@locale": "en",
+  "select_your_role": "Select your role",
+  "login_as_role": "Login as {role}",
+  "signup_as_role": "Signup as {role}",
+  "language_english": "English",
+  "language_portuguese": "Portuguese",
+  "language_arabic": "Arabic",
+  "role_student": "Student",
+  "role_parent": "Parent",
+  "role_teacher": "Teacher",
+  "login": "Login",
+  "signup": "Sign Up",
+  "select_role": "Select Role",
+  "language": "Language",
+  "student": "Student",
+  "parent": "Parent",
+  "teacher": "Teacher",
+  "hello": "Hello",
+  "welcome": "Welcome to the app!"
+}

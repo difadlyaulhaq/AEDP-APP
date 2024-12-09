@@ -1,0 +1,20 @@
+{
+  "@@locale": "ar", "select_your_role": "اختر دورك",
+  "login_as_role": "تسجيل الدخول كـ {role}",
+  "signup_as_role": "إنشاء حساب كـ {role}",
+  "language_english": "الإنجليزية",
+  "language_portuguese": "البرتغالية",
+  "language_arabic": "العربية",
+  "role_student": "طالب",
+  "role_parent": "والد",
+  "role_teacher": "معلم",
+  "login": "تسجيل الدخول",
+  "signup": "التسجيل",
+  "select_role": "اختيار الدور",
+  "language": "اللغة",
+  "student": "طالب",
+  "parent": "والد/والدة",
+  "teacher": "معلم",
+  "hello": "مرحبًا",
+  "welcome": "مرحبًا بك في التطبيق!"
+}
