@@ -254,9 +254,9 @@ class TeacherDetailMaterial extends StatelessWidget {
                     if (titleController.text.isNotEmpty &&
                         descriptionController.text.isNotEmpty &&
                         filePath != null) {
-                      print('Title: ${titleController.text}');
-                      print('Description: ${descriptionController.text}');
-                      print('File Path: $filePath');
+                      // print('Title: ${titleController.text}');
+                      // print('Description: ${descriptionController.text}');
+                      // print('File Path: $filePath');
                       Navigator.pop(context);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(

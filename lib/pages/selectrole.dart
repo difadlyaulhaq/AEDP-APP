@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -12,15 +13,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Roles for login and signup
-  final List<String> loginRoles = ['student', 'parent', 'teacher'];
-  final List<String> signupRoles = ['student', 'parent', 'teacher'];
+  final List<String> roles = ['student', 'parent', 'teacher'];
+  String selectedLoginRole = 'student';
+  String selectedSignupRole = 'student';
 
-  String selectedLoginRole = 'student'; // Default value for login
-  String selectedSignupRole = 'student'; // Default value for signup
-
-  // Localized role text for the dropdown
-  String localizedRoleText(BuildContext context, String role) {
+  String getLocalizedRole(BuildContext context, String role) {
     switch (role) {
       case 'student':
         return S.of(context).role_student;
@@ -29,37 +26,27 @@ class _LoginScreenState extends State<LoginScreen> {
       case 'teacher':
         return S.of(context).role_teacher;
       default:
-        return S.of(context).role_student; // Default fallback
+        return S.of(context).role_student;
     }
   }
 
-  // Login as role text with localized role
-// Login as role text with localized role
-String loginAsRoleText(BuildContext context, String role) {
-  final String template = S.of(context).login_as_role(role); // Call the function to get the string
-  return template.replaceFirst("{role}", localizedRoleText(context, role)); // Replace placeholder with actual role
-}
+  String getLoginAsText(BuildContext context, String role) =>
+      S.of(context).login_as_role(getLocalizedRole(context, role));
 
-// Signup as role text with localized role
-String signupAsRoleText(BuildContext context, String role) {
-  final String template = S.of(context).signup_as_role(role); // Call the function to get the string
-  return template.replaceFirst("{role}", localizedRoleText(context, role)); // Replace placeholder with actual role
-}
+  String getSignupAsText(BuildContext context, String role) =>
+      S.of(context).signup_as_role(getLocalizedRole(context, role));
 
+  void navigateToLogin(String role) => context.go('/login/$role');
 
-  // Navigate to login page based on role
-  void _navigateToLoginPage(String role) {
-    context.go('/login/$role');
-  }
-
-  // Navigate to signup page based on role
-  void _navigateToSignupPage(String role) {
-    context.go('/signup/$role');
-  }
+  void navigateToSignup(String role) => context.go('/signup/$role');
 
   @override
   Widget build(BuildContext context) {
     final languageCubit = context.read<LanguageCubit>();
+    final textDirection = ui.TextDirection.rtl ==
+            Directionality.of(context) // Check if current locale is RTL
+        ? TextAlign.right
+        : TextAlign.left;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -67,113 +54,63 @@ String signupAsRoleText(BuildContext context, String role) {
         elevation: 0,
         backgroundColor: Colors.white,
         actions: [
-          DropdownButton<String>(
-            value: Localizations.localeOf(context).languageCode,
-            icon: const Icon(Icons.language, color: Colors.blue),
-            underline: const SizedBox(),
-            onChanged: (String? newValue) {
-              if (newValue != null) {
-                languageCubit.changeLanguage(Locale(newValue));
-              }
-            },
-            items: [
-              DropdownMenuItem(
-                value: 'en',
-                child: Text(S.of(context).language_english,
-                    style: const TextStyle(color: Colors.black)),
-              ),
-              DropdownMenuItem(
-                value: 'pt',
-                child: Text(S.of(context).language_portuguese,
-                    style: const TextStyle(color: Colors.black)),
-              ),
-              DropdownMenuItem(
-                value: 'ar',
-                child: Text(S.of(context).language_arabic,
-                    style: const TextStyle(color: Colors.black)),
-              ),
-            ],
-          ),
+          _buildLanguageDropdown(context, languageCubit),
         ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo
             Image.asset(
-              'assets/logo.png', // Replace with your actual image path
+              'assets/logo.png',
               width: 150,
               height: 150,
             ),
             const SizedBox(height: 30),
-
-            // Localized text below the logo
             Text(
               S.of(context).select_your_role,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 90),
-                  child: Text(
-                    S.of(context).login,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: _buildSectionTitle(context, S.of(context).login, textDirection),
             ),
             const SizedBox(height: 10),
-            // Login Dropdown button
             _buildRoleDropdown(
               context: context,
-              label: loginAsRoleText(context, selectedLoginRole), // Pass the correct arguments here
-              roles: loginRoles,
+              label: getLoginAsText(context, selectedLoginRole),
               selectedRole: selectedLoginRole,
-              color: Colors.blue,
-              textColor: Colors.white,
-              onChanged: (String? newValue) {
-                if (newValue != null) {
+              onChanged: (role) {
+                if (role != null) {
                   setState(() {
-                    selectedLoginRole = newValue;
+                    selectedLoginRole = role;
                   });
-                  _navigateToLoginPage(newValue);
+                  navigateToLogin(role);
                 }
               },
             ),
-
             const SizedBox(height: 20),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 90),
-                  child: Text(
-                    S.of(context).signup,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: _buildSectionTitle(context, S.of(context).signup, textDirection),
             ),
-             const SizedBox(height: 10),
-            // Signup Dropdown button
+            const SizedBox(height: 10),
             _buildRoleDropdown(
               context: context,
-              label: signupAsRoleText(context, selectedSignupRole), // Pass the correct arguments here
-              roles: signupRoles,
+              label: getSignupAsText(context, selectedSignupRole),
               selectedRole: selectedSignupRole,
+              onChanged: (role) {
+                if (role != null) {
+                  setState(() {
+                    selectedSignupRole = role;
+                  });
+                  navigateToSignup(role);
+                }
+              },
               color: Colors.white,
               textColor: Colors.blue,
               borderColor: Colors.blue,
-              onChanged: (String? newValue) {
-                if (newValue != null) {
-                  setState(() {
-                    selectedSignupRole = newValue;
-                  });
-                  _navigateToSignupPage(newValue);
-                }
-              },
             ),
           ],
         ),
@@ -181,15 +118,44 @@ String signupAsRoleText(BuildContext context, String role) {
     );
   }
 
+  Widget _buildLanguageDropdown(BuildContext context, LanguageCubit cubit) {
+    return DropdownButton<String>(
+      value: Localizations.localeOf(context).languageCode,
+      icon: const Icon(Icons.language, color: Colors.blue),
+      underline: const SizedBox(),
+      onChanged: (String? newValue) {
+        if (newValue != null) {
+          cubit.changeLanguage(Locale(newValue));
+        }
+      },
+      items: [
+        DropdownMenuItem(
+          value: 'en',
+          child: Text(S.of(context).language_english,
+              style: const TextStyle(color: Colors.black)),
+        ),
+        DropdownMenuItem(
+          value: 'pt',
+          child: Text(S.of(context).language_portuguese,
+              style: const TextStyle(color: Colors.black)),
+        ),
+        DropdownMenuItem(
+          value: 'ar',
+          child: Text(S.of(context).language_arabic,
+              style: const TextStyle(color: Colors.black)),
+        ),
+      ],
+    );
+  }
+
   Widget _buildRoleDropdown({
     required BuildContext context,
     required String label,
-    required List<String> roles,
     required String selectedRole,
-    required Color color,
-    required Color textColor,
-    Color? borderColor,
     required ValueChanged<String?> onChanged,
+    Color color = Colors.blue,
+    Color textColor = Colors.white,
+    Color? borderColor,
   }) {
     return Container(
       width: 250,
@@ -203,20 +169,37 @@ String signupAsRoleText(BuildContext context, String role) {
         value: selectedRole,
         icon: Icon(Icons.keyboard_arrow_down_outlined, color: textColor),
         isExpanded: true,
-        dropdownColor: Colors.white,
         underline: const SizedBox(),
         style: TextStyle(color: textColor, fontSize: 18),
         onChanged: onChanged,
-        items: roles.map<DropdownMenuItem<String>>((String role) {
+        items: roles.map((role) {
           return DropdownMenuItem<String>(
             value: role,
             child: Text(
-              localizedRoleText(context, role), // Display localized role text
+              getLocalizedRole(context, role),
               style: const TextStyle(color: Colors.black),
             ),
           );
         }).toList(),
       ),
+    );
+  }
+
+  Widget _buildSectionTitle(
+      BuildContext context, String title, TextAlign align) {
+    return Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Text(
+              title,
+              textAlign: align,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
