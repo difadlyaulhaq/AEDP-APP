@@ -15,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final List<String> roles = ['student', 'parent', 'teacher'];
   String selectedLoginRole = 'student';
-  String selectedSignupRole = 'student';
+  // String selectedSignupRole = 'student';
 
   String getLocalizedRole(BuildContext context, String role) {
     switch (role) {
@@ -33,8 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
   String getLoginAsText(BuildContext context, String role) =>
       S.of(context).login_as_role(getLocalizedRole(context, role));
 
-  String getSignupAsText(BuildContext context, String role) =>
-      S.of(context).signup_as_role(getLocalizedRole(context, role));
+  // String getSignupAsText(BuildContext context, String role) =>
+  //     S.of(context).signup_as_role(getLocalizedRole(context, role));
 
   void navigateToLogin(String role) => context.go('/login/$role');
 
@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final languageCubit = context.read<LanguageCubit>();
     final textDirection = ui.TextDirection.rtl ==
-            Directionality.of(context) // Check if current locale is RTL
+            Directionality.of(context) 
         ? TextAlign.right
         : TextAlign.left;
 
@@ -71,12 +71,9 @@ class _LoginScreenState extends State<LoginScreen> {
               S.of(context).select_your_role,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: _buildSectionTitle(context, S.of(context).login, textDirection),
-            ),
             const SizedBox(height: 10),
+            // _buildSectionTitle(context, S.of(context).login, textDirection),
+            // const SizedBox(height: 10),
             _buildRoleDropdown(
               context: context,
               label: getLoginAsText(context, selectedLoginRole),
@@ -90,28 +87,28 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
             ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: _buildSectionTitle(context, S.of(context).signup, textDirection),
-            ),
-            const SizedBox(height: 10),
-            _buildRoleDropdown(
-              context: context,
-              label: getSignupAsText(context, selectedSignupRole),
-              selectedRole: selectedSignupRole,
-              onChanged: (role) {
-                if (role != null) {
-                  setState(() {
-                    selectedSignupRole = role;
-                  });
-                  navigateToSignup(role);
-                }
-              },
-              color: Colors.white,
-              textColor: Colors.blue,
-              borderColor: Colors.blue,
-            ),
+            // const SizedBox(height: 20),
+            // Padding(
+            //   padding: const EdgeInsets.all(10),
+            //   child: _buildSectionTitle(context, S.of(context).signup, textDirection),
+            // ),
+            // const SizedBox(height: 10),
+            // _buildRoleDropdown(
+            //   context: context,
+            //   label: getSignupAsText(context, selectedSignupRole),
+            //   selectedRole: selectedSignupRole,
+            //   onChanged: (role) {
+            //     if (role != null) {
+            //       setState(() {
+            //         selectedSignupRole = role;
+            //       });
+            //       navigateToSignup(role);
+            //     }
+            //   },
+            //   color: Colors.white,
+            //   textColor: Colors.blue,
+            //   borderColor: Colors.blue,
+            // ),
           ],
         ),
       ),

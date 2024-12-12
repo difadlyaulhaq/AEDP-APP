@@ -3,9 +3,9 @@ import 'package:project_aedp/pages/students/student_home.dart';
 import 'package:project_aedp/pages/teacher/teacher_dashboard.dart';
 import '../pages/loginbyrole.dart';
 import '../pages/notfound.dart';
-import '../pages/otpverification.dart';
+// import '../pages/otpverification.dart';
 import '../pages/selectrole.dart';
-import '../pages/sign_up_page.dart';
+// import '../pages/sign_up_page.dart';
 import '../pages/splashscreen_page.dart';
 
 part 'router_name.dart';
@@ -14,7 +14,7 @@ abstract class RoutesNames {
   static const splash = 'splash';
   static const selectRole = 'selectRole';
   static const login = 'login';
-  static const signup = 'signup';
+  // static const signup = 'signup';
   static const studentHome = 'studentHome';
   static const teacherDashboard = 'teacherDashboard';
 }
@@ -46,23 +46,23 @@ final router = GoRouter(
     ),
 
     // Signup Page with Role Route
-    GoRoute(
-      path: '/signup/:role',
-      name: RoutesNames.signup,
-      builder: (context, state) {
-        final role = state.pathParameters['role']!;
-        return SignupPageByRole(role: role);
-      },
-    ),
-      GoRoute(
-      path: '/verify-otp/:email/:role',
-      name: Routesnames.otpVerification,
-      builder: (context, state) {
-        final email = state.pathParameters['email']!;
-        final role = state.pathParameters['role']!;
-        return OTPVerificationPage(email: email, role: role);
-      },
-    ),
+    // GoRoute(
+    //   path: '/signup/:role',
+    //   name: RoutesNames.signup,
+    //   builder: (context, state) {
+    //     final role = state.pathParameters['role']!;
+    //     return SignupPageByRole(role: role);
+    //   },
+    // ),
+    //   GoRoute(
+    //   path: '/verify-otp/:email/:role',
+    //   name: Routesnames.otpVerification,
+    //   builder: (context, state) {
+    //     final email = state.pathParameters['email']!;
+    //     final role = state.pathParameters['role']!;
+    //     return OTPVerificationPage(email: email, role: role);
+    //   },
+    // ),
     // Student Home Route
     GoRoute(
       path: '/student-home',
