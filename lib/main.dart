@@ -2,13 +2,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'package:project_aedp/bloc/auth/auth_bloc.dart';
 import 'package:project_aedp/bloc/auth/auth_repository.dart';
 import 'package:project_aedp/bloc/schedule/schedule_bloc.dart';
+import 'package:project_aedp/bloc/teacher_materi/material_event.dart';
+import 'package:project_aedp/bloc/teacher_materi/teacher_bloc.dart';
+import 'package:project_aedp/bloc/language/language_cubit.dart';
+
 import 'package:project_aedp/firebase_options.dart';
 import 'package:project_aedp/routes/router.dart';
-import 'package:project_aedp/bloc/language/language_cubit.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n.dart';
 
 Future<void> main() async {
@@ -19,14 +23,14 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Upload schedule data once
-  await uploadScheduleData();
+  // Upload default schedule data to Firestore
+  await _uploadScheduleData();
 
   runApp(const MyApp());
 }
 
-// Fungsi untuk mengunggah jadwal ke Firestore
-Future<void> uploadScheduleData() async {
+// Fungsi untuk mengunggah data jadwal hanya jika belum ada di Firestore
+Future<void> _uploadScheduleData() async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   final Map<String, List<Map<String, String>>> scheduleData = {
@@ -58,16 +62,15 @@ Future<void> uploadScheduleData() async {
     final day = entry.key;
     final schedule = entry.value;
 
-    // Periksa apakah data sudah ada di Firestore
     final docSnapshot = await firestore.collection('schedules').doc(day).get();
 
-    if (docSnapshot.exists) {
-      print('$day already in firestore, upload skip');
-    } else {
+    if (!docSnapshot.exists) {
       await firestore.collection('schedules').doc(day).set({
         'schedule': schedule,
       });
       print('$day successfully uploaded.');
+    } else {
+      print('$day already in Firestore, upload skipped.');
     }
   }
 }
@@ -88,18 +91,18 @@ class MyApp extends StatelessWidget {
           create: (context) => LanguageCubit(),
         ),
         BlocProvider<ScheduleBloc>(
-        create: (context) => ScheduleBloc(firestore: FirebaseFirestore.instance),
-      ),
-
+          create: (context) => ScheduleBloc(firestore: FirebaseFirestore.instance),
+        ),
+        BlocProvider<MaterialBloc>(
+          create: (context) => MaterialBloc()..add(FetchMaterials()),
+        ),
       ],
       child: BlocBuilder<LanguageCubit, LanguageState>(
         builder: (context, state) {
           return MaterialApp.router(
             routerConfig: router,
             title: 'AEDP',
-            locale: state is LanguageChangedState
-                ? state.locale
-                : const Locale('en'),
+            locale: state is LanguageChangedState ? state.locale : const Locale('en'),
             supportedLocales: S.delegate.supportedLocales,
             localizationsDelegates: const [
               S.delegate,
