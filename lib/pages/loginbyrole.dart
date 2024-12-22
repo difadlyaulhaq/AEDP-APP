@@ -30,65 +30,72 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
   Widget build(BuildContext context) {
    final localization = S.of(context);
 
-    return Scaffold(
-      body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is AuthLoginSuccess) {
-            if (state.role != widget.role.toLowerCase()) {
-              _showSnackBar(S.of(context).accessDeniedIncorrectRole);
-              return;
+    return WillPopScope(
+    onWillPop: () async {
+    
+      context.go('/select-role');
+      return false; // Mencegah pop default
+    },
+      child: Scaffold(
+        body: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthLoginSuccess) {
+              if (state.role != widget.role.toLowerCase()) {
+                _showSnackBar(S.of(context).accessDeniedIncorrectRole);
+                return;
+              }
+      
+              switch (state.role) {
+                case 'student':
+                  context.go('/student-home');
+                  break;
+                case 'parent':
+                  context.go('/parent-home');
+                  break;
+                case 'teacher':
+                  context.go('/teacher-dashboard');
+                  break;
+                default:
+                  _showSnackBar(localization.unknownRole);
+                  break;
+              }
+            } else if (state is AuthFailure) {
+              _showSnackBar('${localization.loginFailed}: ${state.errorMessage}');
             }
-
-            switch (state.role) {
-              case 'student':
-                context.go('/student-home');
-                break;
-              case 'parent':
-                context.go('/parent-home');
-                break;
-              case 'teacher':
-                context.go('/teacher-dashboard');
-                break;
-              default:
-                _showSnackBar(localization.unknownRole);
-                break;
-            }
-          } else if (state is AuthFailure) {
-            _showSnackBar('${localization.loginFailed}: ${state.errorMessage}');
-          }
-        },
-        child: Center(
-          child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 60),
-            shrinkWrap: true,
-            children: [
-              const SizedBox(height: 40),
-              Image.asset("assets/logo.png", width: 132, height: 131),
-              const SizedBox(height: 12),
-              Text(widget.role, textAlign: TextAlign.center, style: _headerStyle()),
-              const SizedBox(height: 8),
-              Text(localization.loginPrompt, textAlign: TextAlign.center, style: _subHeaderStyle()),
-              const SizedBox(height: 20),
-              _buildTextField(emailController, localization.email, Icons.email),
-              const SizedBox(height: 12),
-              _buildPasswordField(localization.password),
-              const SizedBox(height: 26),
-              _buildActionButton(localization.login, () {
-                if (emailController.text.isEmpty || !emailController.text.contains('@')) {
-                  _showSnackBar(localization.invalidEmail);
-                  return;
-                }
-                if (passwordController.text.isEmpty || passwordController.text.length < 6) {
-                  _showSnackBar(localization.passwordRequirement);
-                  return;
-                }
-                context.read<AuthBloc>().add(AuthLoginRequested(
-                      email: emailController.text,
-                      password: passwordController.text,
-                      role: widget.role,
-                    ));
-              }),
-            ],
+          },
+          child: Center(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+              shrinkWrap: true,
+              children: [
+                const SizedBox(height: 40),
+                Image.asset("assets/logo.png", width: 132, height: 131),
+                const SizedBox(height: 12),
+                Text(widget.role, textAlign: TextAlign.center, style: _headerStyle()),
+                const SizedBox(height: 8),
+                Text(localization.loginPrompt, textAlign: TextAlign.center, style: _subHeaderStyle()),
+                const SizedBox(height: 20),
+                _buildTextField(emailController, localization.email, Icons.email),
+                const SizedBox(height: 12),
+                _buildPasswordField(localization.password),
+                const SizedBox(height: 26),
+                _buildActionButton(localization.login, () {
+                  if (emailController.text.isEmpty || !emailController.text.contains('@')) {
+                    _showSnackBar(localization.invalidEmail);
+                    return;
+                  }
+                  if (passwordController.text.isEmpty || passwordController.text.length < 6) {
+                    _showSnackBar(localization.passwordRequirement);
+                    return;
+                  }
+                  context.read<AuthBloc>().add(AuthLoginRequested(
+                        email: emailController.text,
+                        password: passwordController.text,
+                        role: widget.role,
+                      ));
+                }),
+              ],
+            ),
           ),
         ),
       ),
