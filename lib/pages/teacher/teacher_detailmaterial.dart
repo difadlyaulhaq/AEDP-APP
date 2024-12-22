@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'; 
-import 'package:project_aedp/pages/teacher/inputgrade.dart';
 import 'package:project_aedp/pages/teacher/teacher_dashboard.dart';
 import '../../bloc/teacher_materi/teacher_bloc.dart';
 import '../../bloc/teacher_materi/material_event.dart';
 import '../../bloc/teacher_materi/material_state.dart' as teacher_material_state; // Aliased import
 import '../../bloc/teacher_materi/material_model.dart';
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TeacherDetailMaterial extends StatelessWidget {
   const TeacherDetailMaterial({super.key});
@@ -90,7 +91,7 @@ class TeacherDetailMaterial extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
               Expanded(
-                child: BlocBuilder<MaterialBloc, teacher_material_state.MaterialState>( // Using alias here
+                child: BlocBuilder<MaterialBloc, teacher_material_state.MaterialState>(
                   builder: (context, state) {
                     if (state is teacher_material_state.MaterialLoading) {
                       return const Center(child: CircularProgressIndicator());
@@ -102,16 +103,18 @@ class TeacherDetailMaterial extends StatelessWidget {
                           return _buildMaterialCard(
                             material.title,
                             material.description,
+                            material.fileLink, // Pass fileLink here
                             screenWidth,
                           );
                         },
                       );
                     } else if (state is teacher_material_state.MaterialError) {
-                      return Center(child: Text('Error: ${state.errorMessage}')); // Use correct property
+                      return Center(child: Text('Error: ${state.errorMessage}'));
                     }
                     return const Center(child: Text('No materials available.'));
                   },
-                ),
+                )
+
               ),
             ],
           ),
@@ -120,45 +123,64 @@ class TeacherDetailMaterial extends StatelessWidget {
     );
   }
 
-  Widget _buildMaterialCard(String title, String subtitle, double screenWidth) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+Widget _buildMaterialCard(String title, String subtitle, String fileLink, double screenWidth) {
+  Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $url';
+    }
+  }
+
+  return Card(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15),
+    ),
+    child: Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: 16.0,
+        horizontal: screenWidth * 0.05,
       ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: 16.0,
-          horizontal: screenWidth * 0.05,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.04,
-                    fontWeight: FontWeight.bold,
-                  ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: screenWidth * 0.04,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: screenWidth * 0.035,
+                  color: Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 4),
+              GestureDetector(
+                onTap: () => _launchUrl(fileLink),
+                child: Text(
+                  fileLink,
                   style: TextStyle(
                     fontSize: screenWidth * 0.035,
-                    color: Colors.black54,
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
                   ),
                 ),
-              ],
-            ),
-            const Icon(Icons.file_download, color: Colors.black54),
-          ],
-        ),
+              ),
+            ],
+          ),
+          const Icon(Icons.file_download, color: Colors.black54),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   void _showUploadDialog(BuildContext context, String title) {
     final TextEditingController titleController = TextEditingController();

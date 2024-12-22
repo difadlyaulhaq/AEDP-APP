@@ -14,7 +14,7 @@ import 'package:project_aedp/bloc/language/language_cubit.dart';
 import 'package:project_aedp/firebase_options.dart';
 import 'package:project_aedp/routes/router.dart';
 import 'generated/l10n.dart';
-
+  
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

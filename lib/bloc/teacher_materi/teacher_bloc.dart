@@ -9,18 +9,21 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   MaterialBloc() : super(MaterialLoading()) {
-    on<FetchMaterials>((event, emit) async {
-      try {
-        emit(MaterialLoading());
-        final snapshot = await firestore.collection('materials').get();
-        final materials = snapshot.docs
-            .map((doc) => MaterialModel.fromMap(doc.id, doc.data()))
-            .toList();
-        emit(MaterialLoaded(materials));
-      } catch (e) {
-        emit(MaterialError(e.toString()));
-      }
-    });
+      on<FetchMaterials>((event, emit) async {
+    try {
+      emit(MaterialLoading());
+      print("Fetching materials...");
+      final snapshot = await firestore.collection('materials').get();
+      final materials = snapshot.docs
+          .map((doc) => MaterialModel.fromMap(doc.id, doc.data()))
+          .toList();
+      print("Fetched ${materials.length} materials");
+      emit(MaterialLoaded(materials));
+    } catch (e) {
+      print("Error fetching materials: $e");
+      emit(MaterialError(e.toString()));
+    }
+  });
 
     on<AddMaterial>((event, emit) async {
       try {
