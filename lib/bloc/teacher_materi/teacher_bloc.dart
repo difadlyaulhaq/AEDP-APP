@@ -1,29 +1,32 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:project_aedp/bloc/teacher_materi/material_event.dart';
-import 'package:project_aedp/bloc/teacher_materi/material_state.dart';
+import 'material_event.dart';
+import 'material_state.dart';
 import 'material_model.dart';
-
 
 class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   MaterialBloc() : super(MaterialLoading()) {
-      on<FetchMaterials>((event, emit) async {
-    try {
-      emit(MaterialLoading());
-      print("Fetching materials...");
-      final snapshot = await firestore.collection('materials').get();
-      final materials = snapshot.docs
-          .map((doc) => MaterialModel.fromMap(doc.id, doc.data()))
-          .toList();
-      print("Fetched ${materials.length} materials");
-      emit(MaterialLoaded(materials));
-    } catch (e) {
-      print("Error fetching materials: $e");
-      emit(MaterialError(e.toString()));
-    }
-  });
+    on<FetchMaterials>((event, emit) async {
+      try {
+        emit(MaterialLoading());
+
+        // Filter based on multiple subjects by checking if the material's subject is in the provided list
+        final snapshot = await firestore
+            .collection('materials')
+            .where('subject', whereIn: event.subjects)  // Use `whereIn` to filter based on the list of subjects
+            .get();
+
+        final materials = snapshot.docs
+            .map((doc) => MaterialModel.fromMap(doc.id, doc.data()))
+            .toList();
+
+        emit(MaterialLoaded(materials));
+      } catch (e) {
+        emit(MaterialError(e.toString()));
+      }
+    });
 
     on<AddMaterial>((event, emit) async {
       try {
@@ -31,7 +34,7 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
             .collection('materials')
             .doc(event.material.id)
             .set(event.material.toMap());
-        add(FetchMaterials()); // Refresh the list
+        add(FetchMaterials(subjects: [event.material.subject])); // Filter based on subject
       } catch (e) {
         emit(MaterialError(e.toString()));
       }

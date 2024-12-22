@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:project_aedp/pages/teacher/teacher_detailmaterial.dart';
 
-class TeacherMaterialpage extends StatelessWidget {
-  const TeacherMaterialpage ({super.key});
+class TeacherMaterialpage extends StatefulWidget {
+  const TeacherMaterialpage({super.key});
+
+  @override
+  _TeacherMaterialpageState createState() => _TeacherMaterialpageState();
+}
+
+class _TeacherMaterialpageState extends State<TeacherMaterialpage> {
+  List<Map<String, dynamic>> filteredSubjects = List.from(subjects);
+  String selectedFilter = "All";
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +32,8 @@ class TeacherMaterialpage extends StatelessWidget {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Color(0xFF1E70A0), // Warna biru terang
-                        Color(0xFF0B2A3C), // Warna biru gelap
+                        Color(0xFF1E70A0),
+                        Color(0xFF0B2A3C),
                       ],
                     ),
                   ),
@@ -49,6 +57,15 @@ class TeacherMaterialpage extends StatelessWidget {
               ),
             ),
             centerTitle: true,
+            actions: [
+              IconButton(
+                icon: const Icon(
+                  Icons.filter_alt_rounded,
+                  color: Colors.white,
+                ),
+                onPressed: _showFilterDialog,
+              ),
+            ],
           ),
         ),
       ),
@@ -63,48 +80,76 @@ class TeacherMaterialpage extends StatelessWidget {
             crossAxisSpacing: screenWidth * 0.04,
             mainAxisSpacing: screenHeight * 0.02,
           ),
-          itemCount: subjects.length,
+          itemCount: filteredSubjects.length,
           itemBuilder: (context, index) {
-            final subject = subjects[index];
+            final subject = filteredSubjects[index];
             return _buildCardItem(context, subject['name'], subject['icon']);
           },
         ),
       ),
     );
   }
-  Widget _buildTextItem(BuildContext context, String subject) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const TeacherDetailMaterial()));
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFF1E70A0), // Background color
-          borderRadius: BorderRadius.circular(10), // Smaller corner radius
-        ),
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(8.0), // Reduced padding inside the box
-        child: Text(
-          subject,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 16, // Smaller font size for compact display
-            fontWeight: FontWeight.w500, // Lighter font weight for smaller text
+
+  // Show Filter Dialog
+  void _showFilterDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Filter Subjects'),
+          content: DropdownButton<String>(
+            value: selectedFilter,
+            items: <String>["All", "Math", "Science", "History", "Geography", "Art", "Music", "Arabic", "English"]
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (value) {
+              setState(() {
+                selectedFilter = value!;
+                _applyFilter(selectedFilter);
+              });
+              Navigator.pop(context);
+            },
           ),
-          textAlign: TextAlign.center, // Center align the text
-        ),
-      ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
     );
   }
-}
-Widget _buildCardItem(BuildContext context, String subject, IconData icon) {
+
+  // Apply the selected filter to the subjects list
+  void _applyFilter(String filter) {
+    if (filter == "All") {
+      setState(() {
+        filteredSubjects = List.from(subjects);
+      });
+    } else {
+      setState(() {
+        filteredSubjects = subjects
+            .where((subject) => subject['name'].toLowerCase().contains(filter.toLowerCase()))
+            .toList();
+      });
+    }
+  }
+
+  Widget _buildCardItem(BuildContext context, String subject, IconData icon) {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const TeacherDetailMaterial()),
+          MaterialPageRoute(
+            builder: (context) => TeacherDetailMaterial(subject: subject), // Pass subject
+          ),
         );
       },
       child: Card(
@@ -145,6 +190,7 @@ Widget _buildCardItem(BuildContext context, String subject, IconData icon) {
       ),
     );
   }
+}
 
 class CustomAppBarClipper extends CustomClipper<Path> {
   @override

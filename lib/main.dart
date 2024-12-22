@@ -14,7 +14,7 @@ import 'package:project_aedp/bloc/language/language_cubit.dart';
 import 'package:project_aedp/firebase_options.dart';
 import 'package:project_aedp/routes/router.dart';
 import 'generated/l10n.dart';
-  
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -29,7 +29,7 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-// Fungsi untuk mengunggah data jadwal hanya jika belum ada di Firestore
+// Function to upload default schedule data to Firestore if not already uploaded
 Future<void> _uploadScheduleData() async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -68,9 +68,9 @@ Future<void> _uploadScheduleData() async {
       await firestore.collection('schedules').doc(day).set({
         'schedule': schedule,
       });
-      print('$day successfully uploaded.');
+      debugPrint('$day successfully uploaded.');
     } else {
-      print('$day already in Firestore, upload skipped.');
+      debugPrint('$day already in Firestore, upload skipped.');
     }
   }
 }
@@ -80,6 +80,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> subjects = ['English', 'Math', 'Science']; // Define subjects list here
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
@@ -94,7 +96,7 @@ class MyApp extends StatelessWidget {
           create: (context) => ScheduleBloc(firestore: FirebaseFirestore.instance),
         ),
         BlocProvider<MaterialBloc>(
-          create: (context) => MaterialBloc()..add(FetchMaterials()),
+          create: (context) => MaterialBloc()..add(FetchMaterials(subjects: subjects)),  // Corrected event dispatch
         ),
       ],
       child: BlocBuilder<LanguageCubit, LanguageState>(
@@ -127,6 +129,6 @@ class MyApp extends StatelessWidget {
           );
         },
       ),
-    );
+    ); 
   }
 }
