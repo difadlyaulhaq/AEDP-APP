@@ -27,12 +27,14 @@ class AuthLoginRequested extends AuthEvent {
   });
 }
 
-class AuthVerifyOTPRequested extends AuthEvent {
-  final String email;
-  final String otp;
+// class AuthVerifyOTPRequested extends AuthEvent {
+//   final String email;
+//   final String otp;
 
-  AuthVerifyOTPRequested({
-    required this.email,
-    required this.otp,
-  });
-}
+//   AuthVerifyOTPRequested({
+//     required this.email,
+//     required this.otp,
+//   });
+// }
+
+class AuthLogoutRequested extends AuthEvent {} 

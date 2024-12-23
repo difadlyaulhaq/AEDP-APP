@@ -52,13 +52,13 @@ class TeacherDetailMaterial extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 fontSize: 24,
               ),
-            ), 
+            ),
             centerTitle: true,
           ),
         ),
       ),
       body: BlocProvider(
-        create: (context) => MaterialBloc()..add(FetchMaterials(subjects: [subject])), // Wrap 'subject' in a List<String>
+        create: (context) => MaterialBloc()..add(FetchMaterials(subjects: [subject])),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -239,7 +239,7 @@ class TeacherDetailMaterial extends StatelessWidget {
                   onPressed: () {
                     if (titleController.text.isNotEmpty &&
                         descriptionController.text.isNotEmpty &&
-                        filePath != null) {
+                        filePath != null && Uri.tryParse(filePath!)?.hasAbsolutePath == true) {
                       final material = MaterialModel(
                         id: DateTime.now().toIso8601String(),
                         title: titleController.text,
@@ -255,7 +255,7 @@ class TeacherDetailMaterial extends StatelessWidget {
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Please fill all fields and upload a file.'),
+                          content: Text('Please fill all fields and provide a valid file link.'),
                         ),
                       );
                     }

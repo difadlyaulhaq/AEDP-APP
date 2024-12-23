@@ -1,30 +1,57 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project_aedp/bloc/auth/auth_bloc.dart';
+import 'package:project_aedp/bloc/auth/auth_repository.dart';
+import 'package:project_aedp/pages/loginbyrole.dart';
 
-import 'package:project_aedp/main.dart';
+void main() async {
+  // Initialize Firebase before running tests
+  TestWidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
-void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('LoginPageByRole Tests', () {
+    testWidgets('Test LoginPageByRole with BottomNavigationBar', (WidgetTester tester) async {
+      final authRepository = AuthRepository(FirebaseFirestore.instance);
+      final authBloc = AuthBloc(authRepository: authRepository);
+      final roles = ['student', 'parent', 'teacher'];
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      // Wrap the widget with a MaterialApp and Scaffold for BottomNavigationBar context
+      await tester.pumpWidget(
+        BlocProvider<AuthBloc>(
+          create: (_) => authBloc,
+          child: MaterialApp(
+            home: Scaffold(
+              bottomNavigationBar: BottomNavigationBar(
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.search),
+                    label: 'Search',
+                  ),
+                ],
+              ),
+              body: LoginPageByRole(role: roles[0]), // Your widget with a role
+            ),
+          ),
+        ),
+      );
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      // Ensure all animations (like navigation) are settled
+      await tester.pumpAndSettle();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      // Now verify the presence of the LoginPageByRole widget
+      expect(find.byType(LoginPageByRole), findsOneWidget);
+
+      // You can also check the BottomNavigationBar if needed
+      expect(find.byType(BottomNavigationBar), findsOneWidget);
+    });
+
+    // Additional tests can go here
   });
 }

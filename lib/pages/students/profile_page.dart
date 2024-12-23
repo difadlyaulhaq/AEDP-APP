@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_aedp/bloc/auth/auth_bloc.dart' as auth_bloc;
+import 'package:project_aedp/bloc/auth/auth_event.dart' as auth_event;
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -9,22 +12,35 @@ class ProfilePage extends StatelessWidget {
     var screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Profile"),
+        actions: [
+          // Logout Button
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              // Trigger logout event
+              context.read<auth_bloc.AuthBloc>().add(auth_event.AuthLogoutRequested());
+            },
+          ),
+        ],
+      ),
       body: Center(
-        child: SingleChildScrollView( // Enables scrolling
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // Profile Picture and Name
               CircleAvatar(
-                radius: screenWidth * 0.15, // Adjust size based on screen width
-                backgroundImage: const AssetImage('assets/profile_picture.png'), // Update with your image asset
+                radius: screenWidth * 0.15,
+                backgroundImage: const AssetImage('assets/profile_picture.png'),
               ),
               const SizedBox(height: 8),
               Text(
                 "Difa Dlyaul Haq",
                 style: TextStyle(
-                  fontSize: screenWidth * 0.06, // Adjust font size based on screen width
+                  fontSize: screenWidth * 0.06,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -41,41 +57,21 @@ class ProfilePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Data",
+                      "User Information",
                       style: TextStyle(
-                        fontSize: screenWidth * 0.05, // Adjust font size based on screen width
+                        fontSize: screenWidth * 0.05,
                         fontWeight: FontWeight.bold,
                         color: Colors.blue,
                       ),
                     ),
                     const Divider(),
 
-                    // User Information
-                    const ListTile(
-                      leading: Icon(Icons.person),
-                      title: Text("Name:"),
-                      subtitle: Text("Difa Dlyaul Haq"),
-                    ),
-                    const ListTile(
-                      leading: Icon(Icons.email),
-                      title: Text("Email:"),
-                      subtitle: Text("difadlyaulhaq@students.ac.ae"),
-                    ),
-                    const ListTile(
-                      leading: Icon(Icons.badge),
-                      title: Text("Student ID:"),
-                      subtitle: Text("24.1234.07"),
-                    ),
-                    const ListTile(
-                      leading: Icon(Icons.person_outline),
-                      title: Text("Parents Name:"),
-                      subtitle: Text("Difa Dlyaul Haq Father"),
-                    ),
-                    const ListTile(
-                      leading: Icon(Icons.email_outlined),
-                      title: Text("Parent Email:"),
-                      subtitle: Text("difasfather@gmail.com"),
-                    ),
+                    // User Information List
+                    _buildListTile(Icons.person, "Name", "Difa Dlyaul Haq"),
+                    _buildListTile(Icons.email, "Email", "difadlyaulhaq@students.ac.ae"),
+                    _buildListTile(Icons.badge, "Student ID", "24.1234.07"),
+                    _buildListTile(Icons.person_outline, "Parents Name", "Difa Dlyaul Haq Father"),
+                    _buildListTile(Icons.email_outlined, "Parent Email", "difasfather@gmail.com"),
                   ],
                 ),
               ),
@@ -83,6 +79,15 @@ class ProfilePage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  // Helper method to build ListTile
+  Widget _buildListTile(IconData icon, String title, String subtitle) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      subtitle: Text(subtitle),
     );
   }
 }

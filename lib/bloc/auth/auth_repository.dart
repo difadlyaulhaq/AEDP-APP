@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class AuthRepository {
   final FirebaseFirestore _firestore;
 
@@ -18,6 +18,31 @@ class AuthRepository {
     return sha256.convert(bytes).toString();
   }
 
+  /// Save login status to shared preferences
+  Future<void> saveLoginStatus(String email, String role) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('loggedInEmail', email);
+    await prefs.setString('loggedInRole', role);
+  }
+
+  /// Load login status from shared preferences
+  Future<Map<String, String>?> loadLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('loggedInEmail');
+    final role = prefs.getString('loggedInRole');
+
+    if (email != null && role != null) {
+      return {'email': email, 'role': role};
+    }
+    return null;
+  }
+
+  /// Clear login status from shared preferences
+  Future<void> clearLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
   /// Sign up a user
   Future<void> signUp({
     required String email,
@@ -31,25 +56,22 @@ class AuthRepository {
         throw Exception('Email already registered.');
       }
 
-      // Hash the password
       final hashedPassword = _hashPassword(password);
 
-      // Save user data to Firestore
       await _firestore.collection('users').doc(email).set({
-      'email': email,
-      'role': role.toLowerCase().replaceAll('signup as ', ''), // Simpan role sebagai nilai standar
-      'password': hashedPassword,
-      'isVerified': false,
-      'createdAt': FieldValue.serverTimestamp(),
-    });
-
+        'email': email,
+        'role': role.toLowerCase(),
+        'password': hashedPassword,
+        'isVerified': false,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
     } catch (e) {
       throw Exception('Failed to sign up: ${e.toString()}');
     }
   }
 
   /// Login user
-    Future<String?> logIn({
+  Future<String?> logIn({
     required String email,
     required String password,
   }) async {
@@ -67,7 +89,7 @@ class AuthRepository {
         throw Exception('Invalid password.');
       }
 
-      // Return the actual role
+      await saveLoginStatus(email, data?['role']); // Save login status
       return data?['role'];
     } catch (e) {
       throw Exception('Failed to log in: ${e.toString()}');

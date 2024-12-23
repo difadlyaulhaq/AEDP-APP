@@ -30,18 +30,14 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Scaffold(
+    return MaterialApp(
+      home: Scaffold(
         body: IndexedStack(
           index: _selectedIndex,
           children: _pages,
         ),
         bottomNavigationBar: Container(
           decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(25),
-              bottomRight: Radius.circular(25),
-            ),
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,

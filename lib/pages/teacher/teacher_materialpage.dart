@@ -17,74 +17,76 @@ class _TeacherMaterialpageState extends State<TeacherMaterialpage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(screenHeight * 0.2),
-        child: ClipPath(
-          clipper: CustomAppBarClipper(),
-          child: AppBar(
-            automaticallyImplyLeading: true,
-            flexibleSpace: Stack(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFF1E70A0),
-                        Color(0xFF0B2A3C),
-                      ],
+    return MaterialApp(
+      home: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(screenHeight * 0.2),
+          child: ClipPath(
+            clipper: CustomAppBarClipper(),
+            child: AppBar(
+              automaticallyImplyLeading: true,
+              flexibleSpace: Stack(
+                children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFF1E70A0),
+                          Color(0xFF0B2A3C),
+                        ],
+                      ),
                     ),
                   ),
+                ],
+              ),
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                  size: screenWidth * 0.07,
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
+              title: Text(
+                'Subjects',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: screenWidth * 0.065,
+                ),
+              ),
+              centerTitle: true,
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.filter_alt_rounded,
+                    color: Colors.white,
+                  ),
+                  onPressed: _showFilterDialog,
                 ),
               ],
             ),
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-                size: screenWidth * 0.07,
-              ),
-              onPressed: () => Navigator.pop(context),
-            ),
-            title: Text(
-              'Subjects',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                fontSize: screenWidth * 0.065,
-              ),
-            ),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                icon: const Icon(
-                  Icons.filter_alt_rounded,
-                  color: Colors.white,
-                ),
-                onPressed: _showFilterDialog,
-              ),
-            ],
           ),
         ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: screenWidth * 0.04,
-          vertical: screenHeight * 0.02,
-        ),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: screenWidth > 600 ? 3 : 2,
-            crossAxisSpacing: screenWidth * 0.04,
-            mainAxisSpacing: screenHeight * 0.02,
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.04,
+            vertical: screenHeight * 0.02,
           ),
-          itemCount: filteredSubjects.length,
-          itemBuilder: (context, index) {
-            final subject = filteredSubjects[index];
-            return _buildCardItem(context, subject['name'], subject['icon']);
-          },
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: screenWidth > 600 ? 3 : 2,
+              crossAxisSpacing: screenWidth * 0.04,
+              mainAxisSpacing: screenHeight * 0.02,
+            ),
+            itemCount: filteredSubjects.length,
+            itemBuilder: (context, index) {
+              final subject = filteredSubjects[index];
+              return _buildCardItem(context, subject['name'], subject['icon']);
+            },
+          ),
         ),
       ),
     );

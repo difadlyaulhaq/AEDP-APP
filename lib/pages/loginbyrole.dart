@@ -28,14 +28,13 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
 
   @override
   Widget build(BuildContext context) {
-   final localization = S.of(context);
+    final localization = S.of(context);
 
     return WillPopScope(
-    onWillPop: () async {
-    
-      context.go('/select-role');
-      return false; // Mencegah pop default
-    },
+      onWillPop: () async {
+        context.go('/select-role');
+        return false; // Prevent default pop
+      },
       child: Scaffold(
         body: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
@@ -44,7 +43,7 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
                 _showSnackBar(S.of(context).accessDeniedIncorrectRole);
                 return;
               }
-      
+
               switch (state.role) {
                 case 'student':
                   context.go('/student-home');
@@ -89,10 +88,10 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
                     return;
                   }
                   context.read<AuthBloc>().add(AuthLoginRequested(
-                        email: emailController.text,
-                        password: passwordController.text,
-                        role: widget.role,
-                      ));
+                    email: emailController.text,
+                    password: passwordController.text,
+                    role: widget.role,
+                  ));
                 }),
               ],
             ),
