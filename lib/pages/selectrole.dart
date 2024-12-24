@@ -15,7 +15,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final List<String> roles = ['student', 'parent', 'teacher'];
   String selectedLoginRole = 'student';
-  // String selectedSignupRole = 'student';
 
   String getLocalizedRole(BuildContext context, String role) {
     switch (role) {
@@ -33,18 +32,14 @@ class _LoginScreenState extends State<LoginScreen> {
   String getLoginAsText(BuildContext context, String role) =>
       S.of(context).login_as_role(getLocalizedRole(context, role));
 
-  // String getSignupAsText(BuildContext context, String role) =>
-  //     S.of(context).signup_as_role(getLocalizedRole(context, role));
-
-  void navigateToLogin(String role) => context.go('/login/$role');
-
-  void navigateToSignup(String role) => context.go('/signup/$role');
+  void navigateToLogin(String role) {
+    Future.microtask(() => context.go('/login/$role'));
+  }
 
   @override
   Widget build(BuildContext context) {
     final languageCubit = context.read<LanguageCubit>();
-    final textDirection = ui.TextDirection.rtl ==
-            Directionality.of(context) 
+    final textDirection = ui.TextDirection.rtl == Directionality.of(context)
         ? TextAlign.right
         : TextAlign.left;
 
@@ -72,14 +67,12 @@ class _LoginScreenState extends State<LoginScreen> {
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            // _buildSectionTitle(context, S.of(context).login, textDirection),
-            // const SizedBox(height: 10),
             _buildRoleDropdown(
               context: context,
               label: getLoginAsText(context, selectedLoginRole),
               selectedRole: selectedLoginRole,
               onChanged: (role) {
-                if (role != null) {
+                if (role != null && role != selectedLoginRole) {
                   setState(() {
                     selectedLoginRole = role;
                   });
@@ -87,28 +80,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
             ),
-            // const SizedBox(height: 20),
-            // Padding(
-            //   padding: const EdgeInsets.all(10),
-            //   child: _buildSectionTitle(context, S.of(context).signup, textDirection),
-            // ),
-            // const SizedBox(height: 10),
-            // _buildRoleDropdown(
-            //   context: context,
-            //   label: getSignupAsText(context, selectedSignupRole),
-            //   selectedRole: selectedSignupRole,
-            //   onChanged: (role) {
-            //     if (role != null) {
-            //       setState(() {
-            //         selectedSignupRole = role;
-            //       });
-            //       navigateToSignup(role);
-            //     }
-            //   },
-            //   color: Colors.white,
-            //   textColor: Colors.blue,
-            //   borderColor: Colors.blue,
-            // ),
           ],
         ),
       ),
@@ -179,24 +150,6 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         }).toList(),
       ),
-    );
-  }
-
-  Widget _buildSectionTitle(
-      BuildContext context, String title, TextAlign align) {
-    return Row(
-      children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Text(
-              title,
-              textAlign: align,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

@@ -4,21 +4,25 @@ import 'load_profile_event.dart';
 import 'profile_state.dart';
 
 class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
-  LoadProfileBloc() : super(LoadProfileInitial()) {
-    on<LoadProfileEvent>(_onLoadProfile);
+  final FirebaseFirestore _firestore;
+
+  LoadProfileBloc(this._firestore) : super(LoadProfileInitial()) {
+    on<LoadUserProfile>(_onLoadProfile);
   }
 
-  Future<void> _onLoadProfile(
-      LoadProfileEvent event, Emitter<LoadProfileState> emit) async {
+  Future<void> _onLoadProfile(LoadUserProfile event, Emitter<LoadProfileState> emit) async {
     emit(LoadProfileLoading());
     try {
-      final doc = await FirebaseFirestore.instance
-          .collection('teachers')
-          .doc(event.teacherId)
-          .get();
+      final collection = event.role == 'teacher' 
+          ? 'teachers' 
+          : event.role == 'student' 
+              ? 'students' 
+              : 'parents';
+              
+      final doc = await _firestore.collection(collection).doc(event.userId).get();
 
       if (!doc.exists) {
-        throw Exception('Profile not found.');
+        throw Exception('Profile not found');
       }
 
       final profileData = doc.data() as Map<String, dynamic>;

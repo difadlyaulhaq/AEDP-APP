@@ -8,10 +8,10 @@ import 'package:project_aedp/bloc/auth/auth_repository.dart';
 import 'package:project_aedp/bloc/auth/auth_state.dart';
 import 'package:project_aedp/bloc/language/language_cubit.dart';
 import 'package:project_aedp/firebase_options.dart';
-import 'package:project_aedp/pages/loginbyrole.dart';
+import 'package:project_aedp/pages/selectrole.dart';
 import 'package:project_aedp/pages/students/dashboard_students.dart';
 import 'package:project_aedp/pages/teacher/teacher_dashboard.dart';
-import 'bloc/load_profile/profile_bloc.dart';
+import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
 import 'generated/l10n.dart';
 
 Future<void> main() async {
@@ -21,9 +21,10 @@ Future<void> main() async {
 
   final authRepository = AuthRepository(FirebaseFirestore.instance);
   final authBloc = AuthBloc(authRepository: authRepository);
+  final firestore = FirebaseFirestore.instance; // Create an instance of FirebaseFirestore
   final List<String> roles = ['student', 'parent', 'teacher'];
 
-  runApp(MyApp(authBloc: authBloc, roles: roles));
+  runApp(MyApp(authBloc: authBloc, roles: roles, firestore: firestore)); // Pass firestore instance
 }
 
 Future<void> _uploadScheduleData() async {
@@ -50,8 +51,9 @@ Future<void> _uploadScheduleData() async {
 class MyApp extends StatelessWidget {
   final AuthBloc authBloc;
   final List<String> roles;
+  final FirebaseFirestore firestore; // Add firestore to the constructor
 
-  const MyApp({Key? key, required this.authBloc, required this.roles}) : super(key: key);
+  const MyApp({super.key, required this.authBloc, required this.roles, required this.firestore});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +63,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<AuthBloc>(create: (_) => authBloc),
         BlocProvider<LanguageCubit>(create: (_) => LanguageCubit()),
-        BlocProvider<LoadProfileBloc>(create: (_) => LoadProfileBloc()),
+        BlocProvider<LoadProfileBloc>(create: (_) => LoadProfileBloc(firestore)), // Pass firestore instance here
       ],
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, authState) {
@@ -89,7 +91,7 @@ class MyApp extends StatelessWidget {
                   return const DashboardStudents();
                 }
               }
-              return LoginPageByRole(role: roles.isNotEmpty ? roles[0] : 'student');
+              return LoginScreen();
             },
           );
         },

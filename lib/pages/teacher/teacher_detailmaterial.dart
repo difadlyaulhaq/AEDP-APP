@@ -122,65 +122,66 @@ class TeacherDetailMaterial extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildMaterialCard(String title, String subtitle, String fileLink, double screenWidth) {
-    Future<void> _launchUrl(String url) async {
-      final Uri uri = Uri.parse(url);
-      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-        throw 'Could not launch $url';
-      }
+Widget _buildMaterialCard(String title, String subtitle, String fileLink, double screenWidth) {
+  Future<void> openFile(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await canLaunchUrl(uri)) {
+      throw 'Could not launch $url';
     }
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
 
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+  return Card(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15),
+    ),
+    child: Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: 16.0,
+        horizontal: screenWidth * 0.05,
       ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: 16.0,
-          horizontal: screenWidth * 0.05,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.04,
-                    fontWeight: FontWeight.bold,
-                  ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: screenWidth * 0.04,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: screenWidth * 0.035,
+                  color: Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 4),
+              GestureDetector(
+                onTap: () => openFile(fileLink),
+                child: Text(
+                  fileLink,
                   style: TextStyle(
                     fontSize: screenWidth * 0.035,
-                    color: Colors.black54,
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
                   ),
                 ),
-                const SizedBox(height: 4),
-                GestureDetector(
-                  onTap: () => _launchUrl(fileLink),
-                  child: Text(
-                    fileLink,
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.035,
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const Icon(Icons.file_download, color: Colors.black54),
-          ],
-        ),
+              ),
+            ],
+          ),
+          const Icon(Icons.file_download, color: Colors.black54),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   void _showUploadDialog(BuildContext context, String title, String subject) {
     final TextEditingController titleController = TextEditingController();

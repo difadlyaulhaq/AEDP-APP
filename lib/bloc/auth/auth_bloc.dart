@@ -6,14 +6,13 @@ import 'package:project_aedp/bloc/auth/auth_state.dart';
 // New event for loading login status
 class AuthLoadLoginStatus extends AuthEvent {}
 
-class AuthLogoutRequested extends AuthEvent {} // Define logout event
+class AuthLogoutRequested extends AuthEvent {}
 
-// Update AuthBloc
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
 
   AuthBloc({required this.authRepository}) : super(AuthInitial()) {
-    // Handle login
+    // Handle login event
     on<AuthLoginRequested>((event, emit) async {
       emit(AuthLoading());
       try {
@@ -22,7 +21,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           password: event.password,
         );
         if (role != null) {
-          emit(AuthLoginSuccess(role: role));
+          emit(AuthLoginSuccess(role: role, email: event.email)); // Pass email here
         } else {
           emit(AuthFailure('Login failed: Invalid credentials.'));
         }
@@ -37,7 +36,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         final loginStatus = await authRepository.loadLoginStatus();
         if (loginStatus != null) {
-          emit(AuthLoginSuccess(role: loginStatus['role']!));
+          emit(AuthLoginSuccess(role: loginStatus['role']!, email: loginStatus['email']!)); // Add email here
         } else {
           emit(AuthInitial());
         }
@@ -46,7 +45,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
-    // Handle logout
+    // Handle logout event
     on<AuthLogoutRequested>((event, emit) async {
       emit(AuthLoading());
       try {

@@ -1,10 +1,11 @@
-import 'package:equatable/equatable.dart';
 
-class LoadProfileEvent extends Equatable {
-  final String teacherId;
+abstract class LoadProfileEvent {
+  const LoadProfileEvent();
+}
 
-  const LoadProfileEvent({required this.teacherId});
+class LoadUserProfile extends LoadProfileEvent {
+  final String userId;
+  final String role;
 
-  @override
-  List<Object?> get props => [teacherId];
+  const LoadUserProfile({required this.userId, required this.role});
 }
