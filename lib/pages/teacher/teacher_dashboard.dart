@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_aedp/pages/students/invoice_page.dart';
-import 'package:project_aedp/pages/students/profile_page.dart';
+import 'package:project_aedp/pages/profile_page.dart';
 import 'package:project_aedp/pages/teacher/teacher_grade_pages.dart';
 import 'package:project_aedp/pages/teacher/teacher_materialpage.dart';
 import 'package:project_aedp/pages/teacher/teacher_schedule.dart';

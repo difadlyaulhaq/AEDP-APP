@@ -32,3 +32,4 @@ class AuthFailure extends AuthState {
 
   AuthFailure(this.errorMessage);
 }
+

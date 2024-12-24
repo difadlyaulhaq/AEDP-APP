@@ -36,5 +36,4 @@ class AuthLoginRequested extends AuthEvent {
 //     required this.otp,
 //   });
 // }
-
-class AuthLogoutRequested extends AuthEvent {} 
+class AuthLogoutRequested extends AuthEvent {}

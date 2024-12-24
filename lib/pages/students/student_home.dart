@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_aedp/pages/students/dashboard_students.dart';
 import 'package:project_aedp/pages/students/invoice_page.dart';
-import 'package:project_aedp/pages/students/profile_page.dart';
+import 'package:project_aedp/pages/profile_page.dart';
 import 'package:project_aedp/widget/bottom_navbar.dart';
 
 class StudentHome extends StatefulWidget {

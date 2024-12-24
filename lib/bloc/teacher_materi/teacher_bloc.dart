@@ -12,10 +12,9 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
       try {
         emit(MaterialLoading());
 
-        // Filter based on multiple subjects by checking if the material's subject is in the provided list
         final snapshot = await firestore
             .collection('materials')
-            .where('subject', whereIn: event.subjects)  // Use `whereIn` to filter based on the list of subjects
+            .where('subject', whereIn: event.subjects)
             .get();
 
         final materials = snapshot.docs
@@ -29,15 +28,16 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
     });
 
     on<AddMaterial>((event, emit) async {
-      try {
-        await firestore
-            .collection('materials')
-            .doc(event.material.id)
-            .set(event.material.toMap());
-        add(FetchMaterials(subjects: [event.material.subject])); // Filter based on subject
-      } catch (e) {
-        emit(MaterialError(e.toString()));
-      }
-    });
+  try {
+    print("Uploading material: ${event.material.toMap()}");
+    await firestore.collection('materials').doc(event.material.id).set(event.material.toMap());
+    print("Upload successful!");
+    add(FetchMaterials(subjects: [event.material.subject]));
+  } catch (e) {
+    print("Upload error: $e");
+    emit(MaterialError(e.toString()));
+  }
+});
+
   }
 }

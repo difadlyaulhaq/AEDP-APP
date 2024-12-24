@@ -11,6 +11,7 @@ import 'package:project_aedp/firebase_options.dart';
 import 'package:project_aedp/pages/loginbyrole.dart';
 import 'package:project_aedp/pages/students/dashboard_students.dart';
 import 'package:project_aedp/pages/teacher/teacher_dashboard.dart';
+import 'bloc/load_profile/profile_bloc.dart';
 import 'generated/l10n.dart';
 
 Future<void> main() async {
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<AuthBloc>(create: (_) => authBloc),
         BlocProvider<LanguageCubit>(create: (_) => LanguageCubit()),
+        BlocProvider<LoadProfileBloc>(create: (_) => LoadProfileBloc()),
       ],
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, authState) {
