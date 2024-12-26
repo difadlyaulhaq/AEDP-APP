@@ -1,3 +1,4 @@
+import 'dart:developer' as dev; // Tambahkan dart:developer untuk logging
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final List<String> roles = ['student', 'parent', 'teacher'];
-  String selectedLoginRole = 'student';
+  String selectedLoginRole = 'student'; // Properti State untuk nilai dropdown
 
   String getLocalizedRole(BuildContext context, String role) {
     switch (role) {
@@ -29,11 +30,21 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  String getLoginAsText(BuildContext context, String role) =>
-      S.of(context).login_as_role(getLocalizedRole(context, role));
+  String getLoginAsText(BuildContext context, String role) {
+    dev.log("Generating login as text for role: $role");
+    return S.of(context).login_as_role(getLocalizedRole(context, role));
+  }
 
   void navigateToLogin(String role) {
-    Future.microtask(() => context.go('/login/$role'));
+    dev.log("Navigating to login page with role: $role");
+    Future.microtask(() {
+      if (mounted) {
+        context.go('/login/$role');
+        dev.log("Navigation successful to: /login/$role");
+      } else {
+        dev.log("Widget not mounted. Navigation aborted.");
+      }
+    });
   }
 
   @override
@@ -42,6 +53,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final textDirection = ui.TextDirection.rtl == Directionality.of(context)
         ? TextAlign.right
         : TextAlign.left;
+
+    dev.log("LoginScreen build called. Current role: $selectedLoginRole");
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -65,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Text(
               S.of(context).select_your_role,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: textDirection,
             ),
             const SizedBox(height: 10),
             _buildRoleDropdown(
@@ -72,9 +86,11 @@ class _LoginScreenState extends State<LoginScreen> {
               label: getLoginAsText(context, selectedLoginRole),
               selectedRole: selectedLoginRole,
               onChanged: (role) {
+                dev.log("Role selected: $role");
                 if (role != null && role != selectedLoginRole) {
                   setState(() {
                     selectedLoginRole = role;
+                    dev.log("State updated. New role: $selectedLoginRole");
                   });
                   navigateToLogin(role);
                 }
@@ -92,6 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
       icon: const Icon(Icons.language, color: Colors.blue),
       underline: const SizedBox(),
       onChanged: (String? newValue) {
+        dev.log("Language changed to: $newValue");
         if (newValue != null) {
           cubit.changeLanguage(Locale(newValue));
         }
@@ -125,6 +142,12 @@ class _LoginScreenState extends State<LoginScreen> {
     Color textColor = Colors.white,
     Color? borderColor,
   }) {
+    final textDirection = ui.TextDirection.rtl == Directionality.of(context)
+        ? TextAlign.right
+        : TextAlign.left;
+
+    dev.log("Building role dropdown with selected role: $selectedRole");
+
     return Container(
       width: 250,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -141,10 +164,12 @@ class _LoginScreenState extends State<LoginScreen> {
         style: TextStyle(color: textColor, fontSize: 18),
         onChanged: onChanged,
         items: roles.map((role) {
+          dev.log("Adding role to dropdown: $role");
           return DropdownMenuItem<String>(
             value: role,
             child: Text(
               getLocalizedRole(context, role),
+              textAlign: textDirection,
               style: const TextStyle(color: Colors.black),
             ),
           );
