@@ -1,4 +1,4 @@
-import 'dart:developer' as dev; // Tambahkan dart:developer untuk logging
+import 'dart:developer' as dev;
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final List<String> roles = ['student', 'parent', 'teacher'];
-  String selectedLoginRole = 'student'; // Properti State untuk nilai dropdown
+  String selectedLoginRole = 'student';
 
   String getLocalizedRole(BuildContext context, String role) {
     switch (role) {
@@ -37,14 +37,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void navigateToLogin(String role) {
     dev.log("Navigating to login page with role: $role");
-    Future.microtask(() {
-      if (mounted) {
-        context.go('/login/$role');
-        dev.log("Navigation successful to: /login/$role");
-      } else {
-        dev.log("Widget not mounted. Navigation aborted.");
-      }
-    });
+    if (mounted) {
+      context.pushReplacement('/login/$role');
+      dev.log("Navigation requested to: /login/$role");
+    } else {
+      dev.log("Widget not mounted. Navigation aborted.");
+    }
   }
 
   @override
@@ -86,8 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
               label: getLoginAsText(context, selectedLoginRole),
               selectedRole: selectedLoginRole,
               onChanged: (role) {
-                dev.log("Role selected: $role");
-                if (role != null && role != selectedLoginRole) {
+                if (role != null) {
+                  dev.log("Role selected: $role");
                   setState(() {
                     selectedLoginRole = role;
                     dev.log("State updated. New role: $selectedLoginRole");
@@ -101,14 +99,14 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
+  // Build language dropdown
   Widget _buildLanguageDropdown(BuildContext context, LanguageCubit cubit) {
     return DropdownButton<String>(
       value: Localizations.localeOf(context).languageCode,
       icon: const Icon(Icons.language, color: Colors.blue),
       underline: const SizedBox(),
       onChanged: (String? newValue) {
-        dev.log("Language changed to: $newValue");
+        dev.log("Language selection changed to: $newValue");
         if (newValue != null) {
           cubit.changeLanguage(Locale(newValue));
         }
@@ -133,48 +131,49 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildRoleDropdown({
-    required BuildContext context,
-    required String label,
-    required String selectedRole,
-    required ValueChanged<String?> onChanged,
-    Color color = Colors.blue,
-    Color textColor = Colors.white,
-    Color? borderColor,
-  }) {
-    final textDirection = ui.TextDirection.rtl == Directionality.of(context)
-        ? TextAlign.right
-        : TextAlign.left;
+ Widget _buildRoleDropdown({
+  required BuildContext context,
+  required String label,
+  required String selectedRole,
+  required ValueChanged<String?> onChanged,
+}) {
+  final textDirection = ui.TextDirection.rtl == Directionality.of(context)
+      ? TextAlign.right
+      : TextAlign.left;
 
-    dev.log("Building role dropdown with selected role: $selectedRole");
+  return Container(
+    width: 250,
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(30),
+      color: Colors.blue,
+    ),
+    child: DropdownButton<String>(
+      value: selectedRole,
+      icon: const Icon(Icons.keyboard_arrow_down_outlined, color: Colors.white),
+      isExpanded: true,
+      underline: const SizedBox(),
+      style: const TextStyle(color: Colors.white, fontSize: 18),
+      dropdownColor: Colors.white,
+      onChanged: onChanged,
+      items: roles.map((String role) {
+        return DropdownMenuItem<String>(
+          value: role,
+          child: Text(
+            getLocalizedRole(context, role),
+            textAlign: textDirection,
+            style: const TextStyle(color: Colors.black),
+          ),
+        );
+      }).toList(),
+    ),
+  );
+}
 
-    return Container(
-      width: 250,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        color: color,
-        border: borderColor != null ? Border.all(color: borderColor) : null,
-      ),
-      child: DropdownButton<String>(
-        value: selectedRole,
-        icon: Icon(Icons.keyboard_arrow_down_outlined, color: textColor),
-        isExpanded: true,
-        underline: const SizedBox(),
-        style: TextStyle(color: textColor, fontSize: 18),
-        onChanged: onChanged,
-        items: roles.map((role) {
-          dev.log("Adding role to dropdown: $role");
-          return DropdownMenuItem<String>(
-            value: role,
-            child: Text(
-              getLocalizedRole(context, role),
-              textAlign: textDirection,
-              style: const TextStyle(color: Colors.black),
-            ),
-          );
-        }).toList(),
-      ),
-    );
+
+  @override
+  void dispose() {
+    dev.log("Disposing LoginScreen");
+    super.dispose();
   }
 }

@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:project_aedp/bloc/auth/auth_bloc.dart';
-import 'package:project_aedp/bloc/auth/auth_repository.dart';
-import 'package:project_aedp/bloc/auth/auth_state.dart';
-import 'package:project_aedp/bloc/language/language_cubit.dart';
-import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
-import 'package:project_aedp/firebase_options.dart';
-import 'package:project_aedp/generated/l10n.dart';
-import 'package:project_aedp/routes/router.dart';
 
+import 'bloc/auth/auth_bloc.dart';
+import 'bloc/auth/auth_repository.dart';
+import 'bloc/auth/auth_state.dart';
+import 'bloc/language/language_cubit.dart';
+import 'bloc/load_profile/profile_bloc.dart';
+import 'firebase_options.dart';
+import 'generated/l10n.dart';
+import 'routes/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,24 +70,29 @@ class MyApp extends StatelessWidget {
       ],
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, authState) {
-          // Get router configuration with authentication state
+          final languageCubit = context.read<LanguageCubit>();
           final routerConfig = getRouter(authState);
 
-          return MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            routerConfig: routerConfig,
-            locale: context.read<LanguageCubit>().state.locale,
-            supportedLocales: S.delegate.supportedLocales,
-            localizationsDelegates: const [
-              S.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-              scaffoldBackgroundColor: Colors.grey[100],
-            ),
+          return BlocBuilder<LanguageCubit, LanguageState>(
+            bloc: languageCubit,
+            builder: (context, state) {
+              return MaterialApp.router(
+                debugShowCheckedModeBanner: false,
+                routerConfig: routerConfig,
+                locale: state.locale,
+                supportedLocales: S.delegate.supportedLocales,
+                localizationsDelegates: const [
+                  S.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                theme: ThemeData(
+                  primarySwatch: Colors.blue,
+                  scaffoldBackgroundColor: Colors.grey[100],
+                ),
+              );
+            },
           );
         },
       ),

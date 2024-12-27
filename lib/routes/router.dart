@@ -10,16 +10,10 @@ import '../pages/splashscreen_page.dart';
 
 part 'router_name.dart';
 
-abstract class RoutesNames {
-  static const splash = 'splash';
-  static const selectRole = 'selectRole';
-  static const login = 'login';
-  static const studentHome = 'studentHome';
-  static const teacherDashboard = 'teacherDashboard';
-}
-
 GoRouter getRouter(AuthState authState) {
   return GoRouter(
+    initialLocation: '/',
+    debugLogDiagnostics: true,
     routes: [
       GoRoute(
         path: '/',
@@ -28,25 +22,25 @@ GoRouter getRouter(AuthState authState) {
       ),
       GoRoute(
         path: '/select-role',
-        name: RoutesNames.selectRole,
+        name: RoutesNames.selectrole,
         builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
         path: '/login/:role',
         name: RoutesNames.login,
         builder: (context, state) {
-          final role = state.pathParameters['role']!;
+          final role = state.pathParameters['role'] ?? 'student';
           return LoginPageByRole(role: role);
         },
       ),
       GoRoute(
         path: '/student-home',
-        name: RoutesNames.studentHome,
+        name: RoutesNames.homestudent,
         builder: (context, state) => const StudentHome(),
       ),
       GoRoute(
         path: '/teacher-dashboard',
-        name: RoutesNames.teacherDashboard,
+        name: RoutesNames.teacherdash,
         builder: (context, state) => const TeacherDashboard(),
       ),
       GoRoute(
@@ -57,24 +51,23 @@ GoRouter getRouter(AuthState authState) {
     redirect: (BuildContext context, GoRouterState state) {
       final isAuthenticated = authState is AuthLoginSuccess;
       final isGoingToAuth = state.matchedLocation == '/' || 
-                          state.matchedLocation == '/select-role' || 
-                          state.matchedLocation.startsWith('/login');
+                           state.matchedLocation == '/select-role' || 
+                           state.matchedLocation.startsWith('/login');
 
-      // If not authenticated and not going to auth page, redirect to splash
       if (!isAuthenticated && !isGoingToAuth) {
         return '/';
       }
 
-      // If authenticated and going to auth page, redirect to appropriate dashboard
       if (isAuthenticated && isGoingToAuth) {
-        if (authState is AuthLoginSuccess) {
-          if (authState.role == 'teacher') {
+        switch (authState.role) {
+          case 'teacher':
             return '/teacher-dashboard';
-          } else if (authState.role == 'student') {
+          case 'student':
             return '/student-home';
-          }
+          default:
+            return '/select-role';
         }
-      }
+            }
 
       return null;
     },

@@ -1,6 +1,6 @@
 part of "router.dart";
 
-abstract class Routesnames {
+abstract class RoutesNames {
   static const splash = 'splash';
   static const selectrole = "role";
   static const login = 'login';
