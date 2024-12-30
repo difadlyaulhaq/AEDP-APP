@@ -50,6 +50,506 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Mathematics`
+  String get subject_math {
+    return Intl.message(
+      'Mathematics',
+      name: 'subject_math',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Science`
+  String get subject_science {
+    return Intl.message(
+      'Science',
+      name: 'subject_science',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `History`
+  String get subject_history {
+    return Intl.message(
+      'History',
+      name: 'subject_history',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Physical Education`
+  String get subject_physical_education {
+    return Intl.message(
+      'Physical Education',
+      name: 'subject_physical_education',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Art`
+  String get subject_art {
+    return Intl.message(
+      'Art',
+      name: 'subject_art',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `English`
+  String get subject_english {
+    return Intl.message(
+      'English',
+      name: 'subject_english',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Arabic`
+  String get subject_arabic {
+    return Intl.message(
+      'Arabic',
+      name: 'subject_arabic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Grades`
+  String get your_grades {
+    return Intl.message(
+      'Your Grades',
+      name: 'your_grades',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `List of Subjects`
+  String get list_of_subjects {
+    return Intl.message(
+      'List of Subjects',
+      name: 'list_of_subjects',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `GPA`
+  String get gpa {
+    return Intl.message(
+      'GPA',
+      name: 'gpa',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Download`
+  String get download {
+    return Intl.message(
+      'Download',
+      name: 'download',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Odd`
+  String get semester_odd {
+    return Intl.message(
+      'Odd',
+      name: 'semester_odd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Even`
+  String get semester_even {
+    return Intl.message(
+      'Even',
+      name: 'semester_even',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subject`
+  String get subject {
+    return Intl.message(
+      'Subject',
+      name: 'subject',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grade`
+  String get grade {
+    return Intl.message(
+      'Grade',
+      name: 'grade',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Year`
+  String get year {
+    return Intl.message(
+      'Year',
+      name: 'year',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoice`
+  String get invoice_title {
+    return Intl.message(
+      'Invoice',
+      name: 'invoice_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Even`
+  String get invoice_even {
+    return Intl.message(
+      'Even',
+      name: 'invoice_even',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Odd`
+  String get invoice_odd {
+    return Intl.message(
+      'Odd',
+      name: 'invoice_odd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tuition Fee`
+  String get tuition_fee {
+    return Intl.message(
+      'Tuition Fee',
+      name: 'tuition_fee',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Administrative Fee`
+  String get administrative_fee {
+    return Intl.message(
+      'Administrative Fee',
+      name: 'administrative_fee',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `2023/2024`
+  String get invoiceTitle {
+    return Intl.message(
+      '2023/2024',
+      name: 'invoiceTitle',
+      desc: 'The academic year shown at the top of the invoice',
+      args: [],
+    );
+  }
+
+  /// `Even`
+  String get evenSemester {
+    return Intl.message(
+      'Even',
+      name: 'evenSemester',
+      desc: 'Label for even semester section',
+      args: [],
+    );
+  }
+
+  /// `Odd`
+  String get oddSemester {
+    return Intl.message(
+      'Odd',
+      name: 'oddSemester',
+      desc: 'Label for odd semester section',
+      args: [],
+    );
+  }
+
+  /// `Tuition Fee`
+  String get tuitionFee {
+    return Intl.message(
+      'Tuition Fee',
+      name: 'tuitionFee',
+      desc: 'Label for tuition fee item',
+      args: [],
+    );
+  }
+
+  /// `Administrative Fee`
+  String get administrativeFee {
+    return Intl.message(
+      'Administrative Fee',
+      name: 'administrativeFee',
+      desc: 'Label for administrative fee item',
+      args: [],
+    );
+  }
+
+  /// `Invoice`
+  String get nav_invoice {
+    return Intl.message(
+      'Invoice',
+      name: 'nav_invoice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To-Do:`
+  String get todo_title {
+    return Intl.message(
+      'To-Do:',
+      name: 'todo_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Assignment 1`
+  String get assignment_1 {
+    return Intl.message(
+      'Assignment 1',
+      name: 'assignment_1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Due today, 23.59`
+  String get assignment_1_due {
+    return Intl.message(
+      'Due today, 23.59',
+      name: 'assignment_1_due',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Online Learning #04`
+  String get online_learning_04 {
+    return Intl.message(
+      'Online Learning #04',
+      name: 'online_learning_04',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Due Oct 9, 23.59`
+  String get online_learning_04_due {
+    return Intl.message(
+      'Due Oct 9, 23.59',
+      name: 'online_learning_04_due',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Online Learning #05`
+  String get online_learning_05 {
+    return Intl.message(
+      'Online Learning #05',
+      name: 'online_learning_05',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Due Oct 16, 23.59`
+  String get online_learning_05_due {
+    return Intl.message(
+      'Due Oct 16, 23.59',
+      name: 'online_learning_05_due',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Home`
+  String get home {
+    return Intl.message(
+      'Home',
+      name: 'home',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoice`
+  String get invoice {
+    return Intl.message(
+      'Invoice',
+      name: 'invoice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile`
+  String get profile {
+    return Intl.message(
+      'Profile',
+      name: 'profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To-Do:`
+  String get todo {
+    return Intl.message(
+      'To-Do:',
+      name: 'todo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Assignment 1`
+  String get assignment1 {
+    return Intl.message(
+      'Assignment 1',
+      name: 'assignment1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Due today, 23.59`
+  String get due_today {
+    return Intl.message(
+      'Due today, 23.59',
+      name: 'due_today',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Online Learning #04`
+  String get online_learning_4 {
+    return Intl.message(
+      'Online Learning #04',
+      name: 'online_learning_4',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Due Oct 9, 23.59`
+  String get due_oct_9 {
+    return Intl.message(
+      'Due Oct 9, 23.59',
+      name: 'due_oct_9',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Online Learning #05`
+  String get online_learning_5 {
+    return Intl.message(
+      'Online Learning #05',
+      name: 'online_learning_5',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Due Oct 16, 23.59`
+  String get due_oct_16 {
+    return Intl.message(
+      'Due Oct 16, 23.59',
+      name: 'due_oct_16',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Schedule`
+  String get schedule {
+    return Intl.message(
+      'Schedule',
+      name: 'schedule',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Materials`
+  String get materials {
+    return Intl.message(
+      'Materials',
+      name: 'materials',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grades`
+  String get grades {
+    return Intl.message(
+      'Grades',
+      name: 'grades',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reports`
+  String get reports {
+    return Intl.message(
+      'Reports',
+      name: 'reports',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notifications`
+  String get notifications {
+    return Intl.message(
+      'Notifications',
+      name: 'notifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `E-Library`
+  String get e_library {
+    return Intl.message(
+      'E-Library',
+      name: 'e_library',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Subjects`
   String get subjectsTitle {
     return Intl.message(

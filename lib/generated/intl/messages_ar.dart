@@ -40,9 +40,17 @@ class MessageLookup extends MessageLookupByLibrary {
             "تم رفض الوصول: الدور غير صحيح."),
         "accessDeniedMessage":
             MessageLookupByLibrary.simpleMessage("تم الرفض: دور غير صحيح."),
+        "administrativeFee":
+            MessageLookupByLibrary.simpleMessage("الرسوم الإدارية"),
+        "administrative_fee":
+            MessageLookupByLibrary.simpleMessage("رسوم إدارية"),
         "all": MessageLookupByLibrary.simpleMessage("الكل"),
         "arabic": MessageLookupByLibrary.simpleMessage("العربية"),
         "art": MessageLookupByLibrary.simpleMessage("الفن"),
+        "assignment1": MessageLookupByLibrary.simpleMessage("المهمة 1"),
+        "assignment_1": MessageLookupByLibrary.simpleMessage("التكليف 1"),
+        "assignment_1_due":
+            MessageLookupByLibrary.simpleMessage("الاستحقاق اليوم، 23:59"),
         "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
         "contact": MessageLookupByLibrary.simpleMessage("التواصل"),
         "dashboard_attendance": MessageLookupByLibrary.simpleMessage("الحضور"),
@@ -54,24 +62,44 @@ class MessageLookup extends MessageLookupByLibrary {
         "dashboard_schedule": MessageLookupByLibrary.simpleMessage("الجدول"),
         "dashboard_todo_header":
             MessageLookupByLibrary.simpleMessage("المهام:"),
+        "download": MessageLookupByLibrary.simpleMessage("تحميل"),
+        "due_oct_16":
+            MessageLookupByLibrary.simpleMessage("مستحق 16 أكتوبر، 23.59"),
+        "due_oct_9":
+            MessageLookupByLibrary.simpleMessage("مستحق 9 أكتوبر، 23.59"),
+        "due_today": MessageLookupByLibrary.simpleMessage("مستحق اليوم، 23.59"),
+        "e_library":
+            MessageLookupByLibrary.simpleMessage("المكتبة الإلكترونية"),
         "email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
         "emailLabel": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
         "english": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
         "errorLabel": m0,
+        "evenSemester": MessageLookupByLibrary.simpleMessage("الفصل الزوجي"),
         "filterSubjects": MessageLookupByLibrary.simpleMessage("تصفية المواد"),
         "fullName": MessageLookupByLibrary.simpleMessage("الاسم الكامل"),
         "geography": MessageLookupByLibrary.simpleMessage("الجغرافيا"),
+        "gpa": MessageLookupByLibrary.simpleMessage("المعدل التراكمي"),
+        "grade": MessageLookupByLibrary.simpleMessage("الدرجة"),
+        "grades": MessageLookupByLibrary.simpleMessage("الدرجات"),
         "hello": MessageLookupByLibrary.simpleMessage("مرحبًا"),
         "history": MessageLookupByLibrary.simpleMessage("التاريخ"),
+        "home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
         "invalidEmail": MessageLookupByLibrary.simpleMessage(
             "يرجى إدخال عنوان بريد إلكتروني صالح."),
         "invalidEmailMessage": MessageLookupByLibrary.simpleMessage(
             "يرجى إدخال عنوان بريد إلكتروني صالح."),
+        "invoice": MessageLookupByLibrary.simpleMessage("الفاتورة"),
+        "invoiceTitle": MessageLookupByLibrary.simpleMessage("٢٠٢٣/٢٠٢٤"),
+        "invoice_even": MessageLookupByLibrary.simpleMessage("زوجي"),
+        "invoice_odd": MessageLookupByLibrary.simpleMessage("فردي"),
+        "invoice_title": MessageLookupByLibrary.simpleMessage("الفاتورة"),
         "language": MessageLookupByLibrary.simpleMessage("اللغة"),
         "language_arabic": MessageLookupByLibrary.simpleMessage("العربية"),
         "language_english": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
         "language_portuguese":
             MessageLookupByLibrary.simpleMessage("البرتغالية"),
+        "list_of_subjects":
+            MessageLookupByLibrary.simpleMessage("قائمة المواد"),
         "login": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
         "loginButton": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
         "loginFailed": MessageLookupByLibrary.simpleMessage("فشل تسجيل الدخول"),
@@ -82,16 +110,32 @@ class MessageLookup extends MessageLookupByLibrary {
             "قم بتسجيل الدخول إلى حسابك للمتابعة"),
         "login_as_role": m2,
         "logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
+        "materials": MessageLookupByLibrary.simpleMessage("المواد"),
         "math": MessageLookupByLibrary.simpleMessage("الرياضيات"),
         "music": MessageLookupByLibrary.simpleMessage("الموسيقى"),
         "nameNotFound": MessageLookupByLibrary.simpleMessage("الاسم غير موجود"),
         "nav_attendance": MessageLookupByLibrary.simpleMessage("الحضور"),
         "nav_home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
+        "nav_invoice": MessageLookupByLibrary.simpleMessage("الفاتورة"),
         "nav_profile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
         "noProfileData": MessageLookupByLibrary.simpleMessage(
             "لا توجد بيانات للملف الشخصي."),
         "noScheduleAvailable":
             MessageLookupByLibrary.simpleMessage("لا يوجد جدول متاح"),
+        "notifications": MessageLookupByLibrary.simpleMessage("الإشعارات"),
+        "oddSemester": MessageLookupByLibrary.simpleMessage("الفصل الفردي"),
+        "online_learning_04":
+            MessageLookupByLibrary.simpleMessage("التعلم عبر الإنترنت #04"),
+        "online_learning_04_due":
+            MessageLookupByLibrary.simpleMessage("الاستحقاق 9 أكتوبر، 23:59"),
+        "online_learning_05":
+            MessageLookupByLibrary.simpleMessage("التعلم عبر الإنترنت #05"),
+        "online_learning_05_due":
+            MessageLookupByLibrary.simpleMessage("الاستحقاق 16 أكتوبر، 23:59"),
+        "online_learning_4":
+            MessageLookupByLibrary.simpleMessage("التعلم عبر الإنترنت #04"),
+        "online_learning_5":
+            MessageLookupByLibrary.simpleMessage("التعلم عبر الإنترنت #05"),
         "parent": MessageLookupByLibrary.simpleMessage("والد/والدة"),
         "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
         "passwordLabel": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
@@ -99,22 +143,37 @@ class MessageLookup extends MessageLookupByLibrary {
             "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل."),
         "pleaseEnterEmailAndPassword": MessageLookupByLibrary.simpleMessage(
             "الرجاء إدخال البريد الإلكتروني وكلمة المرور"),
+        "profile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
         "profileTitle": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
+        "reports": MessageLookupByLibrary.simpleMessage("التقارير"),
         "roleHeader": m3,
         "role_parent": MessageLookupByLibrary.simpleMessage("والد"),
         "role_student": MessageLookupByLibrary.simpleMessage("طالب"),
         "role_teacher": MessageLookupByLibrary.simpleMessage("معلم"),
+        "schedule": MessageLookupByLibrary.simpleMessage("الجدول"),
         "scheduleTitle": MessageLookupByLibrary.simpleMessage("الجدول"),
         "science": MessageLookupByLibrary.simpleMessage("العلوم"),
         "select_role": MessageLookupByLibrary.simpleMessage("اختيار الدور"),
         "select_your_role": MessageLookupByLibrary.simpleMessage("اختر دورك"),
+        "semester_even": MessageLookupByLibrary.simpleMessage("زوجي"),
+        "semester_odd": MessageLookupByLibrary.simpleMessage("فردي"),
         "shortPasswordMessage": MessageLookupByLibrary.simpleMessage(
             "يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل."),
         "signup": MessageLookupByLibrary.simpleMessage("التسجيل"),
         "signup_as_role": m4,
         "student": MessageLookupByLibrary.simpleMessage("طالب"),
+        "subject": MessageLookupByLibrary.simpleMessage("الموضوع"),
+        "subject_arabic": MessageLookupByLibrary.simpleMessage("عربي"),
+        "subject_art": MessageLookupByLibrary.simpleMessage("فن"),
+        "subject_english": MessageLookupByLibrary.simpleMessage("إنجليزي"),
+        "subject_history": MessageLookupByLibrary.simpleMessage("تاريخ"),
+        "subject_math": MessageLookupByLibrary.simpleMessage("رياضيات"),
+        "subject_physical_education":
+            MessageLookupByLibrary.simpleMessage("التربية البدنية"),
+        "subject_science": MessageLookupByLibrary.simpleMessage("علوم"),
         "subjectsTitle": MessageLookupByLibrary.simpleMessage("المواد"),
         "teacher": MessageLookupByLibrary.simpleMessage("معلم"),
+        "todo": MessageLookupByLibrary.simpleMessage("المهام:"),
         "todo_assignment1_title":
             MessageLookupByLibrary.simpleMessage("الواجب 1"),
         "todo_due_date": m5,
@@ -124,11 +183,17 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("التعلم عن بعد #04"),
         "todo_online_learning5":
             MessageLookupByLibrary.simpleMessage("التعلم عن بعد #05"),
+        "todo_title": MessageLookupByLibrary.simpleMessage("المهام:"),
+        "tuitionFee": MessageLookupByLibrary.simpleMessage("الرسوم الدراسية"),
+        "tuition_fee": MessageLookupByLibrary.simpleMessage("رسوم الدراسة"),
         "unknown": MessageLookupByLibrary.simpleMessage("غير معروف"),
         "unknownRole": MessageLookupByLibrary.simpleMessage("دور غير معروف"),
         "unknownRoleMessage":
             MessageLookupByLibrary.simpleMessage("دور غير معروف"),
         "userInfo": MessageLookupByLibrary.simpleMessage("معلومات المستخدم"),
-        "welcome": MessageLookupByLibrary.simpleMessage("مرحبًا بك في التطبيق!")
+        "welcome":
+            MessageLookupByLibrary.simpleMessage("مرحبًا بك في التطبيق!"),
+        "year": MessageLookupByLibrary.simpleMessage("السنة"),
+        "your_grades": MessageLookupByLibrary.simpleMessage("درجاتك")
       };
 }

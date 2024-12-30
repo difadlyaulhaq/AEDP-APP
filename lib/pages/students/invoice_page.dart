@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_aedp/generated/l10n.dart';
 
 class InvoicePage extends StatelessWidget {
   const InvoicePage({super.key});
@@ -6,6 +7,9 @@ class InvoicePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(S.of(context).invoice_title), // Use localized string for title
+      ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           final screenWidth = MediaQuery.of(context).size.width;
@@ -15,25 +19,25 @@ class InvoicePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "2023/2024",
+                Text(
+                  "2023/2024", // You can localize this too if needed
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
                 buildInvoiceSection(
-                  title: "Even",
+                  title: S.of(context).invoice_even, // Use localized title
                   items: [
-                    InvoiceItem("Tuition Fee", "February 18 2024", "AED 96,140"),
-                    InvoiceItem("Administrative Fee", "February 18 2024", "AED 1,000"),
+                    InvoiceItem(S.of(context).tuition_fee, "February 18 2024", "AED 96,140"),
+                    InvoiceItem(S.of(context).administrative_fee, "February 18 2024", "AED 1,000"),
                   ],
                   isWide: screenWidth > 600, // Adapt layout for wide screens
                 ),
                 const SizedBox(height: 16),
                 buildInvoiceSection(
-                  title: "Odd",
+                  title: S.of(context).invoice_odd, // Use localized title
                   items: [
-                    InvoiceItem("Tuition Fee", "August 18 2024", "AED 96,140"),
-                    InvoiceItem("Administrative Fee", "August 18 2024", "AED 1,000"),
+                    InvoiceItem(S.of(context).tuition_fee, "August 18 2024", "AED 96,140"),
+                    InvoiceItem(S.of(context).administrative_fee, "August 18 2024", "AED 1,000"),
                   ],
                   isWide: screenWidth > 600, // Adapt layout for wide screens
                 ),

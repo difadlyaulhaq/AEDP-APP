@@ -1,105 +1,103 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_aedp/bloc/teacher_materi/material_event.dart';
+import 'package:project_aedp/bloc/teacher_materi/material_state.dart' as material_state;
+import 'package:project_aedp/bloc/teacher_materi/teacher_bloc.dart';
 
 class DetailMaterial extends StatelessWidget {
-  const DetailMaterial({super.key});
+  final String subject;
+  
+  const DetailMaterial({
+    super.key,
+    required this.subject,
+  });
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(screenHeight * 0.2), // Tinggi AppBar responsif
-        child: ClipPath(
-          clipper: CustomAppBarClipper(),
-          child: AppBar(
-            automaticallyImplyLeading: true,
-            flexibleSpace: Stack(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF1E70A0), // Biru terang
-                        Color(0xFF0B2A3C), // Biru gelap
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
+    return BlocProvider(
+      create: (context) => MaterialBloc()..add(FetchMaterials(subjects: [subject])),
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(screenHeight * 0.2),
+          child: ClipPath(
+            clipper: CustomAppBarClipper(),
+            child: AppBar(
+              automaticallyImplyLeading: true,
+              flexibleSpace: Stack(
+                children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xFF1E70A0),
+                          Color(0xFF0B2A3C),
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: Icon(
-                    Icons.school,
-                    size: screenWidth * 0.3,
-                    color: Colors.white.withOpacity(0.1),
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Icon(
+                      Icons.school,
+                      size: screenWidth * 0.3,
+                      color: Colors.white.withAlpha(25),
+                    ),
                   ),
+                ],
+              ),
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                  size: screenWidth * 0.07,
                 ),
-              ],
-            ),
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-                size: screenWidth * 0.07,
+                onPressed: () => Navigator.pop(context),
               ),
-              onPressed: () => Navigator.pop(context),
-            ),
-            title: Text(
-              'Math Materials',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: screenWidth * 0.06,
+              title: Text(
+                '$subject Materials',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: screenWidth * 0.06,
+                ),
               ),
+              centerTitle: true,
             ),
-            centerTitle: true,
           ),
         ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(screenWidth * 0.04),
-        child: ListView(
-          children: [
-            _buildMaterialCard(
-              context,
-              title: 'New Material',
-              subtitle: 'Integers and Their Operations',
-              color: Colors.blue.shade100,
-              icon: Icons.book,
-            ),
-            _buildAssignmentCard(
-              context,
-              title: 'New Assignment',
-              subtitle: 'Exercise 2: Linear Equations',
-              color: Colors.orange.shade100,
-              icon: Icons.assignment,
-            ),
-            _buildMaterialCard(
-              context,
-              title: 'New Material',
-              subtitle: 'The Pythagorean Theorem',
-              color: Colors.blue.shade100,
-              icon: Icons.book,
-            ),
-            _buildAssignmentCard(
-              context,
-              title: 'New Assignment',
-              subtitle: 'Exercise 1: Geometry Basics',
-              color: Colors.orange.shade100,
-              icon: Icons.assignment,
-            ),
-            _buildMaterialCard(
-              context,
-              title: 'New Material',
-              subtitle: 'Elementary Geometry',
-              color: Colors.blue.shade100,
-              icon: Icons.book,
-            ),
-          ],
+        body: BlocBuilder<MaterialBloc, material_state.MaterialState>(
+          builder: (context, state) {
+            if (state is material_state.MaterialLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is material_state.MaterialError) {
+              return Center(child: Text('Error: ${state.errorMessage}'));
+            } else if (state is material_state.MaterialLoaded) {
+              return Padding(
+                padding: EdgeInsets.all(screenWidth * 0.04),
+                child: ListView.builder(
+                  itemCount: state.materials.length,
+                  itemBuilder: (context, index) {
+                    final material = state.materials[index];
+                    // Using a simple blue color for all cards until we determine the correct property
+                    return _buildMaterialCard(
+                      context,
+                      title: material.title,
+                      subtitle: material.description,
+                      color: Colors.blue.shade100,
+                      icon: Icons.book,
+                    );
+                  },
+                ),
+              );
+            }
+            return const Center(child: Text('No materials available'));
+          },
         ),
       ),
     );
@@ -135,44 +133,32 @@ class DetailMaterial extends StatelessWidget {
                 size: screenWidth * 0.1,
               ),
               SizedBox(width: screenWidth * 0.04),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.045,
-                      fontWeight: FontWeight.bold,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.045,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: screenWidth * 0.02),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.04,
-                      color: Colors.black54,
+                    SizedBox(height: screenWidth * 0.02),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.04,
+                        color: Colors.black54,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildAssignmentCard(BuildContext context,
-      {required String title,
-      required String subtitle,
-      required Color color,
-      required IconData icon}) {
-    return _buildMaterialCard(
-      context,
-      title: title,
-      subtitle: subtitle,
-      color: color,
-      icon: icon,
     );
   }
 }
@@ -182,8 +168,8 @@ class CustomAppBarClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     final path = Path();
     path.lineTo(0, size.height - 40);
-    path.quadraticBezierTo(size.width / 2, size.height, size.width,
-        size.height - 40); // Desain lengkungan
+    path.quadraticBezierTo(
+        size.width / 2, size.height, size.width, size.height - 40);
     path.lineTo(size.width, 0);
     path.close();
     return path;

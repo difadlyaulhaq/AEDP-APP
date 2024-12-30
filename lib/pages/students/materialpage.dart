@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/students/detailmaterial.dart';
 
-class StudentMaterialPage extends StatelessWidget {
+class StudentMaterialPage extends StatefulWidget {
   const StudentMaterialPage({super.key});
+
+  @override
+  State<StudentMaterialPage> createState() => _StudentMaterialPageState();
+}
+
+class _StudentMaterialPageState extends State<StudentMaterialPage> {
+  List<Map<String, dynamic>> filteredSubjects = List.from(subjects);
+  String selectedFilter = "All";
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +33,8 @@ class StudentMaterialPage extends StatelessWidget {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Color(0xFF1E70A0), // Warna biru terang
-                        Color(0xFF0B2A3C), // Warna biru gelap
+                        Color(0xFF1E70A0),
+                        Color(0xFF0B2A3C),
                       ],
                     ),
                   ),
@@ -41,7 +50,7 @@ class StudentMaterialPage extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
             ),
             title: Text(
-              'Subjects',
+              S.of(context).subjectsTitle,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -49,6 +58,15 @@ class StudentMaterialPage extends StatelessWidget {
               ),
             ),
             centerTitle: true,
+            actions: [
+              IconButton(
+                icon: const Icon(
+                  Icons.filter_alt_rounded,
+                  color: Colors.white,
+                ),
+                onPressed: _showFilterDialog,
+              ),
+            ],
           ),
         ),
       ),
@@ -63,14 +81,72 @@ class StudentMaterialPage extends StatelessWidget {
             crossAxisSpacing: screenWidth * 0.04,
             mainAxisSpacing: screenHeight * 0.02,
           ),
-          itemCount: subjects.length,
+          itemCount: filteredSubjects.length,
           itemBuilder: (context, index) {
-            final subject = subjects[index];
+            final subject = filteredSubjects[index];
             return _buildCardItem(context, subject['name'], subject['icon']);
           },
         ),
       ),
     );
+  }
+
+  void _showFilterDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(S.of(context).filterSubjects),
+          content: DropdownButton<String>(
+            value: selectedFilter,
+            items: <String>[
+              S.of(context).all,
+              S.of(context).math,
+              S.of(context).science,
+              S.of(context).history,
+              S.of(context).geography,
+              S.of(context).art,
+              S.of(context).music,
+              S.of(context).arabic,
+              S.of(context).english
+            ].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (value) {
+              setState(() {
+                selectedFilter = value!;
+                _applyFilter(selectedFilter);
+              });
+              Navigator.pop(context);
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(S.of(context).cancel),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _applyFilter(String filter) {
+    if (filter == S.of(context).all) {
+      setState(() {
+        filteredSubjects = List.from(subjects);
+      });
+    } else {
+      setState(() {
+        filteredSubjects = subjects
+            .where((subject) =>
+                subject['name'].toLowerCase().contains(filter.toLowerCase()))
+            .toList();
+      });
+    }
   }
 
   Widget _buildCardItem(BuildContext context, String subject, IconData icon) {
@@ -80,7 +156,11 @@ class StudentMaterialPage extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const DetailMaterial()),
+          MaterialPageRoute(
+            builder: (context) => DetailMaterial(
+              subject: subject.toLowerCase(),
+            ),
+          ),
         );
       },
       child: Card(
@@ -146,12 +226,12 @@ class CustomAppBarClipper extends CustomClipper<Path> {
 }
 
 final List<Map<String, dynamic>> subjects = [
-  {'name': 'History', 'icon': Icons.history_edu},
-  {'name': 'Math', 'icon': Icons.calculate},
-  {'name': 'Science', 'icon': Icons.science},
-  {'name': 'Art', 'icon': Icons.brush},
-  {'name': 'Arabic', 'icon': Icons.language},
-  {'name': 'Music', 'icon': Icons.music_note},
-  {'name': 'Geography', 'icon': Icons.public},
-  {'name': 'English', 'icon': Icons.book},
+  {'name': S.current.history, 'icon': Icons.history_edu},
+  {'name': S.current.math, 'icon': Icons.calculate},
+  {'name': S.current.science, 'icon': Icons.science},
+  {'name': S.current.art, 'icon': Icons.brush},
+  {'name': S.current.arabic, 'icon': Icons.language},
+  {'name': S.current.music, 'icon': Icons.music_note},
+  {'name': S.current.geography, 'icon': Icons.public},
+  {'name': S.current.english, 'icon': Icons.book},
 ];

@@ -1,40 +1,40 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
+import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/theme/theme.dart';
 
-class Gradespage extends StatefulWidget {
-  const Gradespage({super.key});
+class GradesPage extends StatefulWidget {
+  const GradesPage({super.key});
 
   @override
-  State<Gradespage> createState() => _GradespageState();
+  State<GradesPage> createState() => _GradesPageState();
 }
 
-class _GradespageState extends State<Gradespage> {
+class _GradesPageState extends State<GradesPage> {
   String selectedYear = '2024';
   String selectedSemester = 'Odd';
 
-  List<Map<String, dynamic>> gradesData = [
-    {"subject": "Mathematics", "grade": 82, "year": "2024", "semester": "Odd"},
-    {"subject": "Science", "grade": 91, "year": "2024", "semester": "Even"},
-    {"subject": "History", "grade": 100, "year": "2024", "semester": "Odd"},
-    {"subject": "Physical Education", "grade": 80, "year": "2024", "semester": "Even"},
-    {"subject": "Art", "grade": 19, "year": "2024", "semester": "Odd"},
-    {"subject": "English", "grade": 100, "year": "2024", "semester": "Even"},
-    {"subject": "Arabic", "grade": 100, "year": "2024", "semester": "Odd"},
-  ];
+  List<Map<String, dynamic>> getGradesData(BuildContext context) {
+    return [
+      {"subject": S.of(context).subject_math, "grade": 82, "year": "2024", "semester": "Odd"},
+      {"subject": S.of(context).subject_science, "grade": 91, "year": "2024", "semester": "Even"},
+      {"subject": S.of(context).subject_history, "grade": 100, "year": "2024", "semester": "Odd"},
+      {"subject": S.of(context).subject_physical_education, "grade": 80, "year": "2024", "semester": "Even"},
+      {"subject": S.of(context).subject_art, "grade": 19, "year": "2024", "semester": "Odd"},
+      {"subject": S.of(context).subject_english, "grade": 100, "year": "2024", "semester": "Even"},
+      {"subject": S.of(context).subject_arabic, "grade": 100, "year": "2024", "semester": "Odd"},
+    ];
+  }
 
-  List<Map<String, dynamic>> get filteredGrades {
-    return gradesData
-        .where((grade) =>
-            grade["year"] == selectedYear && grade["semester"] == selectedSemester)
-        .toList();
+  List<Map<String, dynamic>> getFilteredGrades(List<Map<String, dynamic>> gradesData) {
+    return gradesData.where((grade) {
+      return grade['year'] == selectedYear && grade['semester'] == selectedSemester;
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final gradesData = getGradesData(context);
+    final filteredGrades = getFilteredGrades(gradesData); // Use the filtered grades here
     double gpa = _calculateGPA(filteredGrades);
 
     return Scaffold(
@@ -65,7 +65,7 @@ class _GradespageState extends State<Gradespage> {
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
-                fontSize: screenWidth * 0.05, // Adjust size dynamically
+                fontSize: MediaQuery.of(context).size.width * 0.05,
               ),
             ),
             centerTitle: true,
@@ -73,14 +73,14 @@ class _GradespageState extends State<Gradespage> {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
               child: Container(
-                height: screenHeight * 0.1,
-                width: screenHeight * 0.1,
+                height: MediaQuery.of(context).size.height * 0.1,
+                width: MediaQuery.of(context).size.height * 0.1,
                 decoration: const BoxDecoration(
                   color: Color(0xFF1E70A0),
                   shape: BoxShape.circle,
@@ -89,21 +89,21 @@ class _GradespageState extends State<Gradespage> {
                 child: Text(
                   gpa.toStringAsFixed(2),
                   style: TextStyle(
-                    fontSize: screenWidth * 0.06,
+                    fontSize: MediaQuery.of(context).size.width * 0.06,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
               ),
             ),
-            SizedBox(height: screenHeight * 0.02),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "List of Subjects",
-                  style: blackColorTextStyle.copyWith(
-                    fontSize: screenWidth * 0.045,
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.045,
                     color: const Color.fromRGBO(13, 49, 70, 1),
                     fontWeight: FontWeight.w600,
                   ),
@@ -124,7 +124,7 @@ class _GradespageState extends State<Gradespage> {
                               ))
                           .toList(),
                     ),
-                    SizedBox(width: screenWidth * 0.02),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
                     DropdownButton<String>(
                       value: selectedSemester,
                       onChanged: (newValue) {
@@ -143,7 +143,7 @@ class _GradespageState extends State<Gradespage> {
                 ),
               ],
             ),
-            SizedBox(height: screenHeight * 0.02),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
             Expanded(
               child: ListView.builder(
                 itemCount: filteredGrades.length,
@@ -152,7 +152,7 @@ class _GradespageState extends State<Gradespage> {
                   return _buildGradeItem(
                     gradeItem["subject"],
                     gradeItem["grade"].toString(),
-                    screenWidth,
+                    MediaQuery.of(context).size.width,
                   );
                 },
               ),
@@ -212,17 +212,15 @@ class CustomAppBarClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.lineTo(0, size.height - 40);
-    path.quadraticBezierTo(0, size.height, 40, size.height);
-    path.lineTo(size.width - 40, size.height);
-    path.quadraticBezierTo(size.width, size.height, size.width, size.height - 40);
-    path.lineTo(size.width, 0);
-    path.close();
+    path.lineTo(0, size.height - 40); // Start from the bottom-left corner
+    path.quadraticBezierTo(0, size.height, 40, size.height); // Left corner curve
+    path.lineTo(size.width - 40, size.height); // Straight line at the bottom middle
+    path.quadraticBezierTo(size.width, size.height, size.width, size.height - 40); // Right corner curve
+    path.lineTo(size.width, 0); // Straight line at the top-right corner
+    path.close(); // Close the path
     return path;
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return false;
-  }
+  bool shouldReclip(CustomClipper<Path> oldClipper) => true; // Always reclip
 }

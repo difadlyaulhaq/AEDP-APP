@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/theme/theme.dart';
 import 'package:project_aedp/bloc/schedule/schedule_bloc.dart';
 import 'package:project_aedp/bloc/schedule/schedule_event.dart';
@@ -74,7 +75,7 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('Schedule', style: whiteColorTextStyle),
+              title: Text(S.of(context).scheduleTitle, style: whiteColorTextStyle),
               centerTitle: true,
               flexibleSpace: Container(
                 decoration: const BoxDecoration(
@@ -104,10 +105,10 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
                       ? ListView(
                           children: daySchedule.map((classInfo) => _buildClassCard(classInfo)).toList(),
                         )
-                      : const Center(
+                      : Center(
                           child: Text(
-                            'No schedule available',
-                            style: TextStyle(fontSize: 18, color: Colors.grey),
+                            S.of(context).noScheduleAvailable,
+                            style: const TextStyle(fontSize: 18, color: Colors.grey),
                           ),
                         ),
                 );
