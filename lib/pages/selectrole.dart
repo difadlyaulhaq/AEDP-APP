@@ -35,15 +35,13 @@ class _LoginScreenState extends State<LoginScreen> {
     return S.of(context).login_as_role(getLocalizedRole(context, role));
   }
 
-  void navigateToLogin(String role) {
-    dev.log("Navigating to login page with role: $role");
-    if (mounted) {
-      context.pushReplacement('/login/$role');
-      dev.log("Navigation requested to: /login/$role");
-    } else {
-      dev.log("Widget not mounted. Navigation aborted.");
-    }
+void navigateToLogin(String role) {
+  dev.log("Navigating to login page with role: $role");
+  if (mounted) {
+    context.go('/login/$role');
+    dev.log("Navigation requested to: /login/$role");
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -155,8 +153,15 @@ class _LoginScreenState extends State<LoginScreen> {
       underline: const SizedBox(),
       style: const TextStyle(color: Colors.white, fontSize: 18),
       dropdownColor: Colors.white,
-      onChanged: onChanged,
-      items: roles.map((String role) {
+    onChanged: (String? role) {
+  if (role != null) {
+    dev.log("Role selected: $role");
+    setState(() {
+      selectedLoginRole = role;
+    });
+    navigateToLogin(role); // Gunakan fungsi navigasi yang sudah ada
+  }
+},      items: roles.map((String role) {
         return DropdownMenuItem<String>(
           value: role,
           child: Text(

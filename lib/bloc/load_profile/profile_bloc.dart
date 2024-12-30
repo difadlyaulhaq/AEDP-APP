@@ -13,19 +13,16 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
   Future<void> _onLoadProfile(LoadUserProfile event, Emitter<LoadProfileState> emit) async {
     emit(LoadProfileLoading());
     try {
-      final collection = event.role == 'teacher' 
-          ? 'teachers' 
-          : event.role == 'student' 
-              ? 'students' 
-              : 'parents';
-              
-      final doc = await _firestore.collection(collection).doc(event.userId).get();
+      final QuerySnapshot snapshot = await _firestore.collection('users')
+          .where('email', isEqualTo: event.email)
+          .limit(1)
+          .get();
 
-      if (!doc.exists) {
-        throw Exception('Profile not found');
+      if (snapshot.docs.isEmpty) {
+        throw Exception('Profile not found for email: ${event.email}');
       }
 
-      final profileData = doc.data() as Map<String, dynamic>;
+      final profileData = snapshot.docs.first.data() as Map<String, dynamic>;
       emit(LoadProfileLoaded(profileData: profileData));
     } catch (e) {
       emit(LoadProfileError(e.toString()));

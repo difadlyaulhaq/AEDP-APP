@@ -1,5 +1,6 @@
 {
   "@@locale": "ar",
+  "pleaseEnterEmailAndPassword": "الرجاء إدخال البريد الإلكتروني وكلمة المرور",
   "select_your_role": "اختر دورك",
   "login_as_role": "تسجيل الدخول كـ {role}",
   "signup_as_role": "إنشاء حساب كـ {role}",

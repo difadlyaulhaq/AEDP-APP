@@ -20,7 +20,8 @@ class AuthLoginSuccess extends AuthState {
   @override
   List<Object?> get props => [role, email];
 }
-
+class AuthLogoutState extends AuthState {}
+class AuthLogoutSuccess extends AuthState{}
 class AuthFailure extends AuthState {
   final String errorMessage;
 

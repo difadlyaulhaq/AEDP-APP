@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:project_aedp/bloc/auth/auth_bloc.dart';
 import 'package:project_aedp/bloc/auth/auth_state.dart';
 import 'package:project_aedp/pages/students/student_home.dart';
 import 'package:project_aedp/pages/teacher/teacher_dashboard.dart';
@@ -29,7 +31,7 @@ GoRouter getRouter(AuthState authState) {
         path: '/login/:role',
         name: RoutesNames.login,
         builder: (context, state) {
-          final role = state.pathParameters['role'] ?? 'student';
+          final role = state.pathParameters['role']!;
           return LoginPageByRole(role: role);
         },
       ),
@@ -37,39 +39,55 @@ GoRouter getRouter(AuthState authState) {
         path: '/student-home',
         name: RoutesNames.homestudent,
         builder: (context, state) => const StudentHome(),
+        redirect: (context, state) {
+        final authState = context.read<AuthBloc>().state;
+        if (authState is! AuthLoginSuccess || 
+            authState.role.toLowerCase() != 'student') {
+          return '/select-role';
+        }
+        return null;
+      },
       ),
       GoRoute(
-        path: '/teacher-dashboard',
-        name: RoutesNames.teacherdash,
-        builder: (context, state) => const TeacherDashboard(),
-      ),
+      path: '/teacher-dashboard',
+      builder: (context, state) => const TeacherDashboard(),
+      redirect: (context, state) {
+        final authState = context.read<AuthBloc>().state;
+        if (authState is! AuthLoginSuccess || 
+            authState.role.toLowerCase() != 'teacher') {
+          return '/select-role';
+        }
+        return null;
+      },
+    ),
       GoRoute(
         path: '*',
         builder: (context, state) => const NotFoundPage(),
       ),
     ],
-    redirect: (BuildContext context, GoRouterState state) {
-      final isAuthenticated = authState is AuthLoginSuccess;
-      final isGoingToAuth = state.matchedLocation == '/' || 
-                           state.matchedLocation == '/select-role' || 
-                           state.matchedLocation.startsWith('/login');
-
-      if (!isAuthenticated && !isGoingToAuth) {
-        return '/';
-      }
-
-      if (isAuthenticated && isGoingToAuth) {
-        switch (authState.role) {
+      redirect: (context, state) {
+    final authState = context.read<AuthBloc>().state;
+    final isLoggingIn = state.matchedLocation.startsWith('/login');
+    final isSelectingRole = state.matchedLocation == '/select-role';
+    
+    if (authState is AuthLoginSuccess) {
+      if (isLoggingIn || isSelectingRole) {
+        switch (authState.role.toLowerCase()) {
           case 'teacher':
             return '/teacher-dashboard';
           case 'student':
             return '/student-home';
+          case 'parent':
+            return '/parent-home';
           default:
             return '/select-role';
         }
-            }
-
-      return null;
-    },
+      }
+    } else if (!isSelectingRole && !isLoggingIn) {
+      return '/select-role';
+    }
+    
+    return null;
+  },
   );
 }

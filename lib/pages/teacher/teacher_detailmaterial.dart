@@ -58,7 +58,8 @@ class TeacherDetailMaterial extends StatelessWidget {
         ),
       ),
       body: BlocProvider(
-        create: (context) => MaterialBloc()..add(FetchMaterials(subjects: [subject])),
+        create: (context) =>
+            MaterialBloc()..add(FetchMaterials(subjects: [subject])),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -68,9 +69,9 @@ class TeacherDetailMaterial extends StatelessWidget {
                 child: PopupMenuButton<String>(
                   onSelected: (value) {
                     if (value == 'upload_material') {
-                      _showUploadDialog(context, 'Upload Material', subject);
+                      showUploadDialog(context, 'Upload Material', subject);
                     } else if (value == 'upload_assignment') {
-                      _showUploadDialog(context, 'Upload Assignment', subject);
+                      showUploadDialog(context, 'Upload Assignment', subject);
                     }
                   },
                   icon: const Icon(
@@ -92,7 +93,8 @@ class TeacherDetailMaterial extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
               Expanded(
-                child: BlocBuilder<MaterialBloc, teacher_material_state.MaterialState>(
+                child: BlocBuilder<MaterialBloc,
+                    teacher_material_state.MaterialState>(
                   builder: (context, state) {
                     if (state is teacher_material_state.MaterialLoading) {
                       return const Center(child: CircularProgressIndicator());
@@ -101,7 +103,7 @@ class TeacherDetailMaterial extends StatelessWidget {
                         itemCount: state.materials.length,
                         itemBuilder: (context, index) {
                           final material = state.materials[index];
-                          return _buildMaterialCard(
+                          return buildMaterialCard(
                             material.title,
                             material.description,
                             material.fileLink,
@@ -110,7 +112,8 @@ class TeacherDetailMaterial extends StatelessWidget {
                         },
                       );
                     } else if (state is teacher_material_state.MaterialError) {
-                      return Center(child: Text('Error: ${state.errorMessage}'));
+                      return Center(
+                          child: Text('Error: ${state.errorMessage}'));
                     }
                     return const Center(child: Text('No materials available.'));
                   },
@@ -122,81 +125,86 @@ class TeacherDetailMaterial extends StatelessWidget {
       ),
     );
   }
-Widget _buildMaterialCard(String title, String subtitle, String fileLink, double screenWidth) {
-  Future<void> openFile(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (!await canLaunchUrl(uri)) {
-      throw 'Could not launch $url';
-    }
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
-  }
 
-  return Card(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(15),
-    ),
-    child: Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: 16.0,
-        horizontal: screenWidth * 0.05,
+  Widget buildMaterialCard(
+      String title, String subtitle, String fileLink, double screenWidth) {
+    Future<void> openFile(String url) async {
+      final Uri uri = Uri.parse(url);
+      if (!await canLaunchUrl(uri)) {
+        throw 'Could not launch $url';
+      }
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: screenWidth * 0.04,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  fontSize: screenWidth * 0.035,
-                  color: Colors.black54,
-                ),
-              ),
-              const SizedBox(height: 4),
-              GestureDetector(
-                onTap: () => openFile(fileLink),
-                child: Text(
-                  fileLink,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: 16.0,
+          horizontal: screenWidth * 0.05,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
                   style: TextStyle(
-                    fontSize: screenWidth * 0.035,
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
+                    fontSize: screenWidth * 0.04,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-            ],
-          ),
-          const Icon(Icons.file_download, color: Colors.black54),
-        ],
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.035,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                GestureDetector(
+                  onTap: () => openFile(fileLink),
+                  child: Text(
+                    fileLink,
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.035,
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const Icon(Icons.file_download, color: Colors.black54),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-
-  void _showUploadDialog(BuildContext context, String title, String subject) {
+  void showUploadDialog(BuildContext context, String title, String subject) {
     final TextEditingController titleController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
     String? filePath;
 
+    // Store the scaffold context
+    final scaffoldContext = context;
+
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
               title: Text(title),
               content: SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextField(
                       controller: titleController,
@@ -231,16 +239,18 @@ Widget _buildMaterialCard(String title, String subtitle, String fileLink, double
               ),
               actions: [
                 TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+                  onPressed: () => Navigator.pop(dialogContext),
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                onPressed: () {
+                  try {
+                    print('Upload button pressed');
                     if (titleController.text.isNotEmpty &&
                         descriptionController.text.isNotEmpty &&
-                        filePath != null && Uri.tryParse(filePath!)?.hasAbsolutePath == true) {
+                        filePath != null &&
+                        Uri.tryParse(filePath!)?.hasAbsolutePath == true) {
+                      print('All fields validated');
                       final material = MaterialModel(
                         id: DateTime.now().toIso8601String(),
                         title: titleController.text,
@@ -250,19 +260,30 @@ Widget _buildMaterialCard(String title, String subtitle, String fileLink, double
                         subject: subject,
                       );
 
-                      BlocProvider.of<MaterialBloc>(context)
-                          .add(AddMaterial(material));
-                      Navigator.pop(context);
+                      print('Material model created: ${material.toMap()}');
+                      BlocProvider.of<MaterialBloc>(scaffoldContext).add(AddMaterial(material));
+                      print('Add material event dispatched');
+                      Navigator.pop(dialogContext);
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      print('Validation failed');
+                      Navigator.pop(dialogContext);
+                      ScaffoldMessenger.of(scaffoldContext).showSnackBar(
                         const SnackBar(
                           content: Text('Please fill all fields and provide a valid file link.'),
                         ),
                       );
                     }
-                  },
-                  child: const Text('Upload'),
-                ),
+                  } catch (e) {
+                    print('Error during upload: $e');
+                    ScaffoldMessenger.of(scaffoldContext).showSnackBar(
+                      SnackBar(
+                        content: Text('Error uploading material: $e'),
+                      ),
+                    );
+                  }
+                },
+                child: const Text('Upload'),
+              ),
               ],
             );
           },
@@ -279,14 +300,15 @@ class CustomAppBarClipper extends CustomClipper<Path> {
     path.lineTo(0, size.height - 40);
     path.quadraticBezierTo(0, size.height, 40, size.height);
     path.lineTo(size.width - 40, size.height);
-    path.quadraticBezierTo(size.width, size.height, size.width, size.height - 40);
+    path.quadraticBezierTo(
+        size.width, size.height, size.width, size.height - 40);
     path.lineTo(size.width, 0);
     path.close();
     return path;
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+  bool shouldReclip(CustomAppBarClipper oldClipper) {
     return false;
   }
 }

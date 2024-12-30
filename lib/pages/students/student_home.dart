@@ -2,27 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:project_aedp/pages/students/dashboard_students.dart';
 import 'package:project_aedp/pages/students/invoice_page.dart';
 import 'package:project_aedp/pages/profile_page.dart';
-import 'package:project_aedp/widget/bottom_navbar.dart';
 
 class StudentHome extends StatefulWidget {
-  const StudentHome({super.key});
+  const StudentHome({Key? key}) : super(key: key);
 
   @override
   State<StudentHome> createState() => _StudentHomeState();
 }
 
 class _StudentHomeState extends State<StudentHome> {
-  int _selectedIndex = 0; // Track the selected tab index
-  final String name = "Difa Dlyaul Haq"; // Store the user's name
+  int _selectedIndex = 0;
 
-  // List of all the pages to navigate between
   final List<Widget> _pages = [
-    const DashboardStudentsHome(), // Example Home Page (you can replace with your actual home page)
-    const InvoicePage(),          // Invoice page
-    const ProfilePage(),          // Profile page
+    const DashboardStudentsHome(),
+    const InvoicePage(),
+    const ProfilePage(),
   ];
 
-  // Logic for onTap navigation
   void _onNavbarTap(int index) {
     setState(() {
       _selectedIndex = index;
@@ -31,35 +27,24 @@ class _StudentHomeState extends State<StudentHome> {
 
   @override
   Widget build(BuildContext context) {
-    // Get the screen width and height using MediaQuery
-    var screenWidth = MediaQuery.of(context).size.width;
-    var screenHeight = MediaQuery.of(context).size.height;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(screenHeight * 0.15), // Adjust AppBar height based on screen height
+        preferredSize: Size.fromHeight(screenHeight * 0.15), // Adjust height dynamically
         child: ClipPath(
-          clipper: CustomAppBarClipper(), // Custom clipper for rounded corners
+          clipper: CustomAppBarClipper(),
           child: AppBar(
-            automaticallyImplyLeading: false, // Removes the back button if any
+            title: const Text('Student Dashboard'),
+            centerTitle: true,
+            toolbarHeight: 60,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
+                  colors: [Color(0xFF1E71A2), Color(0xFF0B2A3C)],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Color.fromRGBO(30, 113, 162, 1), 
-                    Color.fromRGBO(11, 42, 60, 1), 
-                  ],
                 ),
-              ),
-            ),
-            title: Text(
-              'Welcome, $name', // Use dynamic name here
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: screenWidth * 0.06, // Adjust title font size based on screen width
               ),
             ),
           ),
@@ -67,33 +52,34 @@ class _StudentHomeState extends State<StudentHome> {
       ),
       body: IndexedStack(
         index: _selectedIndex,
-        children: _pages, // Use IndexedStack to load the appropriate page
+        children: _pages,
       ),
-      // Bottom Navigation Bar
-      bottomNavigationBar: DashboardNavbar(
-        selectedIndex: _selectedIndex,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
         onTap: _onNavbarTap,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.receipt), label: 'Invoices'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
       ),
     );
   }
 }
 
-// Custom clipper class to define the rounded corners for AppBar
 class CustomAppBarClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.lineTo(0, size.height - 40); // Start from the bottom-left corner
-    path.quadraticBezierTo(0, size.height, 40, size.height); // Left corner curve
-    path.lineTo(size.width - 40, size.height); // Straight line at the bottom middle
-    path.quadraticBezierTo(size.width, size.height, size.width, size.height - 40); // Right corner curve
-    path.lineTo(size.width, 0); // Go to the top-right corner
-    path.close(); // Close the path
+    path.lineTo(0, size.height - 40);
+    path.quadraticBezierTo(0, size.height, 40, size.height);
+    path.lineTo(size.width - 40, size.height);
+    path.quadraticBezierTo(size.width, size.height, size.width, size.height - 40);
+    path.lineTo(size.width, 0);
+    path.close();
     return path;
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return false; // No need to reclip as the shape doesn't change dynamically
-  }
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

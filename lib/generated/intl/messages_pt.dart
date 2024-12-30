@@ -62,6 +62,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "passwordLabel": MessageLookupByLibrary.simpleMessage("Senha"),
         "passwordRequirement": MessageLookupByLibrary.simpleMessage(
             "A senha deve ter pelo menos 6 caracteres."),
+        "pleaseEnterEmailAndPassword": MessageLookupByLibrary.simpleMessage(
+            "الرجاء إدخال البريد الإلكتروني وكلمة المرور"),
         "roleHeader": m2,
         "select_role": MessageLookupByLibrary.simpleMessage("Escolher o papel"),
         "select_your_role":

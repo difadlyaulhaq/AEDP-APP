@@ -50,6 +50,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Please enter your email and password`
+  String get pleaseEnterEmailAndPassword {
+    return Intl.message(
+      'Please enter your email and password',
+      name: 'pleaseEnterEmailAndPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Select your role`
   String get select_your_role {
     return Intl.message(

@@ -1,6 +1,7 @@
 {
   "@@locale": "pt",
   "select_your_role": "Selecione o seu papel",
+  "pleaseEnterEmailAndPassword": "الرجاء إدخال البريد الإلكتروني وكلمة المرور",
   "login_as_role": "Entrar como {role}",
   "signup_as_role": "Registrar como {role}",
   "language_english": "Inglês",

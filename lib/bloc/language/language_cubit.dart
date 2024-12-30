@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LanguageState {
   final Locale locale;
@@ -15,9 +16,25 @@ class LanguageChangedState extends LanguageState {
 }
 
 class LanguageCubit extends Cubit<LanguageState> {
-  LanguageCubit() : super(LanguageInitialState());
+  static const String _languageKey = 'selected_language';
+  final SharedPreferences _prefs;
 
-  void changeLanguage(Locale locale) {
+  LanguageCubit(this._prefs) : super(LanguageInitialState()) {
+    // Load saved language when cubit is created
+    loadSavedLanguage();
+  }
+
+  Future<void> loadSavedLanguage() async {
+    final savedLanguage = _prefs.getString(_languageKey);
+    if (savedLanguage != null) {
+      emit(LanguageChangedState(Locale(savedLanguage)));
+    }
+  }
+
+  Future<void> changeLanguage(Locale locale) async {
+    // Save language preference
+    await _prefs.setString(_languageKey, locale.languageCode);
+    // Emit new state
     emit(LanguageChangedState(locale));
   }
 }

@@ -62,6 +62,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "passwordLabel": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
         "passwordRequirement": MessageLookupByLibrary.simpleMessage(
             "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل."),
+        "pleaseEnterEmailAndPassword": MessageLookupByLibrary.simpleMessage(
+            "الرجاء إدخال البريد الإلكتروني وكلمة المرور"),
         "roleHeader": m2,
         "role_parent": MessageLookupByLibrary.simpleMessage("والد"),
         "role_student": MessageLookupByLibrary.simpleMessage("طالب"),

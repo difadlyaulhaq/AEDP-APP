@@ -71,28 +71,30 @@ class AuthRepository {
   }
 
   /// Login user
-  Future<String?> logIn({
-    required String email,
-    required String password,
-  }) async {
+   Future<String?> logIn({required String email, required String password}) async {
     try {
-      final userDoc = await _getUserDoc(email);
+      // Add debug logging
+      print('Attempting login for email: $email');
+      
+    final hashedPassword = _hashPassword(password);
+    final userDoc = await _firestore
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .where('password', isEqualTo: hashedPassword)
+        .get();
 
-      if (!userDoc.exists) {
-        throw Exception('User does not exist.');
+
+      if (userDoc.docs.isNotEmpty) {
+        final role = userDoc.docs.first.data()['role'] as String;
+        print('Login successful, role: $role');
+        return role;
       }
-
-      final data = userDoc.data();
-      final hashedPassword = _hashPassword(password);
-
-      if (data?['password'] != hashedPassword) {
-        throw Exception('Invalid password.');
-      }
-
-      await saveLoginStatus(email, data?['role']); // Save login status
-      return data?['role'];
+      
+      print('No user found with provided credentials');
+      return null;
     } catch (e) {
-      throw Exception('Failed to log in: ${e.toString()}');
+      print('Login error in repository: $e');
+      throw Exception('Login failed: $e');
     }
   }
 }

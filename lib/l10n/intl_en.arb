@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "pleaseEnterEmailAndPassword": "Please enter your email and password",
   "select_your_role": "Select your role",
   "login_as_role": "Login as {role}",
   "signup_as_role": "Signup as {role}",
