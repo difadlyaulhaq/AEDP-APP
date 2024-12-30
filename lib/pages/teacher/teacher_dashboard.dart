@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:project_aedp/generated/l10n.dart';
+import 'package:project_aedp/pages/notfound.dart';
 import 'package:project_aedp/pages/students/invoice_page.dart';
 import 'package:project_aedp/pages/profile_page.dart';
 import 'package:project_aedp/pages/teacher/teacher_grade_pages.dart';
 import 'package:project_aedp/pages/teacher/teacher_materialpage.dart';
 import 'package:project_aedp/pages/teacher/teacher_schedule.dart';
 import 'package:project_aedp/theme/theme.dart';
+import 'dart:developer' as dev;
+
 
 class TeacherDashboard extends StatefulWidget {
   const TeacherDashboard({super.key});
@@ -18,11 +22,12 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
 
   final List<Widget> _pages = const [
     DashboardStudentsHome(), 
-    InvoicePage(),
+    NotFoundPage(),
     ProfilePage(),
   ];
 
   void _onNavbarTap(int index) {
+    dev.log("Navigation tab tapped: $index");
     setState(() {
       _selectedIndex = index;
     });
@@ -30,44 +35,43 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: IndexedStack(
-          index: _selectedIndex,
-          children: _pages,
-        ),
-        bottomNavigationBar: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF4A90E2),
-                Color(0xFF003C8F),
-              ],
-            ),
-          ),
-          child: BottomNavigationBar(
-            currentIndex: _selectedIndex,
-            onTap: _onNavbarTap,
-            backgroundColor: Colors.transparent,
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.white70,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.receipt_long),
-                label: 'Invoice',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
-              ),
+    // Remove MaterialApp and use Scaffold directly
+    return Scaffold(
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF4A90E2),
+              Color(0xFF003C8F),
             ],
           ),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: _onNavbarTap,
+          backgroundColor: Colors.transparent,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white70,
+          items: [
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.home),
+              label: S.of(context).nav_home,
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.calendar_month_rounded),
+              label: S.of(context).nav_attendance,
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.person),
+              label: S.of(context).nav_profile,
+            ),
+          ],
         ),
       ),
     );
@@ -79,17 +83,19 @@ class DashboardStudentsHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // MediaQuery for responsiveness
     double screenWidth = MediaQuery.of(context).size.width;
+    final textDirection = Directionality.of(context);
 
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: textDirection == TextDirection.rtl 
+                ? Alignment.centerRight 
+                : Alignment.centerLeft,
             child: Text(
-              "To-Do:",
+              S.of(context).dashboard_todo_header,
               style: blackColorTextStyle.copyWith(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -106,45 +112,89 @@ class DashboardStudentsHome extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _buildTodoItem("Assignment 1", "Due today, 23.59"),
-              _buildTodoItem("Online Learning #04", "Due Oct 9, 23.59"),
-              _buildTodoItem("Online Learning #05", "Due Oct 16, 23.59"),
+              _buildTodoItem(
+                S.of(context).todo_assignment1_title,
+                S.of(context).todo_due_today,
+                context
+              ),
+              _buildTodoItem(
+                S.of(context).todo_online_learning4,
+                S.of(context).todo_due_date("Oct 9"),
+                context
+              ),
+              _buildTodoItem(
+                S.of(context).todo_online_learning5,
+                S.of(context).todo_due_date("Oct 16"),
+                context
+              ),
             ],
           ),
         ),
         const SizedBox(height: 20),
-        // Icon Buttons with responsive Grid
         Expanded(
           child: GridView.count(
-            crossAxisCount: screenWidth > 600 ? 4 : 3, // 4 columns on large screens, 3 on smaller ones
+            crossAxisCount: screenWidth > 600 ? 4 : 3,
             children: [
-              _buildIconButton(Icons.calendar_today, "Schedule", () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const TeacherSchedule()),
-                );
-              }),
-              _buildIconButton(Icons.book, "Materials", () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const TeacherMaterialpage()),
-                );
-              }),
-              _buildIconButton(Icons.check_circle_outline, "Grades", () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const TeacherGradePages()),
-                );
-              }),
-              _buildIconButton(Icons.insert_drive_file, "Reports", () {
-                // Navigate or display message for "Reports"
-              }),
-              _buildIconButton(Icons.notifications, "Notifications", () {
-                // Navigate or display message for "Notifications"
-              }),
-              _buildIconButton(Icons.calendar_month_rounded, "Attendance", () {
-                // Navigate or display message for "Attendance"
-              }),
+              _buildIconButton(
+                Icons.calendar_today,
+                S.of(context).dashboard_schedule,
+                () {
+                  dev.log("Navigating to Schedule");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TeacherSchedule()),
+                  );
+                },
+                context,
+              ),
+              _buildIconButton(
+                Icons.book,
+                S.of(context).dashboard_materials,
+                () {
+                  dev.log("Navigating to Materials");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TeacherMaterialpage()),
+                  );
+                },
+                context,
+              ),
+              _buildIconButton(
+                Icons.check_circle_outline,
+                S.of(context).dashboard_grades,
+                () {
+                  dev.log("Navigating to Grades");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const NotFoundPage()),
+                  );
+                },
+                context,
+              ),
+              _buildIconButton(
+                Icons.insert_drive_file,
+                S.of(context).dashboard_reports,
+                () {
+                  dev.log("Reports button clicked");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const NotFoundPage()),
+                  );
+                },
+                context,
+              ),
+              _buildIconButton(
+                Icons.notifications,
+                S.of(context).dashboard_notifications,
+                () {
+                  dev.log("Notifications button clicked");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const NotFoundPage()),
+                  );
+                },
+                context,
+              ),
             ],
           ),
         ),
@@ -152,13 +202,16 @@ class DashboardStudentsHome extends StatelessWidget {
     );
   }
 
-  Widget _buildTodoItem(String title, String deadline) {
+  Widget _buildTodoItem(String title, String deadline, BuildContext context) {
+    final textDirection = Directionality.of(context);
+    
     return Material(
       color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          textDirection: textDirection,
           children: [
             Text(
               title,
@@ -174,7 +227,7 @@ class DashboardStudentsHome extends StatelessWidget {
     );
   }
 
-  Widget _buildIconButton(IconData icon, String label, VoidCallback onTap) {
+  Widget _buildIconButton(IconData icon, String label, VoidCallback onTap, BuildContext context) {
     return Material(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -192,13 +245,13 @@ class DashboardStudentsHome extends StatelessWidget {
           Text(
             label,
             style: blackColorTextStyle.copyWith(fontSize: 14),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
     );
   }
 }
-
 // Custom clipper class to define the rounded corners for AppBar
 class CustomAppBarClipper extends CustomClipper<Path> {
   @override

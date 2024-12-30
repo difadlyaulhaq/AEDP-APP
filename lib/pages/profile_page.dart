@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +7,8 @@ import 'package:project_aedp/bloc/auth/auth_state.dart';
 import 'package:project_aedp/bloc/load_profile/load_profile_event.dart';
 import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
 import 'package:project_aedp/bloc/load_profile/profile_state.dart';
+import 'package:project_aedp/bloc/language/language_cubit.dart';
+import 'package:project_aedp/generated/l10n.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -27,7 +30,7 @@ class ProfilePage extends StatelessWidget {
 
             return Scaffold(
               appBar: AppBar(
-                title: const Text("Profile"),
+                title: Text(S.of(context).profileTitle),
                 centerTitle: true,
                 toolbarHeight: 60,
                 actions: [
@@ -37,6 +40,7 @@ class ProfilePage extends StatelessWidget {
                       context.read<AuthBloc>().add(AuthLogoutRequested());
                     },
                   ),
+                  _buildLanguageDropdown(context),
                 ],
               ),
               body: BlocBuilder<LoadProfileBloc, LoadProfileState>(
@@ -46,9 +50,9 @@ class ProfilePage extends StatelessWidget {
                   } else if (state is LoadProfileLoaded) {
                     return _buildProfileContent(context, state.profileData, screenWidth);
                   } else if (state is LoadProfileError) {
-                    return Center(child: Text("Error: ${state.errorMessage}"));
+                    return Center(child: Text(S.of(context).errorLabel(state.errorMessage)));
                   }
-                  return const Center(child: Text('No profile data found.'));
+                  return Center(child: Text(S.of(context).noProfileData));
                 },
               ),
             );
@@ -74,7 +78,7 @@ class ProfilePage extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            profileData['fullName'] ?? "Name not found",
+            profileData['fullName'] ?? S.of(context).nameNotFound,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: screenWidth * 0.06,
@@ -82,7 +86,7 @@ class ProfilePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          _buildInfoSection(profileData, screenWidth),
+          _buildInfoSection(context, profileData, screenWidth),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
@@ -91,9 +95,9 @@ class ProfilePage extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
             ),
-            child: const Text(
-              'Logout',
-              style: TextStyle(color: Colors.white),
+            child: Text(
+              S.of(context).logout,
+              style: const TextStyle(color: Colors.white),
             ),
           ),
         ],
@@ -101,7 +105,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoSection(Map<String, dynamic> profileData, double screenWidth) {
+  Widget _buildInfoSection(BuildContext context, Map<String, dynamic> profileData, double screenWidth) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -112,7 +116,7 @@ class ProfilePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "User Information",
+            S.of(context).userInfo,
             style: TextStyle(
               fontSize: screenWidth * 0.05,
               fontWeight: FontWeight.bold,
@@ -120,19 +124,47 @@ class ProfilePage extends StatelessWidget {
             ),
           ),
           const Divider(),
-          _buildListTile(Icons.person, "Full Name", profileData['fullName'] ?? "Unknown"),
-          _buildListTile(Icons.email, "Email", profileData['email'] ?? "Unknown"),
-          _buildListTile(Icons.phone, "Contact", profileData['contactNumber'] ?? "Unknown"),
+          _buildListTile(context, Icons.person, S.of(context).fullName, profileData['fullName'] ?? S.of(context).unknown),
+          _buildListTile(context, Icons.email, S.of(context).email, profileData['email'] ?? S.of(context).unknown),
+          _buildListTile(context, Icons.phone, S.of(context).contact, profileData['contactNumber'] ?? S.of(context).unknown),
         ],
       ),
     );
   }
 
-  Widget _buildListTile(IconData icon, String title, String subtitle) {
+  Widget _buildListTile(BuildContext context, IconData icon, String title, String subtitle) {
     return ListTile(
       leading: Icon(icon),
       title: Text(title),
       subtitle: Text(subtitle),
+    );
+  }
+
+  Widget _buildLanguageDropdown(BuildContext context) {
+    final cubit = context.read<LanguageCubit>();
+    return DropdownButton<String>(
+      value: Localizations.localeOf(context).languageCode,
+      icon: const Icon(Icons.language, color: Colors.white),
+      underline: const SizedBox(),
+      onChanged: (String? newValue) {
+        if (newValue != null) {
+          cubit.changeLanguage(Locale(newValue));
+        }
+      },
+      items: [
+        DropdownMenuItem(
+          value: 'en',
+          child: Text(S.of(context).language_english),
+        ),
+        DropdownMenuItem(
+          value: 'pt',
+          child: Text(S.of(context).language_portuguese),
+        ),
+        DropdownMenuItem(
+          value: 'ar',
+          child: Text(S.of(context).language_arabic),
+        ),
+      ],
     );
   }
 }

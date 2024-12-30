@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/teacher/teacher_detailmaterial.dart';
 
 class TeacherMaterialpage extends StatefulWidget {
   const TeacherMaterialpage({super.key});
 
   @override
-  _TeacherMaterialpageState createState() => _TeacherMaterialpageState();
+  TeacherMaterialpageState createState() => TeacherMaterialpageState();
 }
 
-class _TeacherMaterialpageState extends State<TeacherMaterialpage> {
+class TeacherMaterialpageState extends State<TeacherMaterialpage> {
   List<Map<String, dynamic>> filteredSubjects = List.from(subjects);
   String selectedFilter = "All";
 
@@ -18,6 +19,7 @@ class _TeacherMaterialpageState extends State<TeacherMaterialpage> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return MaterialApp(
+      
       home: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(screenHeight * 0.2),
@@ -50,7 +52,7 @@ class _TeacherMaterialpageState extends State<TeacherMaterialpage> {
                 onPressed: () => Navigator.pop(context),
               ),
               title: Text(
-                'Subjects',
+                S.of(context).subjectsTitle,
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
@@ -92,17 +94,25 @@ class _TeacherMaterialpageState extends State<TeacherMaterialpage> {
     );
   }
 
-  // Show Filter Dialog
   void _showFilterDialog() {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Filter Subjects'),
+          title: Text(S.of(context).filterSubjects),
           content: DropdownButton<String>(
             value: selectedFilter,
-            items: <String>["All", "Math", "Science", "History", "Geography", "Art", "Music", "Arabic", "English"]
-                .map<DropdownMenuItem<String>>((String value) {
+            items: <String>[
+              S.of(context).all,
+              S.of(context).math,
+              S.of(context).science,
+              S.of(context).history,
+              S.of(context).geography,
+              S.of(context).art,
+              S.of(context).music,
+              S.of(context).arabic,
+              S.of(context).english
+            ].map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
@@ -119,7 +129,7 @@ class _TeacherMaterialpageState extends State<TeacherMaterialpage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(S.of(context).cancel),
             ),
           ],
         );
@@ -127,16 +137,16 @@ class _TeacherMaterialpageState extends State<TeacherMaterialpage> {
     );
   }
 
-  // Apply the selected filter to the subjects list
   void _applyFilter(String filter) {
-    if (filter == "All") {
+    if (filter == S.of(context).all) {
       setState(() {
         filteredSubjects = List.from(subjects);
       });
     } else {
       setState(() {
         filteredSubjects = subjects
-            .where((subject) => subject['name'].toLowerCase().contains(filter.toLowerCase()))
+            .where((subject) =>
+                subject['name'].toLowerCase().contains(filter.toLowerCase()))
             .toList();
       });
     }
@@ -150,7 +160,7 @@ class _TeacherMaterialpageState extends State<TeacherMaterialpage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TeacherDetailMaterial(subject: subject), // Pass subject
+            builder: (context) => TeacherDetailMaterial(subject: subject),
           ),
         );
       },
@@ -217,12 +227,12 @@ class CustomAppBarClipper extends CustomClipper<Path> {
 }
 
 final List<Map<String, dynamic>> subjects = [
-  {'name': 'History', 'icon': Icons.history_edu},
-  {'name': 'Math', 'icon': Icons.calculate},
-  {'name': 'Science', 'icon': Icons.science},
-  {'name': 'Art', 'icon': Icons.brush},
-  {'name': 'Arabic', 'icon': Icons.language},
-  {'name': 'Music', 'icon': Icons.music_note},
-  {'name': 'Geography', 'icon': Icons.public},
-  {'name': 'English', 'icon': Icons.book},
+  {'name': S.current.history, 'icon': Icons.history_edu},
+  {'name': S.current.math, 'icon': Icons.calculate},
+  {'name': S.current.science, 'icon': Icons.science},
+  {'name': S.current.art, 'icon': Icons.brush},
+  {'name': S.current.arabic, 'icon': Icons.language},
+  {'name': S.current.music, 'icon': Icons.music_note},
+  {'name': S.current.geography, 'icon': Icons.public},
+  {'name': S.current.english, 'icon': Icons.book},
 ];

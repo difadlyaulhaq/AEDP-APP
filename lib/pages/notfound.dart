@@ -8,7 +8,7 @@ class NotFoundPage extends StatelessWidget {
     return const Scaffold(
       body: Center(
         child: Text(
-          '404 - Page Not Found',
+          'UNDER DEVELOPMENT',
           style: TextStyle(fontSize: 24),
         ),
       ),

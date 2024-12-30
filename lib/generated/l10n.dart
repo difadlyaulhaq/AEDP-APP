@@ -50,6 +50,396 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Subjects`
+  String get subjectsTitle {
+    return Intl.message(
+      'Subjects',
+      name: 'subjectsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Filter Subjects`
+  String get filterSubjects {
+    return Intl.message(
+      'Filter Subjects',
+      name: 'filterSubjects',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get all {
+    return Intl.message(
+      'All',
+      name: 'all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Math`
+  String get math {
+    return Intl.message(
+      'Math',
+      name: 'math',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Science`
+  String get science {
+    return Intl.message(
+      'Science',
+      name: 'science',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `History`
+  String get history {
+    return Intl.message(
+      'History',
+      name: 'history',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Geography`
+  String get geography {
+    return Intl.message(
+      'Geography',
+      name: 'geography',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Art`
+  String get art {
+    return Intl.message(
+      'Art',
+      name: 'art',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Music`
+  String get music {
+    return Intl.message(
+      'Music',
+      name: 'music',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Arabic`
+  String get arabic {
+    return Intl.message(
+      'Arabic',
+      name: 'arabic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `English`
+  String get english {
+    return Intl.message(
+      'English',
+      name: 'english',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Schedule`
+  String get scheduleTitle {
+    return Intl.message(
+      'Schedule',
+      name: 'scheduleTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No schedule available`
+  String get noScheduleAvailable {
+    return Intl.message(
+      'No schedule available',
+      name: 'noScheduleAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile`
+  String get profileTitle {
+    return Intl.message(
+      'Profile',
+      name: 'profileTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logout`
+  String get logout {
+    return Intl.message(
+      'Logout',
+      name: 'logout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name not found`
+  String get nameNotFound {
+    return Intl.message(
+      'Name not found',
+      name: 'nameNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No profile data found.`
+  String get noProfileData {
+    return Intl.message(
+      'No profile data found.',
+      name: 'noProfileData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User Information`
+  String get userInfo {
+    return Intl.message(
+      'User Information',
+      name: 'userInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Full Name`
+  String get fullName {
+    return Intl.message(
+      'Full Name',
+      name: 'fullName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email`
+  String get email {
+    return Intl.message(
+      'Email',
+      name: 'email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact`
+  String get contact {
+    return Intl.message(
+      'Contact',
+      name: 'contact',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown`
+  String get unknown {
+    return Intl.message(
+      'Unknown',
+      name: 'unknown',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error: {errorMessage}`
+  String errorLabel(Object errorMessage) {
+    return Intl.message(
+      'Error: $errorMessage',
+      name: 'errorLabel',
+      desc: '',
+      args: [errorMessage],
+    );
+  }
+
+  /// `Home`
+  String get nav_home {
+    return Intl.message(
+      'Home',
+      name: 'nav_home',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Attendance`
+  String get nav_attendance {
+    return Intl.message(
+      'Attendance',
+      name: 'nav_attendance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile`
+  String get nav_profile {
+    return Intl.message(
+      'Profile',
+      name: 'nav_profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To-Do:`
+  String get dashboard_todo_header {
+    return Intl.message(
+      'To-Do:',
+      name: 'dashboard_todo_header',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Assignment 1`
+  String get todo_assignment1_title {
+    return Intl.message(
+      'Assignment 1',
+      name: 'todo_assignment1_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Due today, 23:59`
+  String get todo_due_today {
+    return Intl.message(
+      'Due today, 23:59',
+      name: 'todo_due_today',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Online Learning #04`
+  String get todo_online_learning4 {
+    return Intl.message(
+      'Online Learning #04',
+      name: 'todo_online_learning4',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Online Learning #05`
+  String get todo_online_learning5 {
+    return Intl.message(
+      'Online Learning #05',
+      name: 'todo_online_learning5',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Due {date}, 23:59`
+  String todo_due_date(String date) {
+    return Intl.message(
+      'Due $date, 23:59',
+      name: 'todo_due_date',
+      desc: '',
+      args: [date],
+    );
+  }
+
+  /// `Schedule`
+  String get dashboard_schedule {
+    return Intl.message(
+      'Schedule',
+      name: 'dashboard_schedule',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Materials`
+  String get dashboard_materials {
+    return Intl.message(
+      'Materials',
+      name: 'dashboard_materials',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grades`
+  String get dashboard_grades {
+    return Intl.message(
+      'Grades',
+      name: 'dashboard_grades',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reports`
+  String get dashboard_reports {
+    return Intl.message(
+      'Reports',
+      name: 'dashboard_reports',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notifications`
+  String get dashboard_notifications {
+    return Intl.message(
+      'Notifications',
+      name: 'dashboard_notifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Attendance`
+  String get dashboard_attendance {
+    return Intl.message(
+      'Attendance',
+      name: 'dashboard_attendance',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please enter your email and password`
   String get pleaseEnterEmailAndPassword {
     return Intl.message(
@@ -375,16 +765,6 @@ class S {
     return Intl.message(
       'Login to your account to continue',
       name: 'loginPrompt',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Email`
-  String get email {
-    return Intl.message(
-      'Email',
-      name: 'email',
       desc: '',
       args: [],
     );

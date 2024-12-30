@@ -20,13 +20,17 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'pt';
 
-  static String m0(errorMessage) => "Falha no login: ${errorMessage}";
+  static String m0(errorMessage) => "Erro: ${errorMessage}";
 
-  static String m1(role) => "Entrar como ${role}";
+  static String m1(errorMessage) => "Falha no login: ${errorMessage}";
 
-  static String m2(role) => "Login de ${role}";
+  static String m2(role) => "Entrar como ${role}";
 
-  static String m3(role) => "Registrar como ${role}";
+  static String m3(role) => "Login de ${role}";
+
+  static String m4(role) => "Registrar como ${role}";
+
+  static String m5(date) => "Vence em ${date}, 23:59";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -36,9 +40,32 @@ class MessageLookup extends MessageLookupByLibrary {
             "Acesso negado: Função incorreta."),
         "accessDeniedMessage": MessageLookupByLibrary.simpleMessage(
             "Acesso negado: Função incorreta."),
+        "all": MessageLookupByLibrary.simpleMessage("Todos"),
+        "arabic": MessageLookupByLibrary.simpleMessage("Árabe"),
+        "art": MessageLookupByLibrary.simpleMessage("Arte"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
+        "contact": MessageLookupByLibrary.simpleMessage("Contato"),
+        "dashboard_attendance":
+            MessageLookupByLibrary.simpleMessage("Presença"),
+        "dashboard_grades": MessageLookupByLibrary.simpleMessage("Notas"),
+        "dashboard_materials":
+            MessageLookupByLibrary.simpleMessage("Materiais"),
+        "dashboard_notifications":
+            MessageLookupByLibrary.simpleMessage("Notificações"),
+        "dashboard_reports": MessageLookupByLibrary.simpleMessage("Relatórios"),
+        "dashboard_schedule": MessageLookupByLibrary.simpleMessage("Agenda"),
+        "dashboard_todo_header":
+            MessageLookupByLibrary.simpleMessage("Tarefas:"),
         "email": MessageLookupByLibrary.simpleMessage("E-mail"),
         "emailLabel": MessageLookupByLibrary.simpleMessage("Email"),
+        "english": MessageLookupByLibrary.simpleMessage("Inglês"),
+        "errorLabel": m0,
+        "filterSubjects":
+            MessageLookupByLibrary.simpleMessage("Filtrar Disciplinas"),
+        "fullName": MessageLookupByLibrary.simpleMessage("Nome completo"),
+        "geography": MessageLookupByLibrary.simpleMessage("Geografia"),
         "hello": MessageLookupByLibrary.simpleMessage("Olá"),
+        "history": MessageLookupByLibrary.simpleMessage("História"),
         "invalidEmail": MessageLookupByLibrary.simpleMessage(
             "Por favor, insira um endereço de e-mail válido."),
         "invalidEmailMessage": MessageLookupByLibrary.simpleMessage(
@@ -51,12 +78,24 @@ class MessageLookup extends MessageLookupByLibrary {
         "login": MessageLookupByLibrary.simpleMessage("Entrar"),
         "loginButton": MessageLookupByLibrary.simpleMessage("Entrar"),
         "loginFailed": MessageLookupByLibrary.simpleMessage("Falha no login"),
-        "loginFailedMessage": m0,
+        "loginFailedMessage": m1,
         "loginPrompt": MessageLookupByLibrary.simpleMessage(
             "Faça login na sua conta para continuar"),
         "loginSubtitle": MessageLookupByLibrary.simpleMessage(
             "Faça login na sua conta para continuar"),
-        "login_as_role": m1,
+        "login_as_role": m2,
+        "logout": MessageLookupByLibrary.simpleMessage("Sair"),
+        "math": MessageLookupByLibrary.simpleMessage("Matemática"),
+        "music": MessageLookupByLibrary.simpleMessage("Música"),
+        "nameNotFound":
+            MessageLookupByLibrary.simpleMessage("Nome não encontrado"),
+        "nav_attendance": MessageLookupByLibrary.simpleMessage("Presença"),
+        "nav_home": MessageLookupByLibrary.simpleMessage("Início"),
+        "nav_profile": MessageLookupByLibrary.simpleMessage("Perfil"),
+        "noProfileData": MessageLookupByLibrary.simpleMessage(
+            "Nenhum dado de perfil encontrado."),
+        "noScheduleAvailable": MessageLookupByLibrary.simpleMessage(
+            "Nenhum cronograma disponível"),
         "parent": MessageLookupByLibrary.simpleMessage("Pai/Mãe"),
         "password": MessageLookupByLibrary.simpleMessage("Senha"),
         "passwordLabel": MessageLookupByLibrary.simpleMessage("Senha"),
@@ -64,20 +103,36 @@ class MessageLookup extends MessageLookupByLibrary {
             "A senha deve ter pelo menos 6 caracteres."),
         "pleaseEnterEmailAndPassword": MessageLookupByLibrary.simpleMessage(
             "الرجاء إدخال البريد الإلكتروني وكلمة المرور"),
-        "roleHeader": m2,
+        "profileTitle": MessageLookupByLibrary.simpleMessage("Perfil"),
+        "roleHeader": m3,
+        "scheduleTitle": MessageLookupByLibrary.simpleMessage("Cronograma"),
+        "science": MessageLookupByLibrary.simpleMessage("Ciência"),
         "select_role": MessageLookupByLibrary.simpleMessage("Escolher o papel"),
         "select_your_role":
             MessageLookupByLibrary.simpleMessage("Selecione o seu papel"),
         "shortPasswordMessage": MessageLookupByLibrary.simpleMessage(
             "A senha deve ter pelo menos 6 caracteres."),
         "signup": MessageLookupByLibrary.simpleMessage("Cadastrar-se"),
-        "signup_as_role": m3,
+        "signup_as_role": m4,
         "student": MessageLookupByLibrary.simpleMessage("Estudante"),
+        "subjectsTitle": MessageLookupByLibrary.simpleMessage("Disciplinas"),
         "teacher": MessageLookupByLibrary.simpleMessage("Professor"),
+        "todo_assignment1_title":
+            MessageLookupByLibrary.simpleMessage("Tarefa 1"),
+        "todo_due_date": m5,
+        "todo_due_today":
+            MessageLookupByLibrary.simpleMessage("Vence hoje, 23:59"),
+        "todo_online_learning4":
+            MessageLookupByLibrary.simpleMessage("Aprendizado Online #04"),
+        "todo_online_learning5":
+            MessageLookupByLibrary.simpleMessage("Aprendizado Online #05"),
+        "unknown": MessageLookupByLibrary.simpleMessage("Desconhecido"),
         "unknownRole":
             MessageLookupByLibrary.simpleMessage("Função desconhecida"),
         "unknownRoleMessage":
             MessageLookupByLibrary.simpleMessage("Função desconhecida"),
+        "userInfo":
+            MessageLookupByLibrary.simpleMessage("Informações do Usuário"),
         "welcome":
             MessageLookupByLibrary.simpleMessage("Bem-vindo ao aplicativo!")
       };
