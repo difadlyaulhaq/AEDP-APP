@@ -4,13 +4,13 @@ import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/theme/theme.dart';
 
 class ParentGradesPage extends StatefulWidget {
-  const ParentGradesPage ({super.key});
+  const ParentGradesPage({super.key});
 
   @override
-  State<ParentGradesPage > createState() => _GradesPageState();
+  State<ParentGradesPage> createState() => _GradesPageState();
 }
 
-class _GradesPageState extends State<ParentGradesPage > {
+class _GradesPageState extends State<ParentGradesPage> {
   String selectedYear = '2024';
   String selectedSemester = 'Odd';
 
@@ -39,37 +39,26 @@ class _GradesPageState extends State<ParentGradesPage > {
     double gpa = _calculateGPA(filteredGrades);
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(120.0),
-        child: ClipPath(
-          clipper: CustomAppBarClipper(),
-          child: AppBar(
-            automaticallyImplyLeading: true,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color.fromRGBO(30, 113, 162, 1),
-                    Color.fromRGBO(11, 42, 60, 1),
-                  ],
-                ),
-              ),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          S.of(context).grades_title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF1E71A2), Color(0xFF0B2A3C)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.pushNamed(context, '/parent-home'),
-            ),
-            title: Text(
-              S.of(context).grades_title,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: MediaQuery.of(context).size.width * 0.05,
-              ),
-            ),
-            centerTitle: true,
           ),
         ),
       ),
@@ -207,20 +196,4 @@ class _GradesPageState extends State<ParentGradesPage > {
       ),
     );
   }
-}
-class CustomAppBarClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.lineTo(0, size.height - 40); // Start from the bottom-left corner
-    path.quadraticBezierTo(0, size.height, 40, size.height); // Left corner curve
-    path.lineTo(size.width - 40, size.height); // Straight line at the bottom middle
-    path.quadraticBezierTo(size.width, size.height, size.width, size.height - 40); // Right corner curve
-    path.lineTo(size.width, 0); // Straight line at the top-right corner
-    path.close(); // Close the path
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => true; // Always reclip
 }
