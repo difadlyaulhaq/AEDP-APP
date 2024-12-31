@@ -51,7 +51,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "assignment_1": MessageLookupByLibrary.simpleMessage("التكليف 1"),
         "assignment_1_due":
             MessageLookupByLibrary.simpleMessage("الاستحقاق اليوم، 23:59"),
+        "attendance_tracking":
+            MessageLookupByLibrary.simpleMessage("تتبع الحضور"),
         "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
+        "certificates_and_reports":
+            MessageLookupByLibrary.simpleMessage("الشهادات والتقارير"),
         "contact": MessageLookupByLibrary.simpleMessage("التواصل"),
         "dashboard_attendance": MessageLookupByLibrary.simpleMessage("الحضور"),
         "dashboard_grades": MessageLookupByLibrary.simpleMessage("الدرجات"),
@@ -75,6 +79,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "english": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
         "errorLabel": m0,
         "evenSemester": MessageLookupByLibrary.simpleMessage("الفصل الزوجي"),
+        "fee_payment_management":
+            MessageLookupByLibrary.simpleMessage("إدارة دفع الرسوم"),
         "filterSubjects": MessageLookupByLibrary.simpleMessage("تصفية المواد"),
         "fullName": MessageLookupByLibrary.simpleMessage("الاسم الكامل"),
         "geography": MessageLookupByLibrary.simpleMessage("الجغرافيا"),
@@ -116,8 +122,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "music": MessageLookupByLibrary.simpleMessage("الموسيقى"),
         "nameNotFound": MessageLookupByLibrary.simpleMessage("الاسم غير موجود"),
         "nav_attendance": MessageLookupByLibrary.simpleMessage("الحضور"),
+        "nav_dashboard": MessageLookupByLibrary.simpleMessage("لوحة القيادة"),
         "nav_home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
         "nav_invoice": MessageLookupByLibrary.simpleMessage("الفاتورة"),
+        "nav_notifications": MessageLookupByLibrary.simpleMessage("الإشعارات"),
         "nav_profile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
         "noProfileData": MessageLookupByLibrary.simpleMessage(
             "لا توجد بيانات للملف الشخصي."),
@@ -167,6 +175,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "student": MessageLookupByLibrary.simpleMessage("طالب"),
         "student_dashboard":
             MessageLookupByLibrary.simpleMessage("لوحة الطالب"),
+        "student_progress_monitoring":
+            MessageLookupByLibrary.simpleMessage("مراقبة تقدم الطالب"),
         "subject": MessageLookupByLibrary.simpleMessage("الموضوع"),
         "subject_arabic": MessageLookupByLibrary.simpleMessage("عربي"),
         "subject_art": MessageLookupByLibrary.simpleMessage("فن"),

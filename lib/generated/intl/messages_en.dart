@@ -51,7 +51,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "assignment_1": MessageLookupByLibrary.simpleMessage("Assignment 1"),
         "assignment_1_due":
             MessageLookupByLibrary.simpleMessage("Due today, 23.59"),
+        "attendance_tracking":
+            MessageLookupByLibrary.simpleMessage("Attendance Tracking"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "certificates_and_reports":
+            MessageLookupByLibrary.simpleMessage("Certificates and Reports"),
         "contact": MessageLookupByLibrary.simpleMessage("Contact"),
         "dashboard_attendance":
             MessageLookupByLibrary.simpleMessage("Attendance"),
@@ -73,6 +77,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "english": MessageLookupByLibrary.simpleMessage("English"),
         "errorLabel": m0,
         "evenSemester": MessageLookupByLibrary.simpleMessage("Even"),
+        "fee_payment_management":
+            MessageLookupByLibrary.simpleMessage("Fee Payment Management"),
         "filterSubjects":
             MessageLookupByLibrary.simpleMessage("Filter Subjects"),
         "fullName": MessageLookupByLibrary.simpleMessage("Full Name"),
@@ -80,6 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "gpa": MessageLookupByLibrary.simpleMessage("GPA"),
         "grade": MessageLookupByLibrary.simpleMessage("Grade"),
         "grades": MessageLookupByLibrary.simpleMessage("Grades"),
+        "grades_title": MessageLookupByLibrary.simpleMessage("Your Grades"),
         "hello": MessageLookupByLibrary.simpleMessage("Hello"),
         "history": MessageLookupByLibrary.simpleMessage("History"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
@@ -115,8 +122,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "music": MessageLookupByLibrary.simpleMessage("Music"),
         "nameNotFound": MessageLookupByLibrary.simpleMessage("Name not found"),
         "nav_attendance": MessageLookupByLibrary.simpleMessage("Attendance"),
+        "nav_dashboard": MessageLookupByLibrary.simpleMessage("Dashboard"),
         "nav_home": MessageLookupByLibrary.simpleMessage("Home"),
         "nav_invoice": MessageLookupByLibrary.simpleMessage("Invoice"),
+        "nav_notifications":
+            MessageLookupByLibrary.simpleMessage("Notifications"),
         "nav_profile": MessageLookupByLibrary.simpleMessage("Profile"),
         "noProfileData":
             MessageLookupByLibrary.simpleMessage("No profile data found."),
@@ -167,11 +177,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "student": MessageLookupByLibrary.simpleMessage("Student"),
         "student_dashboard":
             MessageLookupByLibrary.simpleMessage("Student Dashboard"),
+        "student_progress_monitoring":
+            MessageLookupByLibrary.simpleMessage("Student Progress Monitoring"),
         "subject": MessageLookupByLibrary.simpleMessage("Subject"),
         "subject_arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
         "subject_art": MessageLookupByLibrary.simpleMessage("Art"),
         "subject_english": MessageLookupByLibrary.simpleMessage("English"),
         "subject_history": MessageLookupByLibrary.simpleMessage("History"),
+        "subject_list_title":
+            MessageLookupByLibrary.simpleMessage("List of Subjects"),
         "subject_math": MessageLookupByLibrary.simpleMessage("Mathematics"),
         "subject_physical_education":
             MessageLookupByLibrary.simpleMessage("Physical Education"),

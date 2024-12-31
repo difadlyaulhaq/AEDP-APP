@@ -15,7 +15,7 @@ class _ParrentHomeState extends State<ParrentHome> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    const DashboardparrentHome (),
+    const DashboardParentHome(),
     const InvoicePage(),
     const ProfilePage(),
   ];

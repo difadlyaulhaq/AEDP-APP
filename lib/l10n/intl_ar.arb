@@ -1,5 +1,12 @@
 {
   "@@locale": "ar",
+ 
+  "nav_dashboard": "لوحة القيادة",
+  "nav_notifications": "الإشعارات",
+  "attendance_tracking": "تتبع الحضور",
+  "student_progress_monitoring": "مراقبة تقدم الطالب",
+  "fee_payment_management": "إدارة دفع الرسوم",
+  "certificates_and_reports": "الشهادات والتقارير",
   "parent_dashboard": "لوحة تحكم الوالدين",
   "student_dashboard": "لوحة الطالب",
   "invoices": "الفواتير",

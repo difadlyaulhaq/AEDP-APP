@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_aedp/generated/l10n.dart';
+import 'package:project_aedp/pages/parrents/ParentGradesPage.dart';
 import 'package:project_aedp/pages/profile_page.dart';
 import 'package:project_aedp/pages/students/GradesPage.dart';
 import 'package:project_aedp/pages/students/invoice_page.dart';
@@ -7,73 +8,8 @@ import 'package:project_aedp/pages/students/materialpage.dart';
 import 'package:project_aedp/pages/students/schedulepage.dart';
 import 'package:project_aedp/theme/theme.dart';
 
-class ParrentDashboard extends StatefulWidget {
-  const ParrentDashboard({super.key});
-
-  @override
-  State<ParrentDashboard> createState() => _ParrentDashboardState();
-}
-
-class _ParrentDashboardState extends State<ParrentDashboard> {
-    int _selectedIndex = 0;
-
-  final List<Widget> _pages = const [
-    DashboardparrentHome(),
-    InvoicePage(),
-    ProfilePage(),
-  ];
-
-  void _onNavbarTap(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-  @override
- Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
-      ),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF4A90E2),
-              Color(0xFF003C8F),
-            ],
-          ),
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onNavbarTap,
-          backgroundColor: Colors.transparent,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white70,
-          items: [
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.home),
-              label: S.of(context).nav_home,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.receipt_long),
-              label: S.of(context).nav_invoice,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.person),
-              label: S.of(context).nav_profile,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class DashboardparrentHome extends StatelessWidget {
-  const DashboardparrentHome({super.key});
+class DashboardParentHome extends StatelessWidget {
+  const DashboardParentHome({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -104,22 +40,82 @@ class DashboardparrentHome extends StatelessWidget {
               _buildIconButton(context, Icons.check_circle_outline, S.of(context).grades, () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const GradesPage()),
+                  MaterialPageRoute(builder: (context) => const ParentGradesPage()),
+                );
+              }),
+              _buildIconButton(context, Icons.assessment, 'Progress', () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const StudentProgressPage()),
+                );
+              }),
+              _buildIconButton(context, Icons.fact_check, 'Attendance', () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AttendancePage()),
+                );
+              }),
+              _buildIconButton(context, Icons.notifications, S.of(context).notifications, () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const NotificationsPage()),
+                );
+              }),
+              _buildIconButton(context, Icons.library_books, S.of(context).e_library, () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ELibraryPage()),
+                );
+              }),
+              _buildIconButton(context, Icons.card_membership, 'Certificates', () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CertificatesPage()),
                 );
               }),
               _buildIconButton(context, Icons.insert_drive_file, S.of(context).reports, () {
-                // Navigate or display message for "Reports"
-              }),
-              _buildIconButton(context, Icons.notifications, S.of(context).notifications, () {
-                // Navigate or display message for "Notifications"
-              }),
-              _buildIconButton(context, Icons.library_books, S.of(context).e_library, () {
-                // Navigate or display message for "E-Library"
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ReportsPage()),
+                );
               }),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildIconButton(BuildContext context, IconData icon, String label, VoidCallback onTap) {
+    return Material(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(30),
+            child: CircleAvatar(
+              backgroundColor: bluecolor,
+              radius: MediaQuery.of(context).size.width * 0.08,
+              child: Icon(
+                icon,
+                color: Colors.white,
+                size: MediaQuery.of(context).size.width * 0.06,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: blackColorTextStyle.copyWith(
+              fontSize: MediaQuery.of(context).size.width * 0.035,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
     );
   }
 
@@ -146,34 +142,77 @@ class DashboardparrentHome extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildIconButton(BuildContext context, IconData icon, String label, VoidCallback onTap) {
-    return Material(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(30),
-            child: CircleAvatar(
-              backgroundColor: bluecolor,
-              radius: MediaQuery.of(context).size.width * 0.08,
-              child: Icon(
-                icon,
-                color: Colors.white,
-                size: MediaQuery.of(context).size.width * 0.06,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: blackColorTextStyle.copyWith(
-              fontSize: MediaQuery.of(context).size.width * 0.035,
-            ),
-          ),
-        ],
-      ),
+// You'll need to create these pages:
+class StudentProgressPage extends StatelessWidget {
+  const StudentProgressPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Implement student progress monitoring page
+    return const Scaffold(
+      body: Center(child: Text('Student Progress Page')),
+    );
+  }
+}
+
+class AttendancePage extends StatelessWidget {
+  const AttendancePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Implement attendance tracking page
+    return const Scaffold(
+      body: Center(child: Text('Attendance Page')),
+    );
+  }
+}
+
+class NotificationsPage extends StatelessWidget {
+  const NotificationsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Implement notifications page
+    return const Scaffold(
+      body: Center(child: Text('Notifications Page')),
+    );
+  }
+}
+
+class ELibraryPage extends StatelessWidget {
+  const ELibraryPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Implement e-library page
+    return const Scaffold(
+      body: Center(child: Text('E-Library Page')),
+    );
+  }
+}
+
+class CertificatesPage extends StatelessWidget {
+  const CertificatesPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Implement certificates page
+    return const Scaffold(
+      body: Center(child: Text('Certificates Page')),
+    );
+  }
+}
+
+class ReportsPage extends StatelessWidget {
+  const ReportsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Implement reports page
+    return const Scaffold(
+      body: Center(child: Text('Reports Page')),
     );
   }
 }

@@ -3,14 +3,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/theme/theme.dart';
 
-class GradesPage extends StatefulWidget {
-  const GradesPage({super.key});
+class ParentGradesPage extends StatefulWidget {
+  const ParentGradesPage ({super.key});
 
   @override
-  State<GradesPage> createState() => _GradesPageState();
+  State<ParentGradesPage > createState() => _GradesPageState();
 }
 
-class _GradesPageState extends State<GradesPage> {
+class _GradesPageState extends State<ParentGradesPage > {
   String selectedYear = '2024';
   String selectedSemester = 'Odd';
 
@@ -59,7 +59,7 @@ class _GradesPageState extends State<GradesPage> {
             ),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.pushNamed(context, '/student-home'),
+              onPressed: () => Navigator.pushNamed(context, '/parent-home'),
             ),
             title: Text(
               S.of(context).grades_title,

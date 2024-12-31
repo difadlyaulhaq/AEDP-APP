@@ -51,7 +51,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "assignment_1": MessageLookupByLibrary.simpleMessage("Tarefa 1"),
         "assignment_1_due":
             MessageLookupByLibrary.simpleMessage("Vencimento hoje, 23:59"),
+        "attendance_tracking":
+            MessageLookupByLibrary.simpleMessage("Acompanhamento de Presença"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
+        "certificates_and_reports":
+            MessageLookupByLibrary.simpleMessage("Certificados e Relatórios"),
         "contact": MessageLookupByLibrary.simpleMessage("Contato"),
         "dashboard_attendance":
             MessageLookupByLibrary.simpleMessage("Presença"),
@@ -76,6 +80,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "english": MessageLookupByLibrary.simpleMessage("Inglês"),
         "errorLabel": m0,
         "evenSemester": MessageLookupByLibrary.simpleMessage("Semestre Par"),
+        "fee_payment_management": MessageLookupByLibrary.simpleMessage(
+            "Gerenciamento de Pagamento de Taxas"),
         "filterSubjects":
             MessageLookupByLibrary.simpleMessage("Filtrar Disciplinas"),
         "fullName": MessageLookupByLibrary.simpleMessage("Nome completo"),
@@ -83,6 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "gpa": MessageLookupByLibrary.simpleMessage("Média"),
         "grade": MessageLookupByLibrary.simpleMessage("Nota"),
         "grades": MessageLookupByLibrary.simpleMessage("Notas"),
+        "grades_title": MessageLookupByLibrary.simpleMessage("Suas Notas"),
         "hello": MessageLookupByLibrary.simpleMessage("Olá"),
         "history": MessageLookupByLibrary.simpleMessage("História"),
         "home": MessageLookupByLibrary.simpleMessage("Início"),
@@ -119,8 +126,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "nameNotFound":
             MessageLookupByLibrary.simpleMessage("Nome não encontrado"),
         "nav_attendance": MessageLookupByLibrary.simpleMessage("Presença"),
+        "nav_dashboard":
+            MessageLookupByLibrary.simpleMessage("Painel de Controle"),
         "nav_home": MessageLookupByLibrary.simpleMessage("Início"),
         "nav_invoice": MessageLookupByLibrary.simpleMessage("Fatura"),
+        "nav_notifications":
+            MessageLookupByLibrary.simpleMessage("Notificações"),
         "nav_profile": MessageLookupByLibrary.simpleMessage("Perfil"),
         "noProfileData": MessageLookupByLibrary.simpleMessage(
             "Nenhum dado de perfil encontrado."),
@@ -168,11 +179,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "student": MessageLookupByLibrary.simpleMessage("Estudante"),
         "student_dashboard":
             MessageLookupByLibrary.simpleMessage("Painel do Aluno"),
+        "student_progress_monitoring": MessageLookupByLibrary.simpleMessage(
+            "Monitoramento do Progresso do Aluno"),
         "subject": MessageLookupByLibrary.simpleMessage("Matéria"),
         "subject_arabic": MessageLookupByLibrary.simpleMessage("Árabe"),
         "subject_art": MessageLookupByLibrary.simpleMessage("Arte"),
         "subject_english": MessageLookupByLibrary.simpleMessage("Inglês"),
         "subject_history": MessageLookupByLibrary.simpleMessage("História"),
+        "subject_list_title":
+            MessageLookupByLibrary.simpleMessage("Lista de Disciplinas"),
         "subject_math": MessageLookupByLibrary.simpleMessage("Matemática"),
         "subject_physical_education":
             MessageLookupByLibrary.simpleMessage("Educação Física"),

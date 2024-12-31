@@ -1,5 +1,14 @@
 {
   "@@locale": "en",
+  "grades_title": "Your Grades",
+  "subject_list_title": "List of Subjects",
+
+  "nav_dashboard": "Dashboard",
+  "nav_notifications": "Notifications",
+  "attendance_tracking": "Attendance Tracking",
+  "student_progress_monitoring": "Student Progress Monitoring",
+  "fee_payment_management": "Fee Payment Management",
+  "certificates_and_reports": "Certificates and Reports",
    "parent_dashboard": "Parent Dashboard",
   "student_dashboard": "Student Dashboard",
   "invoices": "Invoices",

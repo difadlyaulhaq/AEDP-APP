@@ -50,6 +50,86 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Your Grades`
+  String get grades_title {
+    return Intl.message(
+      'Your Grades',
+      name: 'grades_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `List of Subjects`
+  String get subject_list_title {
+    return Intl.message(
+      'List of Subjects',
+      name: 'subject_list_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dashboard`
+  String get nav_dashboard {
+    return Intl.message(
+      'Dashboard',
+      name: 'nav_dashboard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notifications`
+  String get nav_notifications {
+    return Intl.message(
+      'Notifications',
+      name: 'nav_notifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Attendance Tracking`
+  String get attendance_tracking {
+    return Intl.message(
+      'Attendance Tracking',
+      name: 'attendance_tracking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Student Progress Monitoring`
+  String get student_progress_monitoring {
+    return Intl.message(
+      'Student Progress Monitoring',
+      name: 'student_progress_monitoring',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fee Payment Management`
+  String get fee_payment_management {
+    return Intl.message(
+      'Fee Payment Management',
+      name: 'fee_payment_management',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Certificates and Reports`
+  String get certificates_and_reports {
+    return Intl.message(
+      'Certificates and Reports',
+      name: 'certificates_and_reports',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Parent Dashboard`
   String get parent_dashboard {
     return Intl.message(
