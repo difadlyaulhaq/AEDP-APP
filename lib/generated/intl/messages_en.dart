@@ -92,6 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "invoice_even": MessageLookupByLibrary.simpleMessage("Even"),
         "invoice_odd": MessageLookupByLibrary.simpleMessage("Odd"),
         "invoice_title": MessageLookupByLibrary.simpleMessage("Invoice"),
+        "invoices": MessageLookupByLibrary.simpleMessage("Invoices"),
         "language": MessageLookupByLibrary.simpleMessage("Language"),
         "language_arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
         "language_english": MessageLookupByLibrary.simpleMessage("English"),
@@ -136,6 +137,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "online_learning_5":
             MessageLookupByLibrary.simpleMessage("Online Learning #05"),
         "parent": MessageLookupByLibrary.simpleMessage("Parent"),
+        "parent_dashboard":
+            MessageLookupByLibrary.simpleMessage("Parent Dashboard"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "passwordLabel": MessageLookupByLibrary.simpleMessage("Password"),
         "passwordRequirement": MessageLookupByLibrary.simpleMessage(
@@ -162,6 +165,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "signup": MessageLookupByLibrary.simpleMessage("Sign Up"),
         "signup_as_role": m4,
         "student": MessageLookupByLibrary.simpleMessage("Student"),
+        "student_dashboard":
+            MessageLookupByLibrary.simpleMessage("Student Dashboard"),
         "subject": MessageLookupByLibrary.simpleMessage("Subject"),
         "subject_arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
         "subject_art": MessageLookupByLibrary.simpleMessage("Art"),

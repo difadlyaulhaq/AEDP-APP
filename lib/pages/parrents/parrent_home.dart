@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:project_aedp/generated/l10n.dart';
-import 'package:project_aedp/pages/students/dashboard_students.dart';
-import 'package:project_aedp/pages/students/invoice_page.dart';
-import 'package:project_aedp/pages/profile_page.dart';
+import 'package:project_aedp/pages/parrents/parrent_dashboard.dart';
+import '../profile_page.dart';
+import '../students/invoice_page.dart';
 
-class StudentHome extends StatefulWidget {
-  const StudentHome({Key? key}) : super(key: key);
+class ParrentHome extends StatefulWidget {
+  const ParrentHome({super.key});
 
   @override
-  State<StudentHome> createState() => _StudentHomeState();
+  State<ParrentHome> createState() => _ParrentHomeState();
 }
 
-class _StudentHomeState extends State<StudentHome> {
+class _ParrentHomeState extends State<ParrentHome> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    const DashboardStudentsHome(),
+    const DashboardparrentHome (),
     const InvoicePage(),
     const ProfilePage(),
   ];
@@ -28,7 +27,7 @@ class _StudentHomeState extends State<StudentHome> {
   }
 
   @override
-  Widget build(BuildContext context) {
+   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -37,7 +36,7 @@ class _StudentHomeState extends State<StudentHome> {
         child: ClipPath(
           clipper: CustomAppBarClipper(),
           child: AppBar(
-            title: Text(S.of(context).student_dashboard),
+            title: Text(S.of(context).parent_dashboard),
             centerTitle: true,
             toolbarHeight: 60,
             flexibleSpace: Container(
@@ -76,9 +75,9 @@ class CustomAppBarClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.lineTo(0, size.height - 20); // Mengurangi tinggi
+    path.lineTo(0, size.height - 30); // Mengurangi tinggi
     path.quadraticBezierTo(0, size.height, 20, size.height); // Sesuaikan offset
-    path.lineTo(size.width - 20, size.height); // Sesuaikan offset
+    path.lineTo(size.width - 30, size.height); // Sesuaikan offset
     path.quadraticBezierTo(size.width, size.height, size.width, size.height - 20); // Mengurangi tinggi
     path.lineTo(size.width, 0);
     path.close();

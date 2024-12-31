@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:project_aedp/bloc/auth/auth_bloc.dart';
 import 'package:project_aedp/bloc/auth/auth_state.dart';
+import 'package:project_aedp/pages/parrents/parrent_home.dart';
 import 'package:project_aedp/pages/students/student_home.dart';
 import 'package:project_aedp/pages/teacher/teacher_dashboard.dart';
 import '../pages/loginbyrole.dart';
@@ -43,6 +44,19 @@ GoRouter getRouter(AuthState authState) {
         final authState = context.read<AuthBloc>().state;
         if (authState is! AuthLoginSuccess || 
             authState.role.toLowerCase() != 'student') {
+          return '/select-role';
+        }
+        return null;
+      },
+      ),
+      GoRoute(
+        path: '/parent-home',
+        name: RoutesNames.ParrentHome,
+        builder: (context, state) => const ParrentHome(),
+        redirect: (context, state) {
+        final authState = context.read<AuthBloc>().state;
+        if (authState is! AuthLoginSuccess || 
+            authState.role.toLowerCase() != 'parent') {
           return '/select-role';
         }
         return null;

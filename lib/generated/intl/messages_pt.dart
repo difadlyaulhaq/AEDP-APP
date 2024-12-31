@@ -95,6 +95,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "invoice_even": MessageLookupByLibrary.simpleMessage("Par"),
         "invoice_odd": MessageLookupByLibrary.simpleMessage("Ímpar"),
         "invoice_title": MessageLookupByLibrary.simpleMessage("Fatura"),
+        "invoices": MessageLookupByLibrary.simpleMessage("Faturas"),
         "language": MessageLookupByLibrary.simpleMessage("Idioma"),
         "language_arabic": MessageLookupByLibrary.simpleMessage("Árabe"),
         "language_english": MessageLookupByLibrary.simpleMessage("Inglês"),
@@ -140,6 +141,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "online_learning_5":
             MessageLookupByLibrary.simpleMessage("Aprendizagem Online #05"),
         "parent": MessageLookupByLibrary.simpleMessage("Pai/Mãe"),
+        "parent_dashboard":
+            MessageLookupByLibrary.simpleMessage("Painel dos Pais"),
         "password": MessageLookupByLibrary.simpleMessage("Senha"),
         "passwordLabel": MessageLookupByLibrary.simpleMessage("Senha"),
         "passwordRequirement": MessageLookupByLibrary.simpleMessage(
@@ -163,6 +166,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "signup": MessageLookupByLibrary.simpleMessage("Cadastrar-se"),
         "signup_as_role": m4,
         "student": MessageLookupByLibrary.simpleMessage("Estudante"),
+        "student_dashboard":
+            MessageLookupByLibrary.simpleMessage("Painel do Aluno"),
         "subject": MessageLookupByLibrary.simpleMessage("Matéria"),
         "subject_arabic": MessageLookupByLibrary.simpleMessage("Árabe"),
         "subject_art": MessageLookupByLibrary.simpleMessage("Arte"),

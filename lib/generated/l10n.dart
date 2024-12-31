@@ -50,6 +50,36 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Parent Dashboard`
+  String get parent_dashboard {
+    return Intl.message(
+      'Parent Dashboard',
+      name: 'parent_dashboard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Student Dashboard`
+  String get student_dashboard {
+    return Intl.message(
+      'Student Dashboard',
+      name: 'student_dashboard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoices`
+  String get invoices {
+    return Intl.message(
+      'Invoices',
+      name: 'invoices',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Mathematics`
   String get subject_math {
     return Intl.message(
@@ -150,16 +180,6 @@ class S {
     );
   }
 
-  /// `Download`
-  String get download {
-    return Intl.message(
-      'Download',
-      name: 'download',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Odd`
   String get semester_odd {
     return Intl.message(
@@ -255,6 +275,16 @@ class S {
     return Intl.message(
       'Administrative Fee',
       name: 'administrative_fee',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Download`
+  String get download {
+    return Intl.message(
+      'Download',
+      name: 'download',
       desc: '',
       args: [],
     );
@@ -745,16 +775,6 @@ class S {
     return Intl.message(
       'Full Name',
       name: 'fullName',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Email`
-  String get email {
-    return Intl.message(
-      'Email',
-      name: 'email',
       desc: '',
       args: [],
     );
@@ -1265,6 +1285,16 @@ class S {
     return Intl.message(
       'Login to your account to continue',
       name: 'loginPrompt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email`
+  String get email {
+    return Intl.message(
+      'Email',
+      name: 'email',
       desc: '',
       args: [],
     );

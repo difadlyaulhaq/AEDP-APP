@@ -93,6 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "invoice_even": MessageLookupByLibrary.simpleMessage("زوجي"),
         "invoice_odd": MessageLookupByLibrary.simpleMessage("فردي"),
         "invoice_title": MessageLookupByLibrary.simpleMessage("الفاتورة"),
+        "invoices": MessageLookupByLibrary.simpleMessage("الفواتير"),
         "language": MessageLookupByLibrary.simpleMessage("اللغة"),
         "language_arabic": MessageLookupByLibrary.simpleMessage("العربية"),
         "language_english": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
@@ -137,6 +138,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "online_learning_5":
             MessageLookupByLibrary.simpleMessage("التعلم عبر الإنترنت #05"),
         "parent": MessageLookupByLibrary.simpleMessage("والد/والدة"),
+        "parent_dashboard":
+            MessageLookupByLibrary.simpleMessage("لوحة تحكم الوالدين"),
         "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
         "passwordLabel": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
         "passwordRequirement": MessageLookupByLibrary.simpleMessage(
@@ -162,6 +165,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "signup": MessageLookupByLibrary.simpleMessage("التسجيل"),
         "signup_as_role": m4,
         "student": MessageLookupByLibrary.simpleMessage("طالب"),
+        "student_dashboard":
+            MessageLookupByLibrary.simpleMessage("لوحة الطالب"),
         "subject": MessageLookupByLibrary.simpleMessage("الموضوع"),
         "subject_arabic": MessageLookupByLibrary.simpleMessage("عربي"),
         "subject_art": MessageLookupByLibrary.simpleMessage("فن"),

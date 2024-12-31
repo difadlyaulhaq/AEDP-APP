@@ -7,5 +7,6 @@ abstract class RoutesNames {
   static const signup = 'signup';
   static const homestudent = 'student-home';
   static const teacherdash = 'teacher-dashboard';
-  static const otpVerification = 'verify-otp';  
+  static const otpVerification = 'verify-otp';
+  static const ParrentHome = 'teacher-home';
 }
