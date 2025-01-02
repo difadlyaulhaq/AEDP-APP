@@ -183,18 +183,18 @@ class DashboardStudentsHome extends StatelessWidget {
                 },
                 context,
               ),
-              _buildIconButton(
-                Icons.notifications,
-                S.of(context).dashboard_notifications,
-                () {
-                  dev.log("Notifications button clicked");
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const NotFoundPage()),
-                  );
-                },
-                context,
-              ),
+              // _buildIconButton(
+              //   Icons.notifications,
+              //   S.of(context).dashboard_notifications,
+              //   () {
+              //     dev.log("Notifications button clicked");
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(builder: (context) => const NotFoundPage()),
+              //     );
+              //   },
+              //   context,
+              // ),
             ],
           ),
         ),
