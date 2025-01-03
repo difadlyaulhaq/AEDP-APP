@@ -1,25 +1,22 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_aedp/bloc/auth/auth_event.dart';
-import 'package:project_aedp/bloc/auth/auth_repository.dart';
-import 'package:project_aedp/bloc/auth/auth_state.dart';
-class AuthLoadLoginStatus extends AuthEvent {}
-class AuthLogoutRequested extends AuthEvent {}
+import 'auth_event.dart';
+import 'auth_state.dart';
+import 'auth_repository.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
-
+  
   AuthBloc({required this.authRepository}) : super(AuthInitial()) {
-     on<AuthLogoutRequested>((event, emit) async {
+    on<AuthLogoutRequested>((event, emit) async {
       try {
         emit(AuthLoading());
         await authRepository.clearLoginStatus();
-        emit(AuthLogoutSuccess()); // Using new state for logout success
+        emit(AuthLogoutSuccess());
       } catch (e) {
-        print('Logout error: $e');
         emit(AuthFailure('Failed to logout: ${e.toString()}'));
       }
     });
+
     on<AuthLoadLoginStatus>((event, emit) async {
       emit(AuthLoading());
       try {
@@ -27,7 +24,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (loginStatus != null) {
           emit(AuthLoginSuccess(
             role: loginStatus['role']!,
-            email: loginStatus['email']!,
+            userId: loginStatus['userId']!,
           ));
         } else {
           emit(AuthInitial());
@@ -36,35 +33,31 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthFailure(e.toString()));
       }
     });
+
     on<AuthLoginRequested>((event, emit) async {
       emit(AuthLoading());
       try {
-        final userRole = await authRepository.logIn(
-          email: event.email,
+        final loginResult = await authRepository.logIn(
+          id: event.id,
           password: event.password,
         );
         
-        if (userRole != null) {
-          print('Login successful, role: $userRole');
-          // Pastikan urutan parameter sesuai dengan method di AuthRepository
-          await authRepository.saveLoginStatus(event.email, userRole);
+        if (loginResult != null) {
+          final userRole = loginResult['role'] as String;
+          final userId = loginResult['userId'] as num;
           
-          // Add small delay to ensure state is properly updated
-          await Future.delayed(const Duration(milliseconds: 100));
+          await authRepository.saveLoginStatus(userId, userRole);
           
-          // Verifikasi role yang login dengan role yang diminta
           if (userRole.toLowerCase() != event.role.toLowerCase()) {
             emit(AuthFailure('Access denied: incorrect role'));
             return;
           }
           
-          emit(AuthLoginSuccess(role: userRole, email: event.email));
+          emit(AuthLoginSuccess(role: userRole, userId: userId));
         } else {
-          print('Login failed: Invalid credentials');
           emit(AuthFailure('Invalid credentials'));
         }
       } catch (e) {
-        print('Login error: $e');
         emit(AuthFailure(e.toString()));
       }
     });

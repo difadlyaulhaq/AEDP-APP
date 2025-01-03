@@ -1,39 +1,25 @@
-import 'package:meta/meta.dart';
+import 'package:equatable/equatable.dart';
 
-@immutable
-abstract class AuthEvent {}
-
-class AuthSignupRequested extends AuthEvent {
-  final String email;
-  final String role;
-  final String password;
-
-  AuthSignupRequested({
-    required this.email,
-    required this.role,
-    required this.password,
-  });
+abstract class AuthEvent extends Equatable {
+  @override
+  List<Object?> get props => [];
 }
 
 class AuthLoginRequested extends AuthEvent {
-  final String email;
+  final num id;
   final String password;
   final String role;
 
   AuthLoginRequested({
-    required this.email,
+    required this.id,
     required this.password,
     required this.role,
   });
+
+  @override
+  List<Object?> get props => [id, password, role];
 }
 
-// class AuthVerifyOTPRequested extends AuthEvent {
-//   final String email;
-//   final String otp;
+class AuthLoadLoginStatus extends AuthEvent {}
 
-//   AuthVerifyOTPRequested({
-//     required this.email,
-//     required this.otp,
-//   });
-// }
 class AuthLogoutRequested extends AuthEvent {}

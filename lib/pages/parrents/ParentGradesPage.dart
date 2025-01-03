@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:project_aedp/generated/l10n.dart';
-import 'package:project_aedp/theme/theme.dart';
 
 class ParentGradesPage extends StatefulWidget {
   const ParentGradesPage({super.key});

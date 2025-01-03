@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/parrents/ParentGradesPage.dart';
-import 'package:project_aedp/pages/profile_page.dart';
-import 'package:project_aedp/pages/students/GradesPage.dart';
-import 'package:project_aedp/pages/students/invoice_page.dart';
 import 'package:project_aedp/pages/students/materialpage.dart';
 import 'package:project_aedp/pages/students/schedulepage.dart';
 import 'package:project_aedp/theme/theme.dart';
@@ -14,6 +11,7 @@ class DashboardParentHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    // ignore: unused_local_variable
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Column(
@@ -25,55 +23,70 @@ class DashboardParentHome extends StatelessWidget {
             mainAxisSpacing: screenWidth * 0.03,
             padding: EdgeInsets.all(screenWidth * 0.04),
             children: [
-              _buildIconButton(context, Icons.calendar_today, S.of(context).schedule, () {
+              _buildIconButton(
+                  context, Icons.calendar_today, S.of(context).schedule, () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SchedulePage()),
                 );
               }),
-              _buildIconButton(context, Icons.book, S.of(context).materials, () {
+              _buildIconButton(context, Icons.book, S.of(context).materials,
+                  () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const StudentMaterialPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const StudentMaterialPage()),
                 );
               }),
-              _buildIconButton(context, Icons.check_circle_outline, S.of(context).grades, () {
+              _buildIconButton(
+                  context, Icons.check_circle_outline, S.of(context).grades,
+                  () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ParentGradesPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const ParentGradesPage()),
                 );
               }),
               _buildIconButton(context, Icons.assessment, 'Progress', () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const StudentProgressPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const StudentProgressPage()),
                 );
               }),
               _buildIconButton(context, Icons.fact_check, 'Attendance', () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AttendancePage()),
+                  MaterialPageRoute(
+                      builder: (context) => const AttendancePage()),
                 );
               }),
-              _buildIconButton(context, Icons.notifications, S.of(context).notifications, () {
+              _buildIconButton(
+                  context, Icons.notifications, S.of(context).notifications,
+                  () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const NotificationsPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const NotificationsPage()),
                 );
               }),
-              _buildIconButton(context, Icons.library_books, S.of(context).e_library, () {
+              _buildIconButton(
+                  context, Icons.library_books, S.of(context).e_library, () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const ELibraryPage()),
                 );
               }),
-              _buildIconButton(context, Icons.card_membership, 'Certificates', () {
+              _buildIconButton(context, Icons.card_membership, 'Certificates',
+                  () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const CertificatesPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const CertificatesPage()),
                 );
               }),
-              _buildIconButton(context, Icons.insert_drive_file, S.of(context).reports, () {
+              _buildIconButton(
+                  context, Icons.insert_drive_file, S.of(context).reports, () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const ReportsPage()),
@@ -86,7 +99,8 @@ class DashboardParentHome extends StatelessWidget {
     );
   }
 
-  Widget _buildIconButton(BuildContext context, IconData icon, String label, VoidCallback onTap) {
+  Widget _buildIconButton(
+      BuildContext context, IconData icon, String label, VoidCallback onTap) {
     return Material(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -115,30 +129,6 @@ class DashboardParentHome extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTodoItem(String title, String deadline) {
-    return Material(
-      color: Colors.transparent,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-              child: Text(
-                title,
-                style: blackColorTextStyle.copyWith(fontSize: 16),
-              ),
-            ),
-            Text(
-              deadline,
-              style: blackColorTextStyle.copyWith(fontSize: 14),
-            ),
-          ],
-        ),
       ),
     );
   }

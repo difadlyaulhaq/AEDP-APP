@@ -17,7 +17,7 @@ class LoginPageByRole extends StatefulWidget {
 }
 
 class _LoginPageByRoleState extends State<LoginPageByRole> {
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController idController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordObscured = true;
   bool isLoading = false;
@@ -28,18 +28,27 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
   }
 
   void _handleLogin() {
-    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+    final String idText = idController.text.trim();
+    final String password = passwordController.text.trim();
+
+    if (idText.isEmpty || password.isEmpty) {
+      _showSnackBar(S.of(context).pleaseEnterEmailAndPassword);
+      return;
+    }
+
+    final num? id = num.tryParse(idText);
+    if (id == null) {
       _showSnackBar(S.of(context).pleaseEnterEmailAndPassword);
       return;
     }
 
     setState(() => isLoading = true);
-    dev.log('Attempting login for role: ${widget.role}');
+    dev.log('Attempting login for role: ${widget.role} with ID: $id');
 
     context.read<AuthBloc>().add(
           AuthLoginRequested(
-            email: emailController.text.trim(),
-            password: passwordController.text,
+            id: id,
+            password: password,
             role: widget.role,
           ),
         );
@@ -132,10 +141,10 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
                     ),
                     const SizedBox(height: 20),
                     _buildTextField(
-                      controller: emailController,
-                      label: localization.email,
-                      icon: Icons.email,
-                      keyboardType: TextInputType.emailAddress,
+                      controller: idController,
+                      label: localization.contact,
+                      icon: Icons.call,
+                      keyboardType: TextInputType.number,
                     ),
                     const SizedBox(height: 12),
                     _buildPasswordField(localization.password),
@@ -227,7 +236,7 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
 
   @override
   void dispose() {
-    emailController.dispose();
+    idController.dispose();
     passwordController.dispose();
     super.dispose();
   }

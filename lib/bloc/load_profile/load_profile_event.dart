@@ -3,6 +3,6 @@ abstract class LoadProfileEvent {
 }
 
 class LoadUserProfile extends LoadProfileEvent {
-  final String email;
-  LoadUserProfile({required this.email});
+  final num id;
+  LoadUserProfile({required this.id});
 }

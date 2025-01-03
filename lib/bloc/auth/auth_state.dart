@@ -1,5 +1,6 @@
-import 'package:meta/meta.dart';
+
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 @immutable
 abstract class AuthState extends Equatable {
@@ -13,15 +14,19 @@ class AuthLoading extends AuthState {}
 
 class AuthLoginSuccess extends AuthState {
   final String role;
-  final String email;
+  final num userId;
 
-  AuthLoginSuccess({required this.role, required this.email});
+  AuthLoginSuccess({
+    required this.role, 
+    required this.userId,
+  });
 
   @override
-  List<Object?> get props => [role, email];
+  List<Object?> get props => [role, userId];
 }
-class AuthLogoutState extends AuthState {}
-class AuthLogoutSuccess extends AuthState{}
+
+class AuthLogoutSuccess extends AuthState {}
+
 class AuthFailure extends AuthState {
   final String errorMessage;
 

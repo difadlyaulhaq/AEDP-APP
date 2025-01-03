@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:project_aedp/bloc/auth/auth_bloc.dart';
+import 'package:project_aedp/bloc/auth/auth_event.dart';
 import 'package:project_aedp/bloc/auth/auth_state.dart';
 import 'package:project_aedp/bloc/load_profile/load_profile_event.dart';
 import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
@@ -26,7 +27,7 @@ class ProfilePage extends StatelessWidget {
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, authState) {
           if (authState is AuthLoginSuccess) {
-            context.read<LoadProfileBloc>().add(LoadUserProfile(email: authState.email));
+            context.read<LoadProfileBloc>().add(LoadUserProfile(id: authState.userId));
 
             return Scaffold(
               appBar: AppBar(
