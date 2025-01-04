@@ -1,6 +1,17 @@
 {
   "@@locale": "ar",
- 
+  "teacherInfo": "معلومات المعلم",
+  "studentInfo": "معلومات الطالب",
+  "parentInfo": "معلومات ولي الأمر",
+  "address": "العنوان",
+  "whatsapp": "واتساب",
+  "classes": "الفصول",
+  "dateOfBirth": "تاريخ الميلاد",
+  "placeOfBirth": "مكان الميلاد",
+  "gradeClass": "الصف",
+  "schoolId": "رقم المدرسة",
+  "fatherName": "اسم الأب",
+  "studentName": "اسم الطالب",
   "nav_dashboard": "لوحة القيادة",
   "nav_notifications": "الإشعارات",
   "attendance_tracking": "تتبع الحضور",

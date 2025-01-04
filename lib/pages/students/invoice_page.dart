@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_aedp/generated/l10n.dart';
+import 'package:project_aedp/bloc/invoice_download/invoice_download_bloc.dart';
+import 'package:http/http.dart' as http;
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:open_file/open_file.dart';
 
 class InvoicePage extends StatelessWidget {
   const InvoicePage({super.key});
@@ -10,46 +16,42 @@ class InvoicePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(S.of(context).invoice_title), // Use localized string for title
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final screenWidth = MediaQuery.of(context).size.width;
+      body: BlocProvider(
+        create: (_) => InvoiceDownloadBloc(),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final screenWidth = MediaQuery.of(context).size.width;
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "2023/2024", // You can localize this too if needed
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-                buildInvoiceSection(
-                  title: S.of(context).invoice_even, // Use localized title
-                  items: [
-                    InvoiceItem(S.of(context).tuition_fee, "February 18 2024", "AED 96,140"),
-                    InvoiceItem(S.of(context).administrative_fee, "February 18 2024", "AED 1,000"),
-                  ],
-                  isWide: screenWidth > 600, // Adapt layout for wide screens
-                ),
-                const SizedBox(height: 16),
-                buildInvoiceSection(
-                  title: S.of(context).invoice_odd, // Use localized title
-                  items: [
-                    InvoiceItem(S.of(context).tuition_fee, "August 18 2024", "AED 96,140"),
-                    InvoiceItem(S.of(context).administrative_fee, "August 18 2024", "AED 1,000"),
-                  ],
-                  isWide: screenWidth > 600, // Adapt layout for wide screens
-                ),
-              ],
-            ),
-          );
-        },
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "2023/2024", // You can localize this too if needed
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
+                  buildInvoiceSection(
+                    context: context,
+                    title: S.of(context).invoice_even,
+                    items: [
+                      InvoiceItem(S.of(context).tuition_fee, "February 18 2024", "uploads/6779191aa340e_week_13.pdf"),
+                      InvoiceItem(S.of(context).administrative_fee, "February 18 2024", "uploads/6779191aa341e_admin_fee.pdf"),
+                    ],
+                    isWide: screenWidth > 600,
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
 
   Widget buildInvoiceSection({
+    required BuildContext context,
     required String title,
     required List<InvoiceItem> items,
     required bool isWide,
@@ -92,7 +94,7 @@ class InvoicePage extends StatelessWidget {
                       child: Column(
                         children: items
                             .sublist(0, (items.length / 2).ceil())
-                            .map((item) => buildInvoiceItem(item, isWide))
+                            .map((item) => buildInvoiceItem(context, item))
                             .toList(),
                       ),
                     ),
@@ -101,28 +103,28 @@ class InvoicePage extends StatelessWidget {
                       child: Column(
                         children: items
                             .sublist((items.length / 2).ceil())
-                            .map((item) => buildInvoiceItem(item, isWide))
+                            .map((item) => buildInvoiceItem(context, item))
                             .toList(),
                       ),
                     ),
                   ],
                 )
               : Column(
-                  children: items.map((item) => buildInvoiceItem(item, isWide)).toList(),
+                  children: items.map((item) => buildInvoiceItem(context, item)).toList(),
                 ),
         ],
       ),
     );
   }
 
-  Widget buildInvoiceItem(InvoiceItem item, bool isWide) {
+  Widget buildInvoiceItem(BuildContext context, InvoiceItem item) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
-            flex: isWide ? 3 : 5,
+            flex: 5,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -131,7 +133,6 @@ class InvoicePage extends StatelessWidget {
                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 Text(item.date),
-                Text(item.amount),
               ],
             ),
           ),
@@ -141,7 +142,7 @@ class InvoicePage extends StatelessWidget {
               child: IconButton(
                 icon: const Icon(Icons.file_download, color: Colors.white),
                 onPressed: () {
-                  // Add download functionality here
+                  _downloadAndOpenPDF(item.pdfPath);
                 },
               ),
             ),
@@ -150,12 +151,34 @@ class InvoicePage extends StatelessWidget {
       ),
     );
   }
+
+  // Function to download and open PDF
+  Future<void> _downloadAndOpenPDF(String pdfUrl) async {
+    try {
+      // Step 1: Download PDF from URL
+      final response = await http.get(Uri.parse(pdfUrl));
+      if (response.statusCode == 200) {
+        // Step 2: Save the file to the device
+        final directory = await getApplicationDocumentsDirectory();
+        final filePath = '${directory.path}/downloaded_file.pdf';
+        final file = File(filePath);
+        await file.writeAsBytes(response.bodyBytes);
+
+        // Step 3: Open the PDF file
+        await OpenFile.open(filePath);
+      } else {
+        print("Failed to download PDF: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
 }
 
 class InvoiceItem {
   final String title;
   final String date;
-  final String amount;
+  final String pdfPath;
 
-  InvoiceItem(this.title, this.date, this.amount);
+  InvoiceItem(this.title, this.date, this.pdfPath);
 }

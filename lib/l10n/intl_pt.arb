@@ -1,5 +1,20 @@
 {
   "@@locale": "pt",
+
+  "teacherInfo": "Informações do Professor",
+  "studentInfo": "Informações do Aluno",
+  "parentInfo": "Informações do Responsável",
+  "address": "Endereço",
+
+  "whatsapp": "WhatsApp",
+  "classes": "Classes",
+  "dateOfBirth": "Data de Nascimento",
+  "placeOfBirth": "Local de Nascimento",
+  "gradeClass": "Série/Classe",
+  "schoolId": "ID da Escola",
+  "fatherName": "Nome do Pai",
+  "studentName": "Nome do Aluno",
+
   "grades_title": "Suas Notas",
   "subject_list_title": "Lista de Disciplinas",
   "nav_dashboard": "Painel de Controle",

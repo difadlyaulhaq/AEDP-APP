@@ -40,6 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "تم رفض الوصول: الدور غير صحيح."),
         "accessDeniedMessage":
             MessageLookupByLibrary.simpleMessage("تم الرفض: دور غير صحيح."),
+        "address": MessageLookupByLibrary.simpleMessage("العنوان"),
         "administrativeFee":
             MessageLookupByLibrary.simpleMessage("الرسوم الإدارية"),
         "administrative_fee":
@@ -56,6 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
         "certificates_and_reports":
             MessageLookupByLibrary.simpleMessage("الشهادات والتقارير"),
+        "classes": MessageLookupByLibrary.simpleMessage("الفصول"),
         "contact": MessageLookupByLibrary.simpleMessage("التواصل"),
         "dashboard_attendance": MessageLookupByLibrary.simpleMessage("الحضور"),
         "dashboard_grades": MessageLookupByLibrary.simpleMessage("الدرجات"),
@@ -66,6 +68,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "dashboard_schedule": MessageLookupByLibrary.simpleMessage("الجدول"),
         "dashboard_todo_header":
             MessageLookupByLibrary.simpleMessage("المهام:"),
+        "dateOfBirth": MessageLookupByLibrary.simpleMessage("تاريخ الميلاد"),
         "download": MessageLookupByLibrary.simpleMessage("تحميل"),
         "due_oct_16":
             MessageLookupByLibrary.simpleMessage("مستحق 16 أكتوبر، 23.59"),
@@ -79,6 +82,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "english": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
         "errorLabel": m0,
         "evenSemester": MessageLookupByLibrary.simpleMessage("الفصل الزوجي"),
+        "fatherName": MessageLookupByLibrary.simpleMessage("اسم الأب"),
         "fee_payment_management":
             MessageLookupByLibrary.simpleMessage("إدارة دفع الرسوم"),
         "filterSubjects": MessageLookupByLibrary.simpleMessage("تصفية المواد"),
@@ -86,6 +90,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "geography": MessageLookupByLibrary.simpleMessage("الجغرافيا"),
         "gpa": MessageLookupByLibrary.simpleMessage("المعدل التراكمي"),
         "grade": MessageLookupByLibrary.simpleMessage("الدرجة"),
+        "gradeClass": MessageLookupByLibrary.simpleMessage("الصف"),
         "grades": MessageLookupByLibrary.simpleMessage("الدرجات"),
         "hello": MessageLookupByLibrary.simpleMessage("مرحبًا"),
         "history": MessageLookupByLibrary.simpleMessage("التاريخ"),
@@ -146,12 +151,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "online_learning_5":
             MessageLookupByLibrary.simpleMessage("التعلم عبر الإنترنت #05"),
         "parent": MessageLookupByLibrary.simpleMessage("والد/والدة"),
+        "parentInfo": MessageLookupByLibrary.simpleMessage("معلومات ولي الأمر"),
         "parent_dashboard":
             MessageLookupByLibrary.simpleMessage("لوحة تحكم الوالدين"),
         "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
         "passwordLabel": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
         "passwordRequirement": MessageLookupByLibrary.simpleMessage(
             "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل."),
+        "placeOfBirth": MessageLookupByLibrary.simpleMessage("مكان الميلاد"),
         "pleaseEnterEmailAndPassword": MessageLookupByLibrary.simpleMessage(
             "الرجاء إدخال البريد الإلكتروني وكلمة المرور"),
         "profile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
@@ -163,6 +170,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "role_teacher": MessageLookupByLibrary.simpleMessage("معلم"),
         "schedule": MessageLookupByLibrary.simpleMessage("الجدول"),
         "scheduleTitle": MessageLookupByLibrary.simpleMessage("الجدول"),
+        "schoolId": MessageLookupByLibrary.simpleMessage("رقم المدرسة"),
         "science": MessageLookupByLibrary.simpleMessage("العلوم"),
         "select_role": MessageLookupByLibrary.simpleMessage("اختيار الدور"),
         "select_your_role": MessageLookupByLibrary.simpleMessage("اختر دورك"),
@@ -173,6 +181,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "signup": MessageLookupByLibrary.simpleMessage("التسجيل"),
         "signup_as_role": m4,
         "student": MessageLookupByLibrary.simpleMessage("طالب"),
+        "studentInfo": MessageLookupByLibrary.simpleMessage("معلومات الطالب"),
+        "studentName": MessageLookupByLibrary.simpleMessage("اسم الطالب"),
         "student_dashboard":
             MessageLookupByLibrary.simpleMessage("لوحة الطالب"),
         "student_progress_monitoring":
@@ -188,6 +198,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "subject_science": MessageLookupByLibrary.simpleMessage("علوم"),
         "subjectsTitle": MessageLookupByLibrary.simpleMessage("المواد"),
         "teacher": MessageLookupByLibrary.simpleMessage("معلم"),
+        "teacherInfo": MessageLookupByLibrary.simpleMessage("معلومات المعلم"),
         "todo": MessageLookupByLibrary.simpleMessage("المهام:"),
         "todo_assignment1_title":
             MessageLookupByLibrary.simpleMessage("الواجب 1"),
@@ -208,6 +219,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "userInfo": MessageLookupByLibrary.simpleMessage("معلومات المستخدم"),
         "welcome":
             MessageLookupByLibrary.simpleMessage("مرحبًا بك في التطبيق!"),
+        "whatsapp": MessageLookupByLibrary.simpleMessage("واتساب"),
         "year": MessageLookupByLibrary.simpleMessage("السنة"),
         "your_grades": MessageLookupByLibrary.simpleMessage("درجاتك")
       };

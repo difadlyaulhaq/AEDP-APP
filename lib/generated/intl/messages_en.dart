@@ -40,6 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Access denied: Incorrect role."),
         "accessDeniedMessage": MessageLookupByLibrary.simpleMessage(
             "Access denied: Incorrect role."),
+        "address": MessageLookupByLibrary.simpleMessage("Address"),
         "administrativeFee":
             MessageLookupByLibrary.simpleMessage("Administrative Fee"),
         "administrative_fee":
@@ -56,6 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "certificates_and_reports":
             MessageLookupByLibrary.simpleMessage("Certificates and Reports"),
+        "classes": MessageLookupByLibrary.simpleMessage("Classes"),
         "contact": MessageLookupByLibrary.simpleMessage("Contact"),
         "dashboard_attendance":
             MessageLookupByLibrary.simpleMessage("Attendance"),
@@ -67,6 +69,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "dashboard_reports": MessageLookupByLibrary.simpleMessage("Reports"),
         "dashboard_schedule": MessageLookupByLibrary.simpleMessage("Schedule"),
         "dashboard_todo_header": MessageLookupByLibrary.simpleMessage("To-Do:"),
+        "dateOfBirth": MessageLookupByLibrary.simpleMessage("Date of Birth"),
         "download": MessageLookupByLibrary.simpleMessage("Download"),
         "due_oct_16": MessageLookupByLibrary.simpleMessage("Due Oct 16, 23.59"),
         "due_oct_9": MessageLookupByLibrary.simpleMessage("Due Oct 9, 23.59"),
@@ -77,6 +80,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "english": MessageLookupByLibrary.simpleMessage("English"),
         "errorLabel": m0,
         "evenSemester": MessageLookupByLibrary.simpleMessage("Even"),
+        "fatherName": MessageLookupByLibrary.simpleMessage("Father\'s Name"),
         "fee_payment_management":
             MessageLookupByLibrary.simpleMessage("Fee Payment Management"),
         "filterSubjects":
@@ -85,6 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "geography": MessageLookupByLibrary.simpleMessage("Geography"),
         "gpa": MessageLookupByLibrary.simpleMessage("GPA"),
         "grade": MessageLookupByLibrary.simpleMessage("Grade"),
+        "gradeClass": MessageLookupByLibrary.simpleMessage("Grade/Class"),
         "grades": MessageLookupByLibrary.simpleMessage("Grades"),
         "grades_title": MessageLookupByLibrary.simpleMessage("Your Grades"),
         "hello": MessageLookupByLibrary.simpleMessage("Hello"),
@@ -147,12 +152,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "online_learning_5":
             MessageLookupByLibrary.simpleMessage("Online Learning #05"),
         "parent": MessageLookupByLibrary.simpleMessage("Parent"),
+        "parentInfo":
+            MessageLookupByLibrary.simpleMessage("Parent Information"),
         "parent_dashboard":
             MessageLookupByLibrary.simpleMessage("Parent Dashboard"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "passwordLabel": MessageLookupByLibrary.simpleMessage("Password"),
         "passwordRequirement": MessageLookupByLibrary.simpleMessage(
             "Password must be at least 6 characters."),
+        "placeOfBirth": MessageLookupByLibrary.simpleMessage("Place of Birth"),
         "pleaseEnterEmailAndPassword": MessageLookupByLibrary.simpleMessage(
             "Please enter your email and password"),
         "profile": MessageLookupByLibrary.simpleMessage("Profile"),
@@ -164,6 +172,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "role_teacher": MessageLookupByLibrary.simpleMessage("Teacher"),
         "schedule": MessageLookupByLibrary.simpleMessage("Schedule"),
         "scheduleTitle": MessageLookupByLibrary.simpleMessage("Schedule"),
+        "schoolId": MessageLookupByLibrary.simpleMessage("School ID"),
         "science": MessageLookupByLibrary.simpleMessage("Science"),
         "select_role": MessageLookupByLibrary.simpleMessage("Select Role"),
         "select_your_role":
@@ -175,6 +184,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "signup": MessageLookupByLibrary.simpleMessage("Sign Up"),
         "signup_as_role": m4,
         "student": MessageLookupByLibrary.simpleMessage("Student"),
+        "studentInfo":
+            MessageLookupByLibrary.simpleMessage("Student Information"),
+        "studentName": MessageLookupByLibrary.simpleMessage("Student Name"),
         "student_dashboard":
             MessageLookupByLibrary.simpleMessage("Student Dashboard"),
         "student_progress_monitoring":
@@ -192,6 +204,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "subject_science": MessageLookupByLibrary.simpleMessage("Science"),
         "subjectsTitle": MessageLookupByLibrary.simpleMessage("Subjects"),
         "teacher": MessageLookupByLibrary.simpleMessage("Teacher"),
+        "teacherInfo":
+            MessageLookupByLibrary.simpleMessage("Teacher Information"),
         "todo": MessageLookupByLibrary.simpleMessage("To-Do:"),
         "todo_assignment1_title":
             MessageLookupByLibrary.simpleMessage("Assignment 1"),
@@ -211,6 +225,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Unknown role"),
         "userInfo": MessageLookupByLibrary.simpleMessage("User Information"),
         "welcome": MessageLookupByLibrary.simpleMessage("Welcome to the app!"),
+        "whatsapp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
         "year": MessageLookupByLibrary.simpleMessage("Year"),
         "your_grades": MessageLookupByLibrary.simpleMessage("Your Grades")
       };

@@ -86,7 +86,7 @@ class ProfilePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          _buildInfoSection(context, profileData, screenWidth),
+          _buildInfoSectionByRole(context, profileData, screenWidth),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
@@ -105,7 +105,65 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoSection(BuildContext context, Map<String, dynamic> profileData, double screenWidth) {
+  Widget _buildInfoSectionByRole(BuildContext context, Map<String, dynamic> profileData, double screenWidth) {
+    final role = profileData['role']?.toLowerCase();
+
+    switch (role) {
+      case 'teacher':
+        return _buildTeacherSection(context, profileData, screenWidth);
+      case 'student':
+        return _buildStudentSection(context, profileData, screenWidth);
+      case 'parent':
+        return _buildParentSection(context, profileData, screenWidth);
+      default:
+        return Center(child: Text(S.of(context).unknownRole));
+    }
+  }
+
+  Widget _buildTeacherSection(BuildContext context, Map<String, dynamic> profileData, double screenWidth) {
+    return _buildInfoContainer(
+      context,
+      screenWidth,
+      S.of(context).teacherInfo,
+      [
+        _buildListTile(context, Icons.location_on, S.of(context).address, profileData['address'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.phone, S.of(context).contact, profileData['contact']?.toString() ?? S.of(context).unknown),
+        _buildListTile(context, Icons.call, S.of(context).whatsapp, profileData['whatsapp'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.class_, S.of(context).classes, (profileData['classes'] as List<String>).join(', ')),
+      ],
+    );
+  }
+
+  Widget _buildStudentSection(BuildContext context, Map<String, dynamic> profileData, double screenWidth) {
+    return _buildInfoContainer(
+      context,
+      screenWidth,
+      S.of(context).studentInfo,
+      [
+        _buildListTile(context, Icons.cake, S.of(context).dateOfBirth, profileData['dateOfBirth'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.place, S.of(context).placeOfBirth, profileData['placeOfBirth'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.school, S.of(context).gradeClass, profileData['gradeClass'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.badge, S.of(context).schoolId, profileData['schoolId'] ?? S.of(context).unknown),
+      ],
+    );
+  }
+
+  Widget _buildParentSection(BuildContext context, Map<String, dynamic> profileData, double screenWidth) {
+    return _buildInfoContainer(
+      context,
+      screenWidth,
+      S.of(context).parentInfo,
+      [
+        _buildListTile(context, Icons.location_on, S.of(context).address, profileData['address'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.person, S.of(context).fatherName, profileData['fatherName'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.person, S.of(context).studentName, profileData['studentName'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.phone, S.of(context).contact, profileData['contact'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.call, S.of(context).whatsapp, profileData['whatsapp'] ?? S.of(context).unknown),
+      ],
+    );
+  }
+
+  Widget _buildInfoContainer(BuildContext context, double screenWidth, String title, List<Widget> content) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -116,7 +174,7 @@ class ProfilePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            S.of(context).userInfo,
+            title,
             style: TextStyle(
               fontSize: screenWidth * 0.05,
               fontWeight: FontWeight.bold,
@@ -124,9 +182,7 @@ class ProfilePage extends StatelessWidget {
             ),
           ),
           const Divider(),
-          _buildListTile(context, Icons.person, S.of(context).fullName, profileData['fullName'] ?? S.of(context).unknown),
-          _buildListTile(context, Icons.email, S.of(context).email, profileData['email'] ?? S.of(context).unknown),
-          _buildListTile(context, Icons.phone, S.of(context).contact, profileData['contactNumber'] ?? S.of(context).unknown),
+          ...content,
         ],
       ),
     );

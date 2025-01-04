@@ -16,15 +16,16 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
   ) async {
     emit(LoadProfileLoading());
     try {
-      // Convert string ID to num
-      final num userId = num.parse(event.id);
-      
-      // First get the user document
-      final userDoc = await _firestore.collection('users')
+      // Ambil data user berdasarkan ID
+      final userId = num.tryParse(event.id);
+      if (userId == null) throw Exception('Invalid user ID');
+
+      final userDoc = await _firestore
+          .collection('users')
           .where('id', isEqualTo: userId)
           .limit(1)
           .get();
-      
+
       if (userDoc.docs.isEmpty) {
         throw Exception('User not found');
       }
@@ -32,64 +33,27 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
       final userData = userDoc.docs.first.data();
       final role = userData['role'] as String;
 
-      // Get role-specific data
+      // Ambil data berdasarkan role
       Map<String, dynamic>? roleData;
       switch (role.toLowerCase()) {
         case 'teacher':
-          final teacherDoc = await _firestore.collection('teachers')
-              .where('id', isEqualTo: userId)
-              .limit(1)
-              .get();
-          if (teacherDoc.docs.isNotEmpty) {
-            roleData = teacherDoc.docs.first.data();
-            roleData = {
-              ...roleData,
-              'classes': List<String>.from(roleData['classes'] ?? []),
-              'contact': roleData['contact']?.toString() ?? '',
-              'whatsapp': roleData['whatsapp'] ?? '',
-            };
-          }
+          roleData = await _fetchTeacherData(userId);
           break;
-
         case 'student':
-          final studentDoc = await _firestore.collection('students')
-              .where('id', isEqualTo: userId)
-              .limit(1)
-              .get();
-          if (studentDoc.docs.isNotEmpty) {
-            roleData = studentDoc.docs.first.data();
-            roleData = {
-              ...roleData,
-              'school_id': roleData['school_id'] ?? '',
-              'profile_picture': roleData['profile_picture'] ?? '',
-            };
-          }
+          roleData = await _fetchStudentData(userId);
           break;
-
         case 'parent':
-          final parentDoc = await _firestore.collection('parents')
-              .where('id', isEqualTo: userId)
-              .limit(1)
-              .get();
-          if (parentDoc.docs.isNotEmpty) {
-            roleData = parentDoc.docs.first.data();
-            roleData = {
-              ...roleData,
-              'contact': roleData['contact'] ?? '',
-              'whatsapp': roleData['whatsapp'] ?? '',
-            };
-          }
+          roleData = await _fetchParentData(userId);
           break;
-
         default:
           throw Exception('Invalid role');
       }
 
       if (roleData == null) {
-        throw Exception('Profile data not found');
+        throw Exception('Role-specific profile data not found');
       }
 
-      // Combine user data with role-specific data
+      // Gabungkan data user dengan data spesifik role
       final profileData = {
         'id': userId.toString(),
         'role': role,
@@ -101,5 +65,59 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
       emit(LoadProfileError(e.toString()));
     }
   }
-}
 
+  Future<Map<String, dynamic>?> _fetchTeacherData(num userId) async {
+    final teacherDoc = await _firestore
+        .collection('teachers')
+        .where('contact', isEqualTo: userId)
+        .limit(1)
+        .get();
+
+    if (teacherDoc.docs.isNotEmpty) {
+      final data = teacherDoc.docs.first.data();
+      return {
+        ...data,
+        'classes': List<String>.from(data['classes'] ?? []),
+        'contact': data['contact']?.toString() ?? '',
+        'whatsapp': data['whatsapp'] ?? '',
+      };
+    }
+    return null;
+  }
+
+  Future<Map<String, dynamic>?> _fetchStudentData(num userId) async {
+    final studentDoc = await _firestore
+        .collection('students')
+        .where('school_id', isEqualTo: userId.toString())
+        .limit(1)
+        .get();
+
+    if (studentDoc.docs.isNotEmpty) {
+      final data = studentDoc.docs.first.data();
+      return {
+        ...data,
+        'school_id': data['school_id'] ?? '',
+        'profile_picture': data['profile_picture'] ?? '',
+      };
+    }
+    return null;
+  }
+
+  Future<Map<String, dynamic>?> _fetchParentData(num userId) async {
+    final parentDoc = await _firestore
+        .collection('parents')
+        .where('contact', isEqualTo: userId.toString())
+        .limit(1)
+        .get();
+
+    if (parentDoc.docs.isNotEmpty) {
+      final data = parentDoc.docs.first.data();
+      return {
+        ...data,
+        'contact': data['contact'] ?? '',
+        'whatsapp': data['whatsapp'] ?? '',
+      };
+    }
+    return null;
+  }
+}
