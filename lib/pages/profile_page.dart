@@ -1,4 +1,3 @@
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -12,7 +11,7 @@ import 'package:project_aedp/bloc/language/language_cubit.dart';
 import 'package:project_aedp/generated/l10n.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class ProfilePage extends StatelessWidget {
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, authState) {
           if (authState is AuthLoginSuccess) {
-            context.read<LoadProfileBloc>().add(LoadUserProfile(id: authState.userId));
+            context.read<LoadProfileBloc>().add(LoadUserProfile(id: authState.userId.toString()));
 
             return Scaffold(
               appBar: AppBar(
@@ -51,7 +50,7 @@ class ProfilePage extends StatelessWidget {
                   } else if (state is LoadProfileLoaded) {
                     return _buildProfileContent(context, state.profileData, screenWidth);
                   } else if (state is LoadProfileError) {
-                    return Center(child: Text(S.of(context).errorLabel(state.errorMessage)));
+                    return Center(child: Text(S.of(context).errorLabel(state.message)));
                   }
                   return Center(child: Text(S.of(context).noProfileData));
                 },

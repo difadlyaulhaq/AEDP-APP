@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:project_aedp/bloc/auth/auth_bloc.dart';
@@ -27,32 +28,36 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
     super.initState();
   }
 
-  void _handleLogin() {
-    final String idText = idController.text.trim();
-    final String password = passwordController.text.trim();
+ void _handleLogin() {
+  final String idText = idController.text.trim();
+  final String password = passwordController.text.trim();
 
-    if (idText.isEmpty || password.isEmpty) {
-      _showSnackBar(S.of(context).pleaseEnterEmailAndPassword);
-      return;
-    }
-
-    final num? id = num.tryParse(idText);
-    if (id == null) {
-      _showSnackBar(S.of(context).pleaseEnterEmailAndPassword);
-      return;
-    }
-
-    setState(() => isLoading = true);
-    dev.log('Attempting login for role: ${widget.role} with ID: $id');
-
-    context.read<AuthBloc>().add(
-          AuthLoginRequested(
-            id: id,
-            password: password,
-            role: widget.role,
-          ),
-        );
+  if (idText.isEmpty || password.isEmpty) {
+    _showSnackBar(S.of(context).pleaseEnterEmailAndPassword);
+    return;
   }
+
+  num? id;
+  try {
+    double parsedId = double.parse(idText); // Parsing as double
+    id = parsedId % 1 == 0 ? parsedId.toInt() : parsedId; 
+  } catch (e) {
+    _showSnackBar('Please enter a valid numeric ID');
+    return;
+  }
+
+  setState(() => isLoading = true);
+  dev.log('Attempting login for role: ${widget.role} with ID: $id');
+
+  context.read<AuthBloc>().add(
+        AuthLoginRequested(
+          id: id,
+          password: password,
+          role: widget.role,
+        ),
+      );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -206,15 +211,15 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
     );
   }
 
-  Widget _buildTextField({
+ Widget _buildTextField({
     required TextEditingController controller,
     required String label,
     required IconData icon,
     TextInputType? keyboardType,
-  }) {
+}) {
     return TextField(
       controller: controller,
-      keyboardType: keyboardType,
+      keyboardType: TextInputType.number, // Force number keyboard
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.grey[200],
@@ -224,10 +229,13 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
           borderRadius: BorderRadius.circular(30),
         ),
       ),
+      // Add input validation to ensure only numbers
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+      ],
       onSubmitted: (_) => _handleLogin(),
     );
-  }
-
+}
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()

@@ -1,9 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-abstract class AuthEvent extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
+abstract class AuthEvent {}
 
 class AuthLoginRequested extends AuthEvent {
   final num id;
@@ -15,11 +10,8 @@ class AuthLoginRequested extends AuthEvent {
     required this.password,
     required this.role,
   });
-
-  @override
-  List<Object?> get props => [id, password, role];
 }
 
-class AuthLoadLoginStatus extends AuthEvent {}
-
 class AuthLogoutRequested extends AuthEvent {}
+
+class AuthLoadLoginStatus extends AuthEvent {}

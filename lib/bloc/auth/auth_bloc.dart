@@ -2,17 +2,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 import 'auth_repository.dart';
+import 'dart:developer' as dev;
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
-  
+
   AuthBloc({required this.authRepository}) : super(AuthInitial()) {
     on<AuthLogoutRequested>((event, emit) async {
       try {
+        dev.log('Processing logout request');
         emit(AuthLoading());
         await authRepository.clearLoginStatus();
         emit(AuthLogoutSuccess());
+        dev.log('Logout successful');
       } catch (e) {
+        dev.log('Logout failed: $e');
         emit(AuthFailure('Failed to logout: ${e.toString()}'));
       }
     });
@@ -20,44 +24,61 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLoadLoginStatus>((event, emit) async {
       emit(AuthLoading());
       try {
+        dev.log('Loading login status');
         final loginStatus = await authRepository.loadLoginStatus();
+        
         if (loginStatus != null) {
+          final userId = loginStatus['userId'] as num;
+          final role = loginStatus['role'] as String;
+          
+          dev.log('Found existing login status - Role: $role, UserId: $userId');
           emit(AuthLoginSuccess(
-            role: loginStatus['role']!,
-            userId: loginStatus['userId']!,
+            role: role,
+            userId: userId,
           ));
         } else {
+          dev.log('No existing login status found');
           emit(AuthInitial());
         }
       } catch (e) {
+        dev.log('Error loading login status: $e');
         emit(AuthFailure(e.toString()));
       }
     });
 
-    on<AuthLoginRequested>((event, emit) async {
+      on<AuthLoginRequested>((event, emit) async {
       emit(AuthLoading());
       try {
+        dev.log('Processing login request - ID: ${event.id}, Role: ${event.role}');
+
+        // Pastikan ID dikonversi ke tipe konsisten (misalnya, double)
         final loginResult = await authRepository.logIn(
           id: event.id,
           password: event.password,
         );
-        
+
         if (loginResult != null) {
           final userRole = loginResult['role'] as String;
           final userId = loginResult['userId'] as num;
-          
-          await authRepository.saveLoginStatus(userId, userRole);
-          
+
+          dev.log('Login successful - Retrieved Role: $userRole, UserId: $userId');
+
           if (userRole.toLowerCase() != event.role.toLowerCase()) {
+            dev.log('Role mismatch - Expected: ${event.role}, Got: $userRole');
             emit(AuthFailure('Access denied: incorrect role'));
             return;
           }
-          
+
+          await authRepository.saveLoginStatus(userId, userRole);
+          dev.log('Login status saved successfully');
+
           emit(AuthLoginSuccess(role: userRole, userId: userId));
         } else {
+          dev.log('Login failed - Invalid credentials');
           emit(AuthFailure('Invalid credentials'));
         }
       } catch (e) {
+        dev.log('Login error: $e');
         emit(AuthFailure(e.toString()));
       }
     });

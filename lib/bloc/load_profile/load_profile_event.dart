@@ -3,6 +3,6 @@ abstract class LoadProfileEvent {
 }
 
 class LoadUserProfile extends LoadProfileEvent {
-  final num id;
+  final String id;
   LoadUserProfile({required this.id});
 }
