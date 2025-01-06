@@ -5,13 +5,13 @@ class InvoiceDownloadInitial extends InvoiceDownloadState {}
 class InvoiceDownloading extends InvoiceDownloadState {}
 
 class InvoiceDownloaded extends InvoiceDownloadState {
-  final String downloadUrl;
+  final String filePath;
 
-  InvoiceDownloaded(this.downloadUrl);
+  InvoiceDownloaded(this.filePath);
 }
 
 class InvoiceDownloadError extends InvoiceDownloadState {
-  final String error;
+  final String message;
 
-  InvoiceDownloadError(this.error);
+  InvoiceDownloadError(this.message);
 }

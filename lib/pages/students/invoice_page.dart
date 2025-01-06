@@ -1,51 +1,119 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_aedp/generated/l10n.dart';
-import 'package:project_aedp/bloc/invoice_download/invoice_download_bloc.dart';
 import 'package:http/http.dart' as http;
-import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
+import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class InvoicePage extends StatelessWidget {
+class InvoicePage extends StatefulWidget {
   const InvoicePage({super.key});
+
+  @override
+  _InvoicePageState createState() => _InvoicePageState();
+}
+
+class _InvoicePageState extends State<InvoicePage> {
+  bool isDownloading = false;
+
+  Future<void> _downloadAndOpenPDF(String documentId) async {
+    if (await Permission.storage.request().isGranted) {
+      try {
+        setState(() => isDownloading = true);
+
+        // Step 1: Fetch PDF path from Firestore
+        final snapshot = await FirebaseFirestore.instance
+            .collection('payments')
+            .doc(documentId)
+            .get();
+
+        if (!snapshot.exists) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('File not found in Firestore')),
+          );
+          return;
+        }
+
+        final pdfPath = snapshot['pdf_path']; // Get relative path
+        if (pdfPath == null || pdfPath.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Invalid PDF path in Firestore')),
+          );
+          return;
+        }
+
+        // Step 2: Combine base URL with relative path
+        final baseUrl = "https://gold-tiger-632820.hostingersite.com/";
+        final downloadUrl = Uri.parse(baseUrl).resolve(pdfPath).toString();
+
+        // Step 3: Download PDF from URL
+        final response = await http.get(Uri.parse(downloadUrl));
+        if (response.statusCode == 200) {
+          // Step 4: Save the file locally
+          final directory = await getApplicationDocumentsDirectory();
+          final filePath = '${directory.path}/${pdfPath.split('/').last}';
+          final file = File(filePath);
+          await file.writeAsBytes(response.bodyBytes);
+
+          // Step 5: Open the PDF file
+          await OpenFile.open(filePath);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Downloaded to $filePath')),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to download PDF: ${response.statusCode}')),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error downloading file: $e')),
+        );
+      } finally {
+        setState(() => isDownloading = false);
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Storage permission is required to download.')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).invoice_title), // Use localized string for title
+        title: const Text('Invoices'),
       ),
-      body: BlocProvider(
-        create: (_) => InvoiceDownloadBloc(),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final screenWidth = MediaQuery.of(context).size.width;
+      body: FutureBuilder<QuerySnapshot>(
+        future: FirebaseFirestore.instance.collection('payments').get(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "2023/2024", // You can localize this too if needed
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  buildInvoiceSection(
-                    context: context,
-                    title: S.of(context).invoice_even,
-                    items: [
-                      InvoiceItem(S.of(context).tuition_fee, "February 18 2024", "uploads/6779191aa340e_week_13.pdf"),
-                      InvoiceItem(S.of(context).administrative_fee, "February 18 2024", "uploads/6779191aa341e_admin_fee.pdf"),
-                    ],
-                    isWide: screenWidth > 600,
-                  ),
-                ],
-              ),
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(child: Text('No invoices found.'));
+          }
+
+          final items = snapshot.data!.docs.map((doc) {
+            return InvoiceItem(
+              doc['parent_name'] ?? 'Unknown',
+              'February 18 2024', // Static date for demo
+              doc.id, // Pass document ID for fetching later
             );
-          },
-        ),
+          }).toList();
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: buildInvoiceSection(
+              context: context,
+              title: "Even Semester",
+              items: items,
+            ),
+          );
+        },
       ),
     );
   }
@@ -54,7 +122,6 @@ class InvoicePage extends StatelessWidget {
     required BuildContext context,
     required String title,
     required List<InvoiceItem> items,
-    required bool isWide,
   }) {
     return Container(
       padding: const EdgeInsets.all(16.0),
@@ -63,7 +130,7 @@ class InvoicePage extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
+            color: Colors.grey,
             spreadRadius: 3,
             blurRadius: 5,
             offset: const Offset(0, 3),
@@ -73,45 +140,14 @@ class InvoicePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            decoration: BoxDecoration(
-              color: const Color(0xFF0075A2),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              title,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
+          Text(
+            title,
+            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
-          isWide
-              ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Column(
-                        children: items
-                            .sublist(0, (items.length / 2).ceil())
-                            .map((item) => buildInvoiceItem(context, item))
-                            .toList(),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Flexible(
-                      child: Column(
-                        children: items
-                            .sublist((items.length / 2).ceil())
-                            .map((item) => buildInvoiceItem(context, item))
-                            .toList(),
-                      ),
-                    ),
-                  ],
-                )
-              : Column(
-                  children: items.map((item) => buildInvoiceItem(context, item)).toList(),
-                ),
+          Column(
+            children: items.map((item) => buildInvoiceItem(context, item)).toList(),
+          ),
         ],
       ),
     );
@@ -139,39 +175,17 @@ class InvoicePage extends StatelessWidget {
           Flexible(
             child: CircleAvatar(
               backgroundColor: const Color(0xFF0075A2),
-              child: IconButton(
-                icon: const Icon(Icons.file_download, color: Colors.white),
-                onPressed: () {
-                  _downloadAndOpenPDF(item.pdfPath);
-                },
-              ),
+              child: isDownloading
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : IconButton(
+                      icon: const Icon(Icons.file_download, color: Colors.white),
+                      onPressed: () => _downloadAndOpenPDF(item.pdfPath),
+                    ),
             ),
           ),
         ],
       ),
     );
-  }
-
-  // Function to download and open PDF
-  Future<void> _downloadAndOpenPDF(String pdfUrl) async {
-    try {
-      // Step 1: Download PDF from URL
-      final response = await http.get(Uri.parse(pdfUrl));
-      if (response.statusCode == 200) {
-        // Step 2: Save the file to the device
-        final directory = await getApplicationDocumentsDirectory();
-        final filePath = '${directory.path}/downloaded_file.pdf';
-        final file = File(filePath);
-        await file.writeAsBytes(response.bodyBytes);
-
-        // Step 3: Open the PDF file
-        await OpenFile.open(filePath);
-      } else {
-        print("Failed to download PDF: ${response.statusCode}");
-      }
-    } catch (e) {
-      print("Error: $e");
-    }
   }
 }
 
