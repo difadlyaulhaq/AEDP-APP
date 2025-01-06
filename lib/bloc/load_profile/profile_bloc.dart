@@ -35,21 +35,25 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
 
       // Ambil data berdasarkan role
       Map<String, dynamic>? roleData;
+      String? fullName;
       switch (role.toLowerCase()) {
         case 'teacher':
-          roleData = await _fetchTeacherData(userId);
+          roleData = await _fetchTeacherData(userId.toString()); // Konversi userId ke string
+          fullName = roleData?['name']; // Ambil nama dari field 'name'
           break;
         case 'student':
           roleData = await _fetchStudentData(userId);
+          fullName = roleData?['full_name']; // Ambil nama dari field 'full_name'
           break;
         case 'parent':
           roleData = await _fetchParentData(userId);
+          fullName = roleData?['father_name']; // Ambil nama dari field 'father_name'
           break;
         default:
           throw Exception('Invalid role');
       }
 
-      if (roleData == null) {
+      if (roleData == null || fullName == null) {
         throw Exception('Role-specific profile data not found');
       }
 
@@ -57,6 +61,7 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
       final profileData = {
         'id': userId.toString(),
         'role': role,
+        'fullName': fullName, // Tambahkan nama pengguna
         ...roleData,
       };
 
@@ -66,10 +71,10 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
     }
   }
 
-  Future<Map<String, dynamic>?> _fetchTeacherData(num userId) async {
+  Future<Map<String, dynamic>?> _fetchTeacherData(String userId) async {
     final teacherDoc = await _firestore
         .collection('teachers')
-        .where('contact', isEqualTo: userId)
+        .where('contact', isEqualTo: userId) // Cocokkan dengan string userId
         .limit(1)
         .get();
 
@@ -77,8 +82,8 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
       final data = teacherDoc.docs.first.data();
       return {
         ...data,
-        'classes': List<String>.from(data['classes'] ?? []),
-        'contact': data['contact']?.toString() ?? '',
+        'classes': List<String>.from(data['classes']?.split(',') ?? []), // Jika classes berbentuk string, pecah jadi list
+        'contact': data['contact'] ?? '',
         'whatsapp': data['whatsapp'] ?? '',
       };
     }

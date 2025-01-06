@@ -98,12 +98,17 @@ class _InvoicePageState extends State<InvoicePage> {
           }
 
           final items = snapshot.data!.docs.map((doc) {
-            return InvoiceItem(
-              doc['parent_name'] ?? 'Unknown',
-              'February 18 2024', // Static date for demo
-              doc.id, // Pass document ID for fetching later
-            );
-          }).toList();
+              return InvoiceItem(
+                doc['father_name'] ?? 'Unknown', // Gunakan field father_name
+                'February 18 2024', // Static date for demo
+                doc['pdf_path'] ?? '', // Gunakan field pdf_path
+              );
+            }).toList();
+
+          print('Documents fetched: ${snapshot.data!.docs}');
+          snapshot.data!.docs.forEach((doc) {
+            print('Father Name: ${doc['father_name']}, PDF Path: ${doc['pdf_path']}');
+          });
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),

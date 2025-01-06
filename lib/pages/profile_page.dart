@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -30,16 +31,7 @@ class ProfilePage extends StatelessWidget {
 
             return Scaffold(
               appBar: AppBar(
-                title: Text(S.of(context).profileTitle),
-                centerTitle: true,
-                toolbarHeight: 60,
                 actions: [
-                  IconButton(
-                    icon: const Icon(Icons.logout),
-                    onPressed: () {
-                      context.read<AuthBloc>().add(AuthLogoutRequested());
-                    },
-                  ),
                   _buildLanguageDropdown(context),
                 ],
               ),
@@ -140,10 +132,10 @@ class ProfilePage extends StatelessWidget {
       screenWidth,
       S.of(context).studentInfo,
       [
-        _buildListTile(context, Icons.cake, S.of(context).dateOfBirth, profileData['dateOfBirth'] ?? S.of(context).unknown),
-        _buildListTile(context, Icons.place, S.of(context).placeOfBirth, profileData['placeOfBirth'] ?? S.of(context).unknown),
-        _buildListTile(context, Icons.school, S.of(context).gradeClass, profileData['gradeClass'] ?? S.of(context).unknown),
-        _buildListTile(context, Icons.badge, S.of(context).schoolId, profileData['schoolId'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.cake, S.of(context).dateOfBirth, profileData['date_of_birth'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.place, S.of(context).placeOfBirth, profileData['place_of_birth'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.school, S.of(context).gradeClass, profileData['grade_class'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.badge, S.of(context).schoolId, profileData['school_id'] ?? S.of(context).unknown),
       ],
     );
   }
@@ -155,8 +147,8 @@ class ProfilePage extends StatelessWidget {
       S.of(context).parentInfo,
       [
         _buildListTile(context, Icons.location_on, S.of(context).address, profileData['address'] ?? S.of(context).unknown),
-        _buildListTile(context, Icons.person, S.of(context).fatherName, profileData['fatherName'] ?? S.of(context).unknown),
-        _buildListTile(context, Icons.person, S.of(context).studentName, profileData['studentName'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.person, S.of(context).fatherName, profileData['father_name'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.person, S.of(context).studentName, profileData['student_name'] ?? S.of(context).unknown),
         _buildListTile(context, Icons.phone, S.of(context).contact, profileData['contact'] ?? S.of(context).unknown),
         _buildListTile(context, Icons.call, S.of(context).whatsapp, profileData['whatsapp'] ?? S.of(context).unknown),
       ],
@@ -200,7 +192,7 @@ class ProfilePage extends StatelessWidget {
     final cubit = context.read<LanguageCubit>();
     return DropdownButton<String>(
       value: Localizations.localeOf(context).languageCode,
-      icon: const Icon(Icons.language, color: Colors.white),
+      icon: const Icon(Icons.language, color: Colors.black),
       underline: const SizedBox(),
       onChanged: (String? newValue) {
         if (newValue != null) {
