@@ -110,21 +110,21 @@ class DashboardStudentsHome extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _buildTodoItem(
-                S.of(context).todo_assignment1_title,
-                S.of(context).todo_due_today,
-                context
-              ),
-              _buildTodoItem(
-                S.of(context).todo_online_learning4,
-                S.of(context).todo_due_date("Oct 9"),
-                context
-              ),
-              _buildTodoItem(
-                S.of(context).todo_online_learning5,
-                S.of(context).todo_due_date("Oct 16"),
-                context
-              ),
+              // _buildTodoItem(
+              //   S.of(context).todo_assignment1_title,
+              //   S.of(context).todo_due_today,
+              //   context
+              // ),
+              // _buildTodoItem(
+              //   S.of(context).todo_online_learning4,
+              //   S.of(context).todo_due_date("Oct 9"),
+              //   context
+              // ),
+              // _buildTodoItem(
+              //   S.of(context).todo_online_learning5,
+              //   S.of(context).todo_due_date("Oct 16"),
+              //   context
+              // ),
             ],
           ),
         ),
@@ -200,30 +200,30 @@ class DashboardStudentsHome extends StatelessWidget {
     );
   }
 
-  Widget _buildTodoItem(String title, String deadline, BuildContext context) {
-    final textDirection = Directionality.of(context);
+  // Widget _buildTodoItem(String title, String deadline, BuildContext context) {
+  //   final textDirection = Directionality.of(context);
     
-    return Material(
-      color: Colors.transparent,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          textDirection: textDirection,
-          children: [
-            Text(
-              title,
-              style: blackColorTextStyle.copyWith(fontSize: 16),
-            ),
-            Text(
-              deadline,
-              style: blackColorTextStyle.copyWith(fontSize: 16),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  //   return Material(
+  //     color: Colors.transparent,
+  //     child: Padding(
+  //       padding: const EdgeInsets.symmetric(vertical: 8.0),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         textDirection: textDirection,
+  //         children: [
+  //           Text(
+  //             title,
+  //             style: blackColorTextStyle.copyWith(fontSize: 16),
+  //           ),
+  //           Text(
+  //             deadline,
+  //             style: blackColorTextStyle.copyWith(fontSize: 16),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildIconButton(IconData icon, String label, VoidCallback onTap, BuildContext context) {
     return Material(

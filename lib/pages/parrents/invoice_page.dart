@@ -16,70 +16,114 @@ class InvoicePage extends StatefulWidget {
 class _InvoicePageState extends State<InvoicePage> {
   bool isDownloading = false;
 
-  Future<void> _downloadAndOpenPDF(String documentId) async {
-    if (await Permission.storage.request().isGranted) {
-      try {
-        setState(() => isDownloading = true);
-
-        // Step 1: Fetch PDF path from Firestore
-        final snapshot = await FirebaseFirestore.instance
-            .collection('payments')
-            .doc(documentId)
-            .get();
-
-        if (!snapshot.exists) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('File not found in Firestore')),
-          );
-          return;
-        }
-
-        final pdfPath = snapshot['pdf_path']; // Get relative path
-        if (pdfPath == null || pdfPath.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Invalid PDF path in Firestore')),
-          );
-          return;
-        }
-
-        // Step 2: Combine base URL with relative path
-        final baseUrl = "https://gold-tiger-632820.hostingersite.com/";
-        final downloadUrl = Uri.parse(baseUrl).resolve(pdfPath).toString();
-
-        // Step 3: Download PDF from URL
-        final response = await http.get(Uri.parse(downloadUrl));
-        if (response.statusCode == 200) {
-          // Step 4: Save the file locally
-          final directory = await getApplicationDocumentsDirectory();
-          final filePath = '${directory.path}/${pdfPath.split('/').last}';
-          final file = File(filePath);
-          await file.writeAsBytes(response.bodyBytes);
-
-          // Step 5: Open the PDF file
-          await OpenFile.open(filePath);
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Downloaded to $filePath')),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to download PDF: ${response.statusCode}')),
-          );
-        }
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error downloading file: $e')),
-        );
-      } finally {
-        setState(() => isDownloading = false);
+  Future<bool> _requestStoragePermission() async {
+    if (Platform.isAndroid) {
+      // For Android 13 and above (SDK 33+)
+      if (await Permission.photos.request().isGranted &&
+          await Permission.videos.request().isGranted &&
+          await Permission.audio.request().isGranted) {
+        return true;
       }
+      // For Android 12 and below
+      if (await Permission.storage.request().isGranted) {
+        return true;
+      }
+      
+      // Show rationale if permission denied
+      if (await Permission.storage.isPermanentlyDenied) {
+        // Show dialog explaining why permission is needed
+        final bool shouldOpenSettings = await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Storage Permission Required'),
+            content: const Text(
+              'This permission is required to download and save invoices. Please enable it in settings.'
+            ),
+            actions: [
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () => Navigator.of(context).pop(false),
+              ),
+              TextButton(
+                child: const Text('Open Settings'),
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
+            ],
+          ),
+        ) ?? false;
+
+        if (shouldOpenSettings) {
+          await openAppSettings();
+        }
+      }
+      return false;
+    }
+    
+    // For iOS, we use getApplicationDocumentsDirectory() so no explicit permission needed
+    return true;
+  }
+
+  Future<String?> _getDownloadPath() async {
+    if (Platform.isAndroid) {
+      // For Android, use the Downloads directory
+      Directory? directory;
+      if (await _requestStoragePermission()) {
+        directory = Directory('/storage/emulated/0/Download');
+        // Create directory if it doesn't exist
+        if (!await directory.exists()) {
+          await directory.create(recursive: true);
+        }
+        return directory.path;
+      }
+      return null;
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Storage permission is required to download.')),
-      );
+      // For iOS, use the app's documents directory
+      final directory = await getApplicationDocumentsDirectory();
+      return directory.path;
     }
   }
 
+  Future<void> _downloadAndOpenPDF(String pdfPath) async {
+    try {
+      setState(() => isDownloading = true);
+
+      final downloadPath = await _getDownloadPath();
+      if (downloadPath == null) {
+        throw Exception('Storage permission not granted');
+      }
+
+      // Step 1: Combine base URL with relative path
+      const baseUrl = "https://gold-tiger-632820.hostingersite.com/";
+      final downloadUrl = Uri.parse(baseUrl).resolve(pdfPath).toString();
+
+      // Step 2: Download PDF from URL
+      final response = await http.get(Uri.parse(downloadUrl));
+      if (response.statusCode == 200) {
+        // Step 3: Save the file locally
+        final fileName = pdfPath.split('/').last;
+        final filePath = '$downloadPath/$fileName';
+        final file = File(filePath);
+        await file.writeAsBytes(response.bodyBytes);
+
+        // Step 4: Open the PDF file
+        await OpenFile.open(filePath);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Downloaded to $filePath')),
+        );
+      } else {
+        throw Exception('Failed to download PDF: ${response.statusCode}');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    } finally {
+      setState(() => isDownloading = false);
+    }
+  }
+
+  // Rest of the code remains the same...
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,17 +142,10 @@ class _InvoicePageState extends State<InvoicePage> {
           }
 
           final items = snapshot.data!.docs.map((doc) {
-              return InvoiceItem(
-                doc['father_name'] ?? 'Unknown', // Gunakan field father_name
-                'February 18 2024', // Static date for demo
-                doc['pdf_path'] ?? '', // Gunakan field pdf_path
-              );
-            }).toList();
-
-          print('Documents fetched: ${snapshot.data!.docs}');
-          snapshot.data!.docs.forEach((doc) {
-            print('Father Name: ${doc['father_name']}, PDF Path: ${doc['pdf_path']}');
-          });
+            final fatherName = doc['father_name'] ?? 'Unknown';
+            final pdfPath = doc['pdf_path'] ?? '';
+            return InvoiceItem(fatherName, 'February 18 2024', pdfPath);
+          }).toList();
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
