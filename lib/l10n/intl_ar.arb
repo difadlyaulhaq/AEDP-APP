@@ -1,5 +1,12 @@
 {
   "@@locale": "ar",
+  "appTitle": "المكتبة الإلكترونية",
+  "noFilesAvailable": "لا توجد ملفات متاحة.",
+  "downloadedTo": "تم التنزيل إلى {path}",
+  "loadingLabel": "جارٍ تحميل المكتبة...",
+  "downloadLabel": "تنزيل",
+  "openSettings": "افتح الإعدادات",
+  "cancelLabel": "إلغاء",
   "teacherInfo": "معلومات المعلم",
   "studentInfo": "معلومات الطالب",
   "parentInfo": "معلومات ولي الأمر",

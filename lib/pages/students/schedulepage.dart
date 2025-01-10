@@ -13,7 +13,7 @@ class SchedulePage extends StatefulWidget {
   _SchedulePageState createState() => _SchedulePageState();
 }
 
-class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderStateMixin {
+class _SchedulePageState extends State<SchedulePage> with TickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -99,6 +99,7 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
               controller: _tabController,
               children: scheduleData.keys.map((day) {
                 final daySchedule = scheduleData[day]!;
+
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: daySchedule.isNotEmpty

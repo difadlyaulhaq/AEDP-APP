@@ -50,6 +50,86 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `E-Library`
+  String get appTitle {
+    return Intl.message(
+      'E-Library',
+      name: 'appTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No files available.`
+  String get noFilesAvailable {
+    return Intl.message(
+      'No files available.',
+      name: 'noFilesAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Downloaded to {path}`
+  String downloadedTo(Object path) {
+    return Intl.message(
+      'Downloaded to $path',
+      name: 'downloadedTo',
+      desc: '',
+      args: [path],
+    );
+  }
+
+  /// `Error: {errorMessage}`
+  String errorLabel(Object errorMessage) {
+    return Intl.message(
+      'Error: $errorMessage',
+      name: 'errorLabel',
+      desc: '',
+      args: [errorMessage],
+    );
+  }
+
+  /// `Loading library...`
+  String get loadingLabel {
+    return Intl.message(
+      'Loading library...',
+      name: 'loadingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Download`
+  String get downloadLabel {
+    return Intl.message(
+      'Download',
+      name: 'downloadLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open Settings`
+  String get openSettings {
+    return Intl.message(
+      'Open Settings',
+      name: 'openSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get cancelLabel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancelLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Your Grades`
   String get grades_title {
     return Intl.message(
@@ -97,16 +177,6 @@ class S {
       name: 'noProfileData',
       desc: '',
       args: [],
-    );
-  }
-
-  /// `Error: {errorMessage}`
-  String errorLabel(Object errorMessage) {
-    return Intl.message(
-      'Error: $errorMessage',
-      name: 'errorLabel',
-      desc: '',
-      args: [errorMessage],
     );
   }
 

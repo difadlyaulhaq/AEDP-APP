@@ -5,6 +5,7 @@ import 'package:open_file/open_file.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project_aedp/generated/l10n.dart';
 
 class InvoicePage extends StatefulWidget {
   const InvoicePage({super.key});
@@ -124,41 +125,42 @@ class _InvoicePageState extends State<InvoicePage> {
   }
 
   // Rest of the code remains the same...
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Invoices'),
-      ),
-      body: FutureBuilder<QuerySnapshot>(
-        future: FirebaseFirestore.instance.collection('payments').get(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(S.of(context).invoiceTitle),
+    ),
+    body: FutureBuilder<QuerySnapshot>(
+      future: FirebaseFirestore.instance.collection('payments').get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No invoices found.'));
-          }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Center(child: Text(S.of(context).noFilesAvailable));
+        }
 
-          final items = snapshot.data!.docs.map((doc) {
-            final fatherName = doc['father_name'] ?? 'Unknown';
-            final pdfPath = doc['pdf_path'] ?? '';
-            return InvoiceItem(fatherName, 'February 18 2024', pdfPath);
-          }).toList();
+        final items = snapshot.data!.docs.map((doc) {
+          final fatherName = doc['father_name'] ?? S.of(context).fatherName;
+          final pdfPath = doc['pdf_path'] ?? '';
+          return InvoiceItem(fatherName, 'February 18 2024', pdfPath);
+        }).toList();
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: buildInvoiceSection(
-              context: context,
-              title: "Even Semester",
-              items: items,
-            ),
-          );
-        },
-      ),
-    );
-  }
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: buildInvoiceSection(
+            context: context,
+            title: S.of(context).evenSemester,
+            items: items,
+          ),
+        );
+      },
+    ),
+  );
+}
+
 
   Widget buildInvoiceSection({
     required BuildContext context,
@@ -234,7 +236,7 @@ class _InvoicePageState extends State<InvoicePage> {
 class InvoiceItem {
   final String title;
   final String date;
-  final String pdfPath;
+  final String pdfPath; 
 
   InvoiceItem(this.title, this.date, this.pdfPath);
 }

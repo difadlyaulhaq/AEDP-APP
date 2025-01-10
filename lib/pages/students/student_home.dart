@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/students/dashboard_students.dart';
-import 'package:project_aedp/pages/parrents/invoice_page.dart';
 import 'package:project_aedp/pages/profile_page.dart';
+import 'package:project_aedp/pages/students/schedulepage.dart';
 
 class StudentHome extends StatefulWidget {
   const StudentHome({Key? key}) : super(key: key);
@@ -16,7 +16,7 @@ class _StudentHomeState extends State<StudentHome> {
 
   final List<Widget> _pages = [
     const DashboardStudentsHome(),
-    const InvoicePage(),
+    const SchedulePage(),
     const ProfilePage(),
   ];
 
@@ -31,26 +31,28 @@ class _StudentHomeState extends State<StudentHome> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(screenHeight * 0.15),
-        child: ClipPath(
-          clipper: CustomAppBarClipper(),
-          child: AppBar(
-            title: Text(S.of(context).student_dashboard),
-            centerTitle: true,
-            toolbarHeight: 60,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF1E71A2), Color(0xFF0B2A3C)],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+      appBar: _selectedIndex == 1 // Jika SchedulePage dipilih
+          ? null // Tidak menampilkan AppBar
+          : PreferredSize(
+              preferredSize: Size.fromHeight(screenHeight * 0.15),
+              child: ClipPath(
+                clipper: CustomAppBarClipper(),
+                child: AppBar(
+                  title: Text(S.of(context).student_dashboard),
+                  centerTitle: true,
+                  toolbarHeight: 60,
+                  flexibleSpace: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF1E71A2), Color(0xFF0B2A3C)],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      ),
       body: IndexedStack(
         index: _selectedIndex,
         children: _pages,
@@ -62,7 +64,7 @@ class _StudentHomeState extends State<StudentHome> {
           BottomNavigationBarItem(
               icon: const Icon(Icons.home), label: S.of(context).home),
           BottomNavigationBarItem(
-              icon: const Icon(Icons.receipt), label: S.of(context).invoices),
+              icon: const Icon(Icons.calendar_today), label: S.of(context).schedule),
           BottomNavigationBarItem(
               icon: const Icon(Icons.person), label: S.of(context).profile),
         ],

@@ -20,17 +20,19 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(errorMessage) => "Error: ${errorMessage}";
+  static String m0(path) => "Downloaded to ${path}";
 
-  static String m1(errorMessage) => "Login failed: ${errorMessage}";
+  static String m1(errorMessage) => "Error: ${errorMessage}";
 
-  static String m2(role) => "Login as ${role}";
+  static String m2(errorMessage) => "Login failed: ${errorMessage}";
 
-  static String m3(role) => "${role} Login";
+  static String m3(role) => "Login as ${role}";
 
-  static String m4(role) => "Signup as ${role}";
+  static String m4(role) => "${role} Login";
 
-  static String m5(date) => "Due ${date}, 23:59";
+  static String m5(role) => "Signup as ${role}";
+
+  static String m6(date) => "Due ${date}, 23:59";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -46,6 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "administrative_fee":
             MessageLookupByLibrary.simpleMessage("Administrative Fee"),
         "all": MessageLookupByLibrary.simpleMessage("All"),
+        "appTitle": MessageLookupByLibrary.simpleMessage("E-Library"),
         "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
         "art": MessageLookupByLibrary.simpleMessage("Art"),
         "assignment1": MessageLookupByLibrary.simpleMessage("Assignment 1"),
@@ -55,6 +58,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "attendance_tracking":
             MessageLookupByLibrary.simpleMessage("Attendance Tracking"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "cancelLabel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "certificates_and_reports":
             MessageLookupByLibrary.simpleMessage("Certificates and Reports"),
         "classes": MessageLookupByLibrary.simpleMessage("Classes"),
@@ -71,6 +75,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "dashboard_todo_header": MessageLookupByLibrary.simpleMessage("To-Do:"),
         "dateOfBirth": MessageLookupByLibrary.simpleMessage("Date of Birth"),
         "download": MessageLookupByLibrary.simpleMessage("Download"),
+        "downloadLabel": MessageLookupByLibrary.simpleMessage("Download"),
+        "downloadedTo": m0,
         "due_oct_16": MessageLookupByLibrary.simpleMessage("Due Oct 16, 23.59"),
         "due_oct_9": MessageLookupByLibrary.simpleMessage("Due Oct 9, 23.59"),
         "due_today": MessageLookupByLibrary.simpleMessage("Due today, 23.59"),
@@ -78,7 +84,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "email": MessageLookupByLibrary.simpleMessage("Email"),
         "emailLabel": MessageLookupByLibrary.simpleMessage("Email"),
         "english": MessageLookupByLibrary.simpleMessage("English"),
-        "errorLabel": m0,
+        "errorLabel": m1,
         "evenSemester": MessageLookupByLibrary.simpleMessage("Even"),
         "fatherName": MessageLookupByLibrary.simpleMessage("Father\'s Name"),
         "fee_payment_management":
@@ -112,15 +118,17 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Portuguese"),
         "list_of_subjects":
             MessageLookupByLibrary.simpleMessage("List of Subjects"),
+        "loadingLabel":
+            MessageLookupByLibrary.simpleMessage("Loading library..."),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "loginButton": MessageLookupByLibrary.simpleMessage("Login"),
         "loginFailed": MessageLookupByLibrary.simpleMessage("Login failed"),
-        "loginFailedMessage": m1,
+        "loginFailedMessage": m2,
         "loginPrompt": MessageLookupByLibrary.simpleMessage(
             "Login to your account to continue"),
         "loginSubtitle": MessageLookupByLibrary.simpleMessage(
             "Login to your account to continue"),
-        "login_as_role": m2,
+        "login_as_role": m3,
         "logout": MessageLookupByLibrary.simpleMessage("Logout"),
         "materials": MessageLookupByLibrary.simpleMessage("Materials"),
         "math": MessageLookupByLibrary.simpleMessage("Math"),
@@ -133,6 +141,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "nav_notifications":
             MessageLookupByLibrary.simpleMessage("Notifications"),
         "nav_profile": MessageLookupByLibrary.simpleMessage("Profile"),
+        "noFilesAvailable":
+            MessageLookupByLibrary.simpleMessage("No files available."),
         "noProfileData":
             MessageLookupByLibrary.simpleMessage("No profile data found."),
         "noScheduleAvailable":
@@ -151,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Online Learning #04"),
         "online_learning_5":
             MessageLookupByLibrary.simpleMessage("Online Learning #05"),
+        "openSettings": MessageLookupByLibrary.simpleMessage("Open Settings"),
         "parent": MessageLookupByLibrary.simpleMessage("Parent"),
         "parentInfo":
             MessageLookupByLibrary.simpleMessage("Parent Information"),
@@ -166,7 +177,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "profile": MessageLookupByLibrary.simpleMessage("Profile"),
         "profileTitle": MessageLookupByLibrary.simpleMessage("Profile"),
         "reports": MessageLookupByLibrary.simpleMessage("Reports"),
-        "roleHeader": m3,
+        "roleHeader": m4,
         "role_parent": MessageLookupByLibrary.simpleMessage("Parent"),
         "role_student": MessageLookupByLibrary.simpleMessage("Student"),
         "role_teacher": MessageLookupByLibrary.simpleMessage("Teacher"),
@@ -182,7 +193,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "shortPasswordMessage": MessageLookupByLibrary.simpleMessage(
             "Password must be at least 6 characters."),
         "signup": MessageLookupByLibrary.simpleMessage("Sign Up"),
-        "signup_as_role": m4,
+        "signup_as_role": m5,
         "student": MessageLookupByLibrary.simpleMessage("Student"),
         "studentInfo":
             MessageLookupByLibrary.simpleMessage("Student Information"),
@@ -209,7 +220,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "todo": MessageLookupByLibrary.simpleMessage("To-Do:"),
         "todo_assignment1_title":
             MessageLookupByLibrary.simpleMessage("Assignment 1"),
-        "todo_due_date": m5,
+        "todo_due_date": m6,
         "todo_due_today":
             MessageLookupByLibrary.simpleMessage("Due today, 23:59"),
         "todo_online_learning4":

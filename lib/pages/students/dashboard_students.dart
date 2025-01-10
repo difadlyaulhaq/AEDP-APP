@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:project_aedp/generated/l10n.dart';
-import 'package:project_aedp/pages/students/GradesPage.dart';
 import 'package:project_aedp/pages/parrents/invoice_page.dart';
+import 'package:project_aedp/pages/students/Elibrary.dart';
 import 'package:project_aedp/pages/students/materialpage.dart';
 import 'package:project_aedp/pages/profile_page.dart';
 import 'package:project_aedp/pages/students/schedulepage.dart';
-import 'package:project_aedp/theme/theme.dart';
 
 class DashboardStudents extends StatefulWidget {
   const DashboardStudents({super.key});
@@ -83,34 +82,34 @@ class DashboardStudentsHome extends StatelessWidget {
 
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.all(screenWidth * 0.04),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              S.of(context).todo_title,
-              style: blackColorTextStyle.copyWith(
-                fontSize: screenWidth * 0.06,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-          padding: EdgeInsets.all(screenWidth * 0.04),
-          decoration: BoxDecoration(
-            color: Colors.grey[300],
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Column(
-            children: [
-              _buildTodoItem(S.of(context).assignment_1, S.of(context).assignment_1_due),
-              _buildTodoItem(S.of(context).online_learning_04, S.of(context).online_learning_04_due),
-              _buildTodoItem(S.of(context).online_learning_05, S.of(context).online_learning_05_due),
-            ],
-          ),
-        ),
+        // Padding(
+        //   padding: EdgeInsets.all(screenWidth * 0.04),
+        //   child: Align(
+        //     alignment: Alignment.centerLeft,
+        //     child: Text(
+        //       S.of(context).todo_title,
+        //       style: blackColorTextStyle.copyWith(
+        //         fontSize: screenWidth * 0.06,
+        //         fontWeight: FontWeight.bold,
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // Container(
+        //   margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+        //   padding: EdgeInsets.all(screenWidth * 0.04),
+        //   decoration: BoxDecoration(
+        //     color: Colors.grey[300],
+        //     borderRadius: BorderRadius.circular(15),
+        //   ),
+        //   // child: Column(
+        //   //   children: [
+        //   //     _buildTodoItem(S.of(context).assignment_1, S.of(context).assignment_1_due),
+        //   //     _buildTodoItem(S.of(context).online_learning_04, S.of(context).online_learning_04_due),
+        //   //     _buildTodoItem(S.of(context).online_learning_05, S.of(context).online_learning_05_due),
+        //   //   ],
+        //   // ),
+        // ),
         SizedBox(height: screenHeight * 0.03),
         Expanded(
           child: GridView.count(
@@ -119,32 +118,40 @@ class DashboardStudentsHome extends StatelessWidget {
             mainAxisSpacing: screenWidth * 0.03,
             padding: EdgeInsets.all(screenWidth * 0.04),
             children: [
-              _buildIconButton(context, Icons.calendar_today, S.of(context).schedule, () {
+              _buildIconButton(
+                  context, Icons.calendar_today, S.of(context).schedule, () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SchedulePage()),
                 );
               }),
-              _buildIconButton(context, Icons.book, S.of(context).materials, () {
+              _buildIconButton(context, Icons.book, S.of(context).materials,
+                  () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const StudentMaterialPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const StudentMaterialPage()),
                 );
               }),
-              _buildIconButton(context, Icons.check_circle_outline, S.of(context).grades, () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const GradesPage()),
-                );
-              }),
-              _buildIconButton(context, Icons.insert_drive_file, S.of(context).reports, () {
-                // Navigate or display message for "Reports"
-              }),
-              _buildIconButton(context, Icons.notifications, S.of(context).notifications, () {
-                // Navigate or display message for "Notifications"
-              }),
+              // _buildIconButton(context, Icons.check_circle_outline, S.of(context).grades, () {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(builder: (context) => const GradesPage()),
+              //   );
+              // }),
+              // _buildIconButton(
+              //     context, Icons.insert_drive_file, S.of(context).reports, () {
+              //   // Navigate or display message for "Reports"
+              // }),
+              // _buildIconButton(context, Icons.notifications, S.of(context).notifications, () {
+              //   // Navigate or display message for "Notifications"
+              // }),
               _buildIconButton(context, Icons.library_books, S.of(context).e_library, () {
-                // Navigate or display message for "E-Library"
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ELibraryPage()),
+                );
               }),
             ],
           ),
@@ -153,56 +160,48 @@ class DashboardStudentsHome extends StatelessWidget {
     );
   }
 
-  Widget _buildTodoItem(String title, String deadline) {
-    return Material(
-      color: Colors.transparent,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-              child: Text(
-                title,
-                style: blackColorTextStyle.copyWith(fontSize: 16),
-              ),
-            ),
-            Text(
-              deadline,
-              style: blackColorTextStyle.copyWith(fontSize: 14),
+  Widget _buildIconButton(
+      BuildContext context, IconData icon, String label, VoidCallback onTap) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.04, vertical: screenWidth * 0.03),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withAlpha(51),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildIconButton(BuildContext context, IconData icon, String label, VoidCallback onTap) {
-    return Material(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(30),
-            child: CircleAvatar(
-              backgroundColor: bluecolor,
-              radius: MediaQuery.of(context).size.width * 0.08,
-              child: Icon(
-                icon,
-                color: Colors.white,
-                size: MediaQuery.of(context).size.width * 0.06,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: const Color(0xFF1E71A2),
+              size: screenWidth * 0.08,
+            ),
+            SizedBox(height: screenWidth * 0.02),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: blackColorTextStyle.copyWith(
-              fontSize: MediaQuery.of(context).size.width * 0.035,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

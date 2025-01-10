@@ -1,6 +1,12 @@
 {
   "@@locale": "pt",
-
+  "appTitle": "Biblioteca Eletrônica",
+  "noFilesAvailable": "Nenhum arquivo disponível.",
+  "downloadedTo": "Baixado para {path}",
+  "loadingLabel": "Carregando biblioteca...",
+  "downloadLabel": "Baixar",
+  "openSettings": "Abrir Configurações",
+  "cancelLabel": "Cancelar",
   "teacherInfo": "Informações do Professor",
   "studentInfo": "Informações do Aluno",
   "parentInfo": "Informações do Responsável",

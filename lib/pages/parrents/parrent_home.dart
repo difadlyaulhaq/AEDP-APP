@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/parrents/parrent_dashboard.dart';
+import 'package:project_aedp/theme/theme.dart';
 import '../profile_page.dart';
 import 'invoice_page.dart';
 
@@ -36,7 +37,7 @@ class _ParrentHomeState extends State<ParrentHome> {
         child: ClipPath(
           clipper: CustomAppBarClipper(),
           child: AppBar(
-            title: Text(S.of(context).parent_dashboard),
+            title: Text(S.of(context).parent_dashboard,style: TextStyle(color: whiteColor),),
             centerTitle: true,
             toolbarHeight: 60,
             flexibleSpace: Container(
@@ -62,7 +63,7 @@ class _ParrentHomeState extends State<ParrentHome> {
           BottomNavigationBarItem(
               icon: const Icon(Icons.home), label: S.of(context).home),
           BottomNavigationBarItem(
-              icon: const Icon(Icons.receipt), label: S.of(context).invoices),
+              icon: const Icon(Icons.receipt), label: S.of(context).invoice),
           BottomNavigationBarItem(
               icon: const Icon(Icons.person), label: S.of(context).profile),
         ],

@@ -20,17 +20,19 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ar';
 
-  static String m0(errorMessage) => "خطأ: ${errorMessage}";
+  static String m0(path) => "تم التنزيل إلى ${path}";
 
-  static String m1(errorMessage) => "فشل تسجيل الدخول: ${errorMessage}";
+  static String m1(errorMessage) => "خطأ: ${errorMessage}";
 
-  static String m2(role) => "تسجيل الدخول كـ ${role}";
+  static String m2(errorMessage) => "فشل تسجيل الدخول: ${errorMessage}";
 
   static String m3(role) => "تسجيل الدخول كـ ${role}";
 
-  static String m4(role) => "إنشاء حساب كـ ${role}";
+  static String m4(role) => "تسجيل الدخول كـ ${role}";
 
-  static String m5(date) => "يستحق ${date}، 23:59";
+  static String m5(role) => "إنشاء حساب كـ ${role}";
+
+  static String m6(date) => "يستحق ${date}، 23:59";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -46,6 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "administrative_fee":
             MessageLookupByLibrary.simpleMessage("رسوم إدارية"),
         "all": MessageLookupByLibrary.simpleMessage("الكل"),
+        "appTitle": MessageLookupByLibrary.simpleMessage("المكتبة الإلكترونية"),
         "arabic": MessageLookupByLibrary.simpleMessage("العربية"),
         "art": MessageLookupByLibrary.simpleMessage("الفن"),
         "assignment1": MessageLookupByLibrary.simpleMessage("المهمة 1"),
@@ -55,6 +58,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "attendance_tracking":
             MessageLookupByLibrary.simpleMessage("تتبع الحضور"),
         "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
+        "cancelLabel": MessageLookupByLibrary.simpleMessage("إلغاء"),
         "certificates_and_reports":
             MessageLookupByLibrary.simpleMessage("الشهادات والتقارير"),
         "classes": MessageLookupByLibrary.simpleMessage("الفصول"),
@@ -70,6 +74,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("المهام:"),
         "dateOfBirth": MessageLookupByLibrary.simpleMessage("تاريخ الميلاد"),
         "download": MessageLookupByLibrary.simpleMessage("تحميل"),
+        "downloadLabel": MessageLookupByLibrary.simpleMessage("تنزيل"),
+        "downloadedTo": m0,
         "due_oct_16":
             MessageLookupByLibrary.simpleMessage("مستحق 16 أكتوبر، 23.59"),
         "due_oct_9":
@@ -80,7 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
         "emailLabel": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
         "english": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
-        "errorLabel": m0,
+        "errorLabel": m1,
         "evenSemester": MessageLookupByLibrary.simpleMessage("الفصل الزوجي"),
         "fatherName": MessageLookupByLibrary.simpleMessage("اسم الأب"),
         "fee_payment_management":
@@ -112,15 +118,17 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("البرتغالية"),
         "list_of_subjects":
             MessageLookupByLibrary.simpleMessage("قائمة المواد"),
+        "loadingLabel":
+            MessageLookupByLibrary.simpleMessage("جارٍ تحميل المكتبة..."),
         "login": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
         "loginButton": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
         "loginFailed": MessageLookupByLibrary.simpleMessage("فشل تسجيل الدخول"),
-        "loginFailedMessage": m1,
+        "loginFailedMessage": m2,
         "loginPrompt": MessageLookupByLibrary.simpleMessage(
             "تسجيل الدخول إلى حسابك للمتابعة"),
         "loginSubtitle": MessageLookupByLibrary.simpleMessage(
             "قم بتسجيل الدخول إلى حسابك للمتابعة"),
-        "login_as_role": m2,
+        "login_as_role": m3,
         "logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
         "materials": MessageLookupByLibrary.simpleMessage("المواد"),
         "math": MessageLookupByLibrary.simpleMessage("الرياضيات"),
@@ -132,6 +140,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "nav_invoice": MessageLookupByLibrary.simpleMessage("الفاتورة"),
         "nav_notifications": MessageLookupByLibrary.simpleMessage("الإشعارات"),
         "nav_profile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
+        "noFilesAvailable":
+            MessageLookupByLibrary.simpleMessage("لا توجد ملفات متاحة."),
         "noProfileData": MessageLookupByLibrary.simpleMessage(
             "لا توجد بيانات للملف الشخصي."),
         "noScheduleAvailable":
@@ -150,6 +160,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("التعلم عبر الإنترنت #04"),
         "online_learning_5":
             MessageLookupByLibrary.simpleMessage("التعلم عبر الإنترنت #05"),
+        "openSettings": MessageLookupByLibrary.simpleMessage("افتح الإعدادات"),
         "parent": MessageLookupByLibrary.simpleMessage("والد/والدة"),
         "parentInfo": MessageLookupByLibrary.simpleMessage("معلومات ولي الأمر"),
         "parent_dashboard":
@@ -164,7 +175,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "profile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
         "profileTitle": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
         "reports": MessageLookupByLibrary.simpleMessage("التقارير"),
-        "roleHeader": m3,
+        "roleHeader": m4,
         "role_parent": MessageLookupByLibrary.simpleMessage("والد"),
         "role_student": MessageLookupByLibrary.simpleMessage("طالب"),
         "role_teacher": MessageLookupByLibrary.simpleMessage("معلم"),
@@ -179,7 +190,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "shortPasswordMessage": MessageLookupByLibrary.simpleMessage(
             "يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل."),
         "signup": MessageLookupByLibrary.simpleMessage("التسجيل"),
-        "signup_as_role": m4,
+        "signup_as_role": m5,
         "student": MessageLookupByLibrary.simpleMessage("طالب"),
         "studentInfo": MessageLookupByLibrary.simpleMessage("معلومات الطالب"),
         "studentName": MessageLookupByLibrary.simpleMessage("اسم الطالب"),
@@ -202,7 +213,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "todo": MessageLookupByLibrary.simpleMessage("المهام:"),
         "todo_assignment1_title":
             MessageLookupByLibrary.simpleMessage("الواجب 1"),
-        "todo_due_date": m5,
+        "todo_due_date": m6,
         "todo_due_today":
             MessageLookupByLibrary.simpleMessage("يستحق اليوم، 23:59"),
         "todo_online_learning4":
