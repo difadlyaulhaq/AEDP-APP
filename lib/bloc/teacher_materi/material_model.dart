@@ -6,7 +6,7 @@ class MaterialModel {
   final String description;
   final String fileLink;
   final DateTime createdAt;
-  final String subject; // New field for subject
+  final String subjectId; // Use subjectId
 
   MaterialModel({
     required this.id,
@@ -14,7 +14,7 @@ class MaterialModel {
     required this.description,
     required this.fileLink,
     required this.createdAt,
-    required this.subject,
+    required this.subjectId,
   });
 
   factory MaterialModel.fromMap(String id, Map<String, dynamic> data) {
@@ -24,7 +24,7 @@ class MaterialModel {
       description: data['description'],
       fileLink: data['fileLink'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      subject: data['subject'], // Parse subject
+      subjectId: data['subjectId'],
     );
   }
 
@@ -34,7 +34,7 @@ class MaterialModel {
       'description': description,
       'fileLink': fileLink,
       'createdAt': createdAt,
-      'subject': subject, // Save subject
+      'subjectId': subjectId,
     };
   }
 }

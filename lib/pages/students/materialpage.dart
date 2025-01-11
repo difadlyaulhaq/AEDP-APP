@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_aedp/bloc/teacher_materi/material_event.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/students/detailmaterial.dart';
+import '../../bloc/teacher_materi/teacher_bloc.dart';
 
 class StudentMaterialPage extends StatefulWidget {
   const StudentMaterialPage({super.key});
@@ -14,6 +17,13 @@ class _StudentMaterialPageState extends State<StudentMaterialPage> {
   String selectedFilter = "All";
 
   @override
+  void initState() {
+    super.initState();
+    // Initialize MaterialBloc and fetch materials
+    context.read<MaterialBloc>().add(FetchMaterials(subjectId: selectedFilter));
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -25,28 +35,20 @@ class _StudentMaterialPageState extends State<StudentMaterialPage> {
           clipper: CustomAppBarClipper(),
           child: AppBar(
             automaticallyImplyLeading: true,
-            flexibleSpace: Stack(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFF1E70A0),
-                        Color(0xFF0B2A3C),
-                      ],
-                    ),
-                  ),
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFF1E70A0),
+                    Color(0xFF0B2A3C),
+                  ],
                 ),
-              ],
+              ),
             ),
             leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-                size: screenWidth * 0.07,
-              ),
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () => Navigator.pop(context),
             ),
             title: Text(
@@ -60,10 +62,7 @@ class _StudentMaterialPageState extends State<StudentMaterialPage> {
             centerTitle: true,
             actions: [
               IconButton(
-                icon: const Icon(
-                  Icons.filter_alt_rounded,
-                  color: Colors.white,
-                ),
+                icon: const Icon(Icons.filter_alt_rounded, color: Colors.white),
                 onPressed: _showFilterDialog,
               ),
             ],
@@ -158,7 +157,8 @@ class _StudentMaterialPageState extends State<StudentMaterialPage> {
           context,
           MaterialPageRoute(
             builder: (context) => DetailMaterial(
-              subject: subject.toLowerCase(),
+              subjectId: subject.toLowerCase(),
+              subjectName: subject,
             ),
           ),
         );

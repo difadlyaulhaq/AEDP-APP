@@ -160,7 +160,7 @@ class DashboardStudentsHome extends StatelessWidget {
                 dev.log("Navigating to Materials");
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const TeacherMaterialpage()),
+                  MaterialPageRoute(builder: (context) => const TeacherMaterialPage()),
                 );
               },
             ),

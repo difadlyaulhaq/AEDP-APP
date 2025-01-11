@@ -14,7 +14,7 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
 
         final snapshot = await firestore
             .collection('materials')
-            .where('subject', whereIn: event.subjects)
+            .where('subjectId', isEqualTo: event.subjectId) // Fetch by subjectId
             .get();
 
         final materials = snapshot.docs
@@ -28,16 +28,17 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
     });
 
     on<AddMaterial>((event, emit) async {
-  try {
-    print("Uploading material: ${event.material.toMap()}");
-    await firestore.collection('materials').doc(event.material.id).set(event.material.toMap());
-    print("Upload successful!");
-    add(FetchMaterials(subjects: [event.material.subject]));
-  } catch (e) {
-    print("Upload error: $e");
-    emit(MaterialError(e.toString()));
-  }
-});
+      try {
+        await firestore
+            .collection('materials')
+            .doc(event.material.id)
+            .set(event.material.toMap());
 
+        // Automatically fetch updated materials after adding a new one
+        add(FetchMaterials(subjectId: event.material.subjectId));
+      } catch (e) {
+        emit(MaterialError(e.toString()));
+      }
+    });
   }
 }

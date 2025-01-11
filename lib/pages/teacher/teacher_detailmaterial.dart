@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_aedp/pages/teacher/teacher_dashboard.dart';
+import 'package:project_aedp/bloc/teacher_materi/material_model.dart';
 import '../../bloc/teacher_materi/teacher_bloc.dart';
 import '../../bloc/teacher_materi/material_event.dart';
-import '../../bloc/teacher_materi/material_state.dart' as teacher_material_state;
-import '../../bloc/teacher_materi/material_model.dart';
+import '../../bloc/teacher_materi/material_state.dart'
+    as teacher_material_state;
+// import '../../bloc/teacher_materi/material_model.dart'; // Remove unused import
 import 'package:url_launcher/url_launcher.dart';
 
 class TeacherDetailMaterial extends StatelessWidget {
@@ -38,12 +39,7 @@ class TeacherDetailMaterial extends StatelessWidget {
             ),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const TeacherDashboard(),
-                ),
-              ),
+              onPressed: () => Navigator.pop(context),
             ),
             title: Text(
               '$subject Materials',
@@ -59,7 +55,7 @@ class TeacherDetailMaterial extends StatelessWidget {
       ),
       body: BlocProvider(
         create: (context) =>
-            MaterialBloc()..add(FetchMaterials(subjects: [subject])),
+            MaterialBloc()..add(FetchMaterials(subjectId: subject)),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -193,7 +189,8 @@ class TeacherDetailMaterial extends StatelessWidget {
     String? filePath;
 
     // Store the scaffold context
-    final scaffoldContext = context;
+    final scaffoldMessengerContext =
+        ScaffoldMessenger.of(context); // Rename to avoid conflict
 
     showDialog(
       context: context,
@@ -243,47 +240,53 @@ class TeacherDetailMaterial extends StatelessWidget {
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
-                onPressed: () {
-                  try {
-                    print('Upload button pressed');
-                    if (titleController.text.isNotEmpty &&
-                        descriptionController.text.isNotEmpty &&
-                        filePath != null &&
-                        Uri.tryParse(filePath!)?.hasAbsolutePath == true) {
-                      print('All fields validated');
-                      final material = MaterialModel(
-                        id: DateTime.now().toIso8601String(),
-                        title: titleController.text,
-                        description: descriptionController.text,
-                        fileLink: filePath!,
-                        createdAt: DateTime.now(),
-                        subject: subject,
-                      );
+                  onPressed: () {
+                    try {
+                      print('Upload button pressed'); // Fix syntax error
+                      if (titleController.text.isNotEmpty &&
+                          descriptionController.text.isNotEmpty &&
+                          filePath != null &&
+                          Uri.tryParse(filePath!)?.hasAbsolutePath == true) {
+                        print('All fields validated');
+                        final material = MaterialModel(
+                          id: DateTime.now().toIso8601String(),
+                          title: titleController.text,
+                          description: descriptionController.text,
+                          fileLink: filePath!,
+                          createdAt: DateTime.now(),
+                          subjectId:
+                              subject, // Add the required subjectId argument
+                        );
 
-                      print('Material model created: ${material.toMap()}');
-                      BlocProvider.of<MaterialBloc>(scaffoldContext).add(AddMaterial(material));
-                      print('Add material event dispatched');
-                      Navigator.pop(dialogContext);
-                    } else {
-                      print('Validation failed');
-                      Navigator.pop(dialogContext);
-                      ScaffoldMessenger.of(scaffoldContext).showSnackBar(
-                        const SnackBar(
-                          content: Text('Please fill all fields and provide a valid file link.'),
+                        print('Material model created: ${material.toMap()}');
+                        BlocProvider.of<MaterialBloc>(
+                                scaffoldMessengerContext.context)
+                            .add(AddMaterial(material));
+                        print('Add material event dispatched');
+                        Navigator.pop(dialogContext); // Fix syntax error
+                      } else {
+                        print('Validation failed');
+                        Navigator.pop(dialogContext);
+                        ScaffoldMessenger.of(scaffoldMessengerContext.context)
+                            .showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'Please fill all fields and provide a valid file link.'),
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      print('Error during upload: $e');
+                      ScaffoldMessenger.of(scaffoldMessengerContext.context)
+                          .showSnackBar(
+                        SnackBar(
+                          content: Text('Error uploading material: $e'),
                         ),
                       );
                     }
-                  } catch (e) {
-                    print('Error during upload: $e');
-                    ScaffoldMessenger.of(scaffoldContext).showSnackBar(
-                      SnackBar(
-                        content: Text('Error uploading material: $e'),
-                      ),
-                    );
-                  }
-                },
-                child: const Text('Upload'),
-              ),
+                  },
+                  child: const Text('Upload'),
+                ),
               ],
             );
           },

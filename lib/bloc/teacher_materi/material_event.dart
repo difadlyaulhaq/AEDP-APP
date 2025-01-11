@@ -7,14 +7,13 @@ abstract class MaterialEvent extends Equatable {
 }
 
 class FetchMaterials extends MaterialEvent {
-  final List<String> subjects; 
+  final String subjectId; // Fetch by subject ID
 
-  FetchMaterials({required this.subjects});
+  FetchMaterials({required this.subjectId});
 
   @override
-  List<Object?> get props => [subjects];
+  List<Object?> get props => [subjectId];
 }
-
 
 class AddMaterial extends MaterialEvent {
   final MaterialModel material;

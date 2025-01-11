@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_aedp/bloc/teacher_materi/material_event.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/teacher/teacher_detailmaterial.dart';
+import '../../bloc/teacher_materi/teacher_bloc.dart';
 
-class TeacherMaterialpage extends StatefulWidget {
-  const TeacherMaterialpage({super.key});
+class TeacherMaterialPage extends StatefulWidget {
+  const TeacherMaterialPage({super.key});
 
   @override
-  TeacherMaterialpageState createState() => TeacherMaterialpageState();
+  TeacherMaterialPageState createState() => TeacherMaterialPageState();
 }
 
-class TeacherMaterialpageState extends State<TeacherMaterialpage> {
+class TeacherMaterialPageState extends State<TeacherMaterialPage> {
   List<Map<String, dynamic>> filteredSubjects = List.from(subjects);
   String selectedFilter = "All";
 
@@ -18,77 +21,63 @@ class TeacherMaterialpageState extends State<TeacherMaterialpage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return MaterialApp(
-      
-      home: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(screenHeight * 0.2),
-          child: ClipPath(
-            clipper: CustomAppBarClipper(),
-            child: AppBar(
-              automaticallyImplyLeading: true,
-              flexibleSpace: Stack(
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color(0xFF1E70A0),
-                          Color(0xFF0B2A3C),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                  size: screenWidth * 0.07,
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-              title: Text(
-                S.of(context).subjectsTitle,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: screenWidth * 0.065,
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(screenHeight * 0.2),
+        child: ClipPath(
+          clipper: CustomAppBarClipper(),
+          child: AppBar(
+            automaticallyImplyLeading: true,
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFF1E70A0),
+                    Color(0xFF0B2A3C),
+                  ],
                 ),
               ),
-              centerTitle: true,
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.filter_alt_rounded,
-                    color: Colors.white,
-                  ),
-                  onPressed: _showFilterDialog,
-                ),
-              ],
             ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => Navigator.pop(context),
+            ),
+            title: Text(
+              S.of(context).subjectsTitle,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: screenWidth * 0.065,
+              ),
+            ),
+            centerTitle: true,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.filter_alt_rounded, color: Colors.white),
+                onPressed: _showFilterDialog,
+              ),
+            ],
           ),
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: screenWidth * 0.04,
-            vertical: screenHeight * 0.02,
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.04,
+          vertical: screenHeight * 0.02,
+        ),
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: screenWidth > 600 ? 3 : 2,
+            crossAxisSpacing: screenWidth * 0.04,
+            mainAxisSpacing: screenHeight * 0.02,
           ),
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: screenWidth > 600 ? 3 : 2,
-              crossAxisSpacing: screenWidth * 0.04,
-              mainAxisSpacing: screenHeight * 0.02,
-            ),
-            itemCount: filteredSubjects.length,
-            itemBuilder: (context, index) {
-              final subject = filteredSubjects[index];
-              return _buildCardItem(context, subject['name'], subject['icon']);
-            },
-          ),
+          itemCount: filteredSubjects.length,
+          itemBuilder: (context, index) {
+            final subject = filteredSubjects[index];
+            return _buildCardItem(context, subject['name'], subject['icon']);
+          },
         ),
       ),
     );
@@ -160,7 +149,11 @@ class TeacherMaterialpageState extends State<TeacherMaterialpage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TeacherDetailMaterial(subject: subject),
+            builder: (context) => BlocProvider(
+              create: (context) =>
+                  MaterialBloc()..add(FetchMaterials(subjectId: subject)),
+              child: TeacherDetailMaterial(subject: subject),
+            ),
           ),
         );
       },
