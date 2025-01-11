@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:project_aedp/generated/l10n.dart';
-import 'package:project_aedp/pages/notfound.dart';
 import 'package:project_aedp/pages/profile_page.dart';
+import 'package:project_aedp/pages/students/elibrary.dart';
+import 'package:project_aedp/pages/students/schedulepage.dart';
 import 'package:project_aedp/pages/teacher/teacher_materialpage.dart';
 import 'package:project_aedp/pages/teacher/teacher_schedule.dart';
-import 'package:project_aedp/theme/theme.dart';
 import 'dart:developer' as dev;
 
 
@@ -20,7 +20,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
 
   final List<Widget> _pages = const [
     DashboardStudentsHome(), 
-    NotFoundPage(),
+    SchedulePage(),
     ProfilePage(),
   ];
 
@@ -62,8 +62,8 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
               label: S.of(context).nav_home,
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.calendar_month_rounded),
-              label: S.of(context).nav_attendance,
+              icon: const Icon(Icons.calendar_today),
+              label: S.of(context).schedule,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.person),
@@ -77,179 +77,136 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
 }
 
 class DashboardStudentsHome extends StatelessWidget {
-  const DashboardStudentsHome({super.key});
+  const DashboardStudentsHome({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    final textDirection = Directionality.of(context);
+  Widget _buildIconButton(
+      BuildContext context, IconData icon, String label, VoidCallback onTap) {
+    final screenWidth = MediaQuery.of(context).size.width;
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Align(
-            alignment: textDirection == TextDirection.rtl 
-                ? Alignment.centerRight 
-                : Alignment.centerLeft,
-            child: Text(
-              S.of(context).dashboard_todo_header,
-              style: blackColorTextStyle.copyWith(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.04, vertical: screenWidth * 0.03),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withAlpha(51),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: const Color(0xFF1E71A2),
+              size: screenWidth * 0.08,
+            ),
+            SizedBox(height: screenWidth * 0.02),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
               ),
             ),
-          ),
+          ],
         ),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16.0),
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            color: Colors.grey[300],
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Column(
-            children: [
-              // _buildTodoItem(
-              //   S.of(context).todo_assignment1_title,
-              //   S.of(context).todo_due_today,
-              //   context
-              // ),
-              // _buildTodoItem(
-              //   S.of(context).todo_online_learning4,
-              //   S.of(context).todo_due_date("Oct 9"),
-              //   context
-              // ),
-              // _buildTodoItem(
-              //   S.of(context).todo_online_learning5,
-              //   S.of(context).todo_due_date("Oct 16"),
-              //   context
-              // ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 20),
-        Expanded(
-          child: GridView.count(
-            crossAxisCount: screenWidth > 600 ? 4 : 3,
-            children: [
-              _buildIconButton(
-                Icons.calendar_today,
-                S.of(context).dashboard_schedule,
-                () {
-                  dev.log("Navigating to Schedule");
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const TeacherSchedule()),
-                  );
-                },
-                context,
-              ),
-              _buildIconButton(
-                Icons.book,
-                S.of(context).dashboard_materials,
-                () {
-                  dev.log("Navigating to Materials");
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const TeacherMaterialpage()),
-                  );
-                },
-                context,
-              ),
-              _buildIconButton(
-                Icons.check_circle_outline,
-                S.of(context).dashboard_grades,
-                () {
-                  dev.log("Navigating to Grades");
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const NotFoundPage()),
-                  );
-                },
-                context,
-              ),
-              _buildIconButton(
-                Icons.insert_drive_file,
-                S.of(context).dashboard_reports,
-                () {
-                  dev.log("Reports button clicked");
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const NotFoundPage()),
-                  );
-                },
-                context,
-              ),
-              // _buildIconButton(
-              //   Icons.notifications,
-              //   S.of(context).dashboard_notifications,
-              //   () {
-              //     dev.log("Notifications button clicked");
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(builder: (context) => const NotFoundPage()),
-              //     );
-              //   },
-              //   context,
-              // ),
-            ],
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  // Widget _buildTodoItem(String title, String deadline, BuildContext context) {
-  //   final textDirection = Directionality.of(context);
-    
-  //   return Material(
-  //     color: Colors.transparent,
-  //     child: Padding(
-  //       padding: const EdgeInsets.symmetric(vertical: 8.0),
-  //       child: Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //         textDirection: textDirection,
-  //         children: [
-  //           Text(
-  //             title,
-  //             style: blackColorTextStyle.copyWith(fontSize: 16),
-  //           ),
-  //           Text(
-  //             deadline,
-  //             style: blackColorTextStyle.copyWith(fontSize: 16),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
+  @override
+  Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
 
-  Widget _buildIconButton(IconData icon, String label, VoidCallback onTap, BuildContext context) {
-    return Material(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(30),
-            child: CircleAvatar(
-              backgroundColor: bluecolor,
-              radius: 30,
-              child: Icon(icon, color: Colors.white, size: 30),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(S.of(context).parent_dashboard),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: GridView.count(
+          crossAxisCount: screenWidth > 600 ? 4 : 3,
+          crossAxisSpacing: 16.0, // Add horizontal spacing
+          mainAxisSpacing: 16.0, // Add vertical spacing
+          children: [
+            _buildIconButton(
+              context,
+              Icons.calendar_today,
+              S.of(context).dashboard_schedule,
+              () {
+                dev.log("Navigating to Schedule");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TeacherSchedule()),
+                );
+              },
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: blackColorTextStyle.copyWith(fontSize: 14),
-            textAlign: TextAlign.center,
-          ),
-        ],
+            _buildIconButton(
+              context,
+              Icons.book,
+              S.of(context).dashboard_materials,
+              () {
+                dev.log("Navigating to Materials");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TeacherMaterialpage()),
+                );
+              },
+            ),
+           _buildIconButton(
+              context,
+              Icons.library_books,
+              S.of(context).e_library,
+              () {
+                dev.log("E-library button clicked");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ELibraryPage()),
+                );
+              },
+            ),
+            // _buildIconButton(
+            //   context,
+            //   Icons.check_circle_outline,
+            //   S.of(context).dashboard_grades,
+            //   () {
+            //     dev.log("Navigating to Grades");
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => const NotFoundPage()),
+            //     );
+            //   },
+            // ),
+            // _buildIconButton(
+            //   context,
+            //   Icons.insert_drive_file,
+            //   S.of(context).dashboard_reports,
+            //   () {
+            //     dev.log("Reports button clicked");
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => const NotFoundPage()),
+            //     );
+            //   },
+            // ),
+          ],
+        ),
       ),
     );
   }
 }
+
 // Custom clipper class to define the rounded corners for AppBar
 class CustomAppBarClipper extends CustomClipper<Path> {
   @override
