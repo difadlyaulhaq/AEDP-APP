@@ -8,11 +8,13 @@ import 'package:url_launcher/url_launcher.dart';
 class DetailMaterial extends StatelessWidget {
   final String subjectId;
   final String subjectName;
-
+  final String subject;
+  
   const DetailMaterial({
     super.key,
     required this.subjectId,
     required this.subjectName,
+    required this.subject,
   });
 
   @override
@@ -20,8 +22,9 @@ class DetailMaterial extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
+    // Remove the BlocProvider here since we're providing it from the navigation
     return BlocProvider(
-      create: (context) => MaterialBloc()..add(FetchMaterials(subjectId: subjectId)),
+      create: (context) => MaterialBloc()..add(FetchMaterials(subjectId: subject)),
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(screenHeight * 0.15),
@@ -43,7 +46,7 @@ class DetailMaterial extends StatelessWidget {
               ),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.of(context).pop(),
               ),
               title: Text(
                 '$subjectName Materials',
@@ -68,6 +71,10 @@ class DetailMaterial extends StatelessWidget {
                     if (state is custom.MaterialLoading) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (state is custom.MaterialLoaded) {
+                      if (state.materials.isEmpty) {
+                        return const Center(
+                            child: Text('No materials available.'));
+                      }
                       return ListView.builder(
                         itemCount: state.materials.length,
                         itemBuilder: (context, index) {
@@ -81,7 +88,8 @@ class DetailMaterial extends StatelessWidget {
                         },
                       );
                     } else if (state is custom.MaterialError) {
-                      return Center(child: Text('Error: ${state.errorMessage}'));
+                      return Center(
+                          child: Text('Error: ${state.errorMessage}'));
                     }
                     return const Center(child: Text('No materials available.'));
                   },
@@ -94,7 +102,8 @@ class DetailMaterial extends StatelessWidget {
     );
   }
 
-  Widget buildMaterialCard(String title, String subtitle, String fileLink, double screenWidth) {
+  Widget buildMaterialCard(
+      String title, String subtitle, String fileLink, double screenWidth) {
     Future<void> openFile(String url) async {
       final Uri uri = Uri.parse(url);
       if (!await canLaunchUrl(uri)) {

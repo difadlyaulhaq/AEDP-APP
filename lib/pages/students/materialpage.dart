@@ -28,63 +28,72 @@ class _StudentMaterialPageState extends State<StudentMaterialPage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(screenHeight * 0.2),
-        child: ClipPath(
-          clipper: CustomAppBarClipper(),
-          child: AppBar(
-            automaticallyImplyLeading: true,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF1E70A0),
-                    Color(0xFF0B2A3C),
-                  ],
+    return BlocProvider(
+      create: (context) => MaterialBloc(),
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(screenHeight * 0.2),
+          child: ClipPath(
+            clipper: CustomAppBarClipper(),
+            child: AppBar(
+              automaticallyImplyLeading: true,
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xFF1E70A0),
+                      Color(0xFF0B2A3C),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.pop(context),
-            ),
-            title: Text(
-              S.of(context).subjectsTitle,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                fontSize: screenWidth * 0.065,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
               ),
-            ),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.filter_alt_rounded, color: Colors.white),
-                onPressed: _showFilterDialog,
+              title: Text(
+                S.of(context).subjectsTitle,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: screenWidth * 0.065,
+                ),
               ),
-            ],
+              centerTitle: true,
+              actions: [
+                IconButton(
+                  icon:
+                      const Icon(Icons.filter_alt_rounded, color: Colors.white),
+                  onPressed: _showFilterDialog,
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: screenWidth * 0.04,
-          vertical: screenHeight * 0.02,
-        ),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: screenWidth > 600 ? 3 : 2,
-            crossAxisSpacing: screenWidth * 0.04,
-            mainAxisSpacing: screenHeight * 0.02,
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.04,
+            vertical: screenHeight * 0.02,
           ),
-          itemCount: filteredSubjects.length,
-          itemBuilder: (context, index) {
-            final subject = filteredSubjects[index];
-            return _buildCardItem(context, subject['name'], subject['icon']);
-          },
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: screenWidth > 600 ? 3 : 2,
+              crossAxisSpacing: screenWidth * 0.04,
+              mainAxisSpacing: screenHeight * 0.02,
+            ),
+            itemCount: filteredSubjects.length,
+            itemBuilder: (context, index) {
+              final subject = filteredSubjects[index];
+              return _buildCardItem(
+                context, 
+                subject['name'],
+                subject['icon'],
+                subject['id'],
+              );
+            },
+          ),
         ),
       ),
     );
@@ -147,8 +156,7 @@ class _StudentMaterialPageState extends State<StudentMaterialPage> {
       });
     }
   }
-
-  Widget _buildCardItem(BuildContext context, String subject, IconData icon) {
+Widget _buildCardItem(BuildContext context, String subject, IconData icon, String subjectId) {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return InkWell(
@@ -156,11 +164,15 @@ class _StudentMaterialPageState extends State<StudentMaterialPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailMaterial(
-              subjectId: subject.toLowerCase(),
-              subjectName: subject,
-            ),
+            builder: (context) => BlocProvider( // Wrap DetailMaterial with BlocProvider
+              create: (context) => MaterialBloc()..add(FetchMaterials(subjectId: subjectId)),
+              child: DetailMaterial(
+                subjectId: subjectId,
+                subjectName: subject,
+                subject: subject,
+              ),
           ),
+        )
         );
       },
       child: Card(
@@ -226,12 +238,12 @@ class CustomAppBarClipper extends CustomClipper<Path> {
 }
 
 final List<Map<String, dynamic>> subjects = [
-  {'name': S.current.history, 'icon': Icons.history_edu},
-  {'name': S.current.math, 'icon': Icons.calculate},
-  {'name': S.current.science, 'icon': Icons.science},
-  {'name': S.current.art, 'icon': Icons.brush},
-  {'name': S.current.arabic, 'icon': Icons.language},
-  {'name': S.current.music, 'icon': Icons.music_note},
-  {'name': S.current.geography, 'icon': Icons.public},
-  {'name': S.current.english, 'icon': Icons.book},
+  {'name': S.current.history, 'icon': Icons.history_edu, 'id': 'history'},
+  {'name': S.current.math, 'icon': Icons.calculate, 'id': 'math'},
+  {'name': S.current.science, 'icon': Icons.science, 'id': 'science'},
+  {'name': S.current.art, 'icon': Icons.brush, 'id': 'art'},
+  {'name': S.current.arabic, 'icon': Icons.language, 'id': 'arabic'},
+  {'name': S.current.music, 'icon': Icons.music_note, 'id': 'music'},
+  {'name': S.current.geography, 'icon': Icons.public, 'id': 'geography'},
+  {'name': S.current.english, 'icon': Icons.book, 'id': 'english'},
 ];
