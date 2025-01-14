@@ -61,12 +61,12 @@ class ProfilePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          CircleAvatar(
-            radius: screenWidth * 0.15,
-            backgroundImage: profileData['profilePicture'] != null
-                ? NetworkImage(profileData['profilePicture'])
-                : const AssetImage('assets/profile_picture.png') as ImageProvider,
-          ),
+          // CircleAvatar(
+          //   radius: screenWidth * 0.15,
+          //   backgroundImage: profileData['profilePicture'] != null
+          //       ? NetworkImage(profileData['profilePicture'])
+          //       : const AssetImage('assets/profile_picture.png') as ImageProvider,
+          // ),
           const SizedBox(height: 8),
           Text(
             profileData['fullName'] ?? S.of(context).nameNotFound,
