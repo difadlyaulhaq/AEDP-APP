@@ -6,8 +6,23 @@ sealed class CertificatesDownloadEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
-class DownloadCertificate extends CertificatesDownloadEvent {
-  final String pdfPath;
 
-  DownloadCertificate(this.pdfPath);
+class LoadCertificates extends CertificatesDownloadEvent {
+  final String fatherName;
+
+  const LoadCertificates(this.fatherName);
+
+  @override
+  List<Object> get props => [fatherName];
+}
+
+class DownloadCertificate extends CertificatesDownloadEvent {
+  final String fatherName;
+
+  final String pdfPath;
+  final BuildContext context;
+
+  const DownloadCertificate(this.fatherName, this.pdfPath, this.context);
+  @override
+  List<Object> get props => [fatherName, pdfPath, context];
 }

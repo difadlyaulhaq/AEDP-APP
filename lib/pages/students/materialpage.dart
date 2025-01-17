@@ -97,7 +97,7 @@ class _StudentMaterialPageState extends State<StudentMaterialPage> {
         ),
       ),
     );
-  }
+  } 
 
   void _showFilterDialog() {
     showDialog(

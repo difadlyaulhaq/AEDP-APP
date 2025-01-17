@@ -1,16 +1,104 @@
-import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
 import 'package:project_aedp/bloc/library_download/library_download_event.dart';
 import 'package:project_aedp/bloc/library_download/library_download_state.dart';
-
+// Bloc Implementation
 class LibraryDownloadBloc extends Bloc<LibraryDownloadEvent, LibraryDownloadState> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  
   LibraryDownloadBloc() : super(LibraryDownloadInitial()) {
-    on<DownloadFile>(_onDownloadFile);
     on<LoadLibraryFiles>(_onLoadLibraryFiles);
+    on<DownloadFile>(_onDownloadFile);
+  }
+
+  Future<void> _onLoadLibraryFiles(
+    LoadLibraryFiles event,
+    Emitter<LibraryDownloadState> emit,
+  ) async {
+    emit(LibraryDownloadLoading());
+    try {
+      // Parse and validate userId
+      final userId = num.tryParse(event.userId);
+      if (userId == null) {
+        emit(LibraryDownloadError("Invalid user ID"));
+        return;
+      }
+
+      // First get user data and check role
+      final userDoc = await _firestore
+          .collection('users')
+          .where('id', isEqualTo: userId)
+
+          .get();
+
+      if (userDoc.docs.isEmpty) {
+        emit(LibraryDownloadError("User not found"));
+        return;
+      }
+
+      final userData = userDoc.docs.first.data();
+      final role = userData['role'] as String?;
+
+      if (role?.toLowerCase() != 'student') {
+        // For non-student roles, fetch all library books
+        final snapshot = await _firestore
+            .collection('library')
+            .get();
+
+        final files = snapshot.docs.map((doc) {
+          final data = doc.data();
+          return LibraryFile(
+            name: data['name'] as String? ?? "Unknown Name",
+            filePath: data['file_path'] as String? ?? "",
+          );
+        }).toList();
+
+        emit(LibraryDownloadLoaded(files: files));
+        return;
+      }
+
+      // For students, get their grade and filter books
+      final studentDoc = await _firestore
+          .collection('students')
+          .where('school_id', isEqualTo: userId.toString())
+          .limit(1)
+          .get();
+
+      if (studentDoc.docs.isEmpty) {
+        emit(LibraryDownloadError("Student data not found"));
+        return;
+      }
+
+      final studentData = studentDoc.docs.first.data();
+      final studentGrade = studentData['grade_class'];
+
+      // Fetch library books for student's grade
+      final snapshot = await _firestore
+          .collection('library')
+          .where('grade', isEqualTo: studentGrade)
+          .get();
+
+      if (snapshot.docs.isEmpty) {
+        emit(LibraryDownloadError("No books available for your grade"));
+        return;
+      }
+
+      final files = snapshot.docs.map((doc) {
+        final data = doc.data();
+        return LibraryFile(
+          name: data['name'] as String? ?? "Unknown Name",
+          filePath: data['file_path'] as String? ?? "",
+        );
+      }).toList();
+
+      emit(LibraryDownloadLoaded(files: files));
+    } catch (e) {
+      emit(LibraryDownloadError("Error loading files: $e"));
+    }
   }
 
   Future<void> _onDownloadFile(
@@ -20,7 +108,6 @@ class LibraryDownloadBloc extends Bloc<LibraryDownloadEvent, LibraryDownloadStat
     emit(LibraryDownloadLoading());
 
     try {
-      // Check storage permission
       final status = await Permission.storage.status;
       if (!status.isGranted) {
         final result = await Permission.storage.request();
@@ -30,70 +117,30 @@ class LibraryDownloadBloc extends Bloc<LibraryDownloadEvent, LibraryDownloadStat
         }
       }
 
-      // Fetch file data from Firestore
-      final snapshot = await FirebaseFirestore.instance
-          .collection('library')
-          .doc(event.filePath)
-          .get();
+      const baseUrl = "https://gold-tiger-632820.hostingersite.com/";
+      final downloadUrl = Uri.parse(baseUrl).resolve(event.filePath).toString();
 
-      if (!snapshot.exists) {
-        emit(LibraryDownloadError("File not found in Firestore"));
-        return;
-      }
-
-      final filePath = snapshot.data()?['file_path'] as String?;
-      if (filePath == null || filePath.isEmpty || !filePath.endsWith('.pdf')) {
-        emit(LibraryDownloadError("Invalid file path in Firestore"));
-        return;
-      }
-
-      // Combine base URL with relative path
-      const baseUrl = "https://gold-tiger-632820.hostingersite.com/"; // Replace with your actual base URL
-      final downloadUrl = Uri.parse(baseUrl).resolve(filePath).toString();
-
-      // Download the file
       final response = await http.get(Uri.parse(downloadUrl));
       if (response.statusCode == 200) {
-        // Get the downloads directory for Android or documents directory for iOS
         final directory = Platform.isAndroid
             ? Directory('/storage/emulated/0/Download')
             : await getApplicationDocumentsDirectory();
 
-        // Create directory if it doesn't exist
         if (!await directory.exists()) {
           await directory.create(recursive: true);
         }
 
-        // Save the file
-        final fileName = filePath.split('/').last;
+        final fileName = event.filePath.split('/').last;
         final filePathToSave = '${directory.path}/$fileName';
         final file = File(filePathToSave);
         await file.writeAsBytes(response.bodyBytes);
 
-        // Emit success with the file path
-        emit(LibraryDownloadLoaded(filePath: filePathToSave));
+        emit(LibraryDownloadLoaded());
       } else {
-        emit(LibraryDownloadError(
-          "Failed to download file: ${response.statusCode}",
-        ));
+        emit(LibraryDownloadError("Failed to download file: ${response.statusCode}"));
       }
     } catch (e) {
       emit(LibraryDownloadError("Error downloading file: $e"));
     }
-  }
-
-  Future<void> _onLoadLibraryFiles(
-    LoadLibraryFiles event,
-    Emitter<LibraryDownloadState> emit,
-  ) async {
-    // Simulate loading files from Firestore or API
-    await Future.delayed(const Duration(seconds: 2));
-
-    final files = [
-      LibraryFile(name: 'Week 12 Notes', filePath: 'uploads/week 12.pdf'),
-    ];
-
-    // Emit the loaded files state
-    emit(LibraryDownloadLoaded(files: files));
   }
 }

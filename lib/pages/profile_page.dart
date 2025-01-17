@@ -27,7 +27,7 @@ class ProfilePage extends StatelessWidget {
         builder: (context, authState) {
           if (authState is AuthLoginSuccess) {
             context.read<LoadProfileBloc>().add(LoadUserProfile(id: authState.userId.toString()));
-
+  
             return Scaffold(
               appBar: AppBar(
                 actions: [
