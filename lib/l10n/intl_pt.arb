@@ -1,5 +1,6 @@
 {
   "@@locale": "pt",
+  "teacher_dashboard": "Painel do Professor",
   "appTitle": "Biblioteca Eletrônica",
   "noFilesAvailable": "Nenhum arquivo disponível.",
   "downloadedTo": "Baixado para {path}",

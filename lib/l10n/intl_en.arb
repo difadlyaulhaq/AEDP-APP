@@ -1,6 +1,7 @@
 {
   "@@locale": "en",
   "appTitle": "E-Library",
+  "teacher_dashboard": "Teacher Dashboard",
   "noFilesAvailable": "No files available.",
   "downloadedTo": "Downloaded to {path}",
   "loadingLabel": "Loading library...",

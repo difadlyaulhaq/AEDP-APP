@@ -130,7 +130,7 @@ class DashboardStudentsHome extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).parent_dashboard),
+        title: Text(S.of(context).teacher_dashboard),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

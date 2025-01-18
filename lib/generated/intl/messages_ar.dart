@@ -210,6 +210,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "subjectsTitle": MessageLookupByLibrary.simpleMessage("المواد"),
         "teacher": MessageLookupByLibrary.simpleMessage("معلم"),
         "teacherInfo": MessageLookupByLibrary.simpleMessage("معلومات المعلم"),
+        "teacher_dashboard":
+            MessageLookupByLibrary.simpleMessage("لوحة تحكم المعلم"),
         "todo": MessageLookupByLibrary.simpleMessage("المهام:"),
         "todo_assignment1_title":
             MessageLookupByLibrary.simpleMessage("الواجب 1"),

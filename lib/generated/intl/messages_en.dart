@@ -217,6 +217,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "teacher": MessageLookupByLibrary.simpleMessage("Teacher"),
         "teacherInfo":
             MessageLookupByLibrary.simpleMessage("Teacher Information"),
+        "teacher_dashboard":
+            MessageLookupByLibrary.simpleMessage("Teacher Dashboard"),
         "todo": MessageLookupByLibrary.simpleMessage("To-Do:"),
         "todo_assignment1_title":
             MessageLookupByLibrary.simpleMessage("Assignment 1"),

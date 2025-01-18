@@ -1,5 +1,6 @@
 {
   "@@locale": "ar",
+  "teacher_dashboard": "لوحة تحكم المعلم",
   "appTitle": "المكتبة الإلكترونية",
   "noFilesAvailable": "لا توجد ملفات متاحة.",
   "downloadedTo": "تم التنزيل إلى {path}",

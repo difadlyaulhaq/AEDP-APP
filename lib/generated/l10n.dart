@@ -60,6 +60,16 @@ class S {
     );
   }
 
+  /// `Teacher Dashboard`
+  String get teacher_dashboard {
+    return Intl.message(
+      'Teacher Dashboard',
+      name: 'teacher_dashboard',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `No files available.`
   String get noFilesAvailable {
     return Intl.message(
@@ -77,16 +87,6 @@ class S {
       name: 'downloadedTo',
       desc: '',
       args: [path],
-    );
-  }
-
-  /// `Error: {errorMessage}`
-  String errorLabel(Object errorMessage) {
-    return Intl.message(
-      'Error: $errorMessage',
-      name: 'errorLabel',
-      desc: '',
-      args: [errorMessage],
     );
   }
 
@@ -150,76 +150,6 @@ class S {
     );
   }
 
-  /// `Profile`
-  String get profileTitle {
-    return Intl.message(
-      'Profile',
-      name: 'profileTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Name not found`
-  String get nameNotFound {
-    return Intl.message(
-      'Name not found',
-      name: 'nameNotFound',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No profile data found.`
-  String get noProfileData {
-    return Intl.message(
-      'No profile data found.',
-      name: 'noProfileData',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Logout`
-  String get logout {
-    return Intl.message(
-      'Logout',
-      name: 'logout',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Unknown`
-  String get unknown {
-    return Intl.message(
-      'Unknown',
-      name: 'unknown',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `User Information`
-  String get userInfo {
-    return Intl.message(
-      'User Information',
-      name: 'userInfo',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Unknown role`
-  String get unknownRole {
-    return Intl.message(
-      'Unknown role',
-      name: 'unknownRole',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Teacher Information`
   String get teacherInfo {
     return Intl.message(
@@ -255,16 +185,6 @@ class S {
     return Intl.message(
       'Address',
       name: 'address',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Contact`
-  String get contact {
-    return Intl.message(
-      'Contact',
-      name: 'contact',
       desc: '',
       args: [],
     );
@@ -345,36 +265,6 @@ class S {
     return Intl.message(
       'Student Name',
       name: 'studentName',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `English`
-  String get language_english {
-    return Intl.message(
-      'English',
-      name: 'language_english',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Portuguese`
-  String get language_portuguese {
-    return Intl.message(
-      'Portuguese',
-      name: 'language_portuguese',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Arabic`
-  String get language_arabic {
-    return Intl.message(
-      'Arabic',
-      name: 'language_arabic',
       desc: '',
       args: [],
     );
@@ -1110,6 +1000,56 @@ class S {
     );
   }
 
+  /// `Profile`
+  String get profileTitle {
+    return Intl.message(
+      'Profile',
+      name: 'profileTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logout`
+  String get logout {
+    return Intl.message(
+      'Logout',
+      name: 'logout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name not found`
+  String get nameNotFound {
+    return Intl.message(
+      'Name not found',
+      name: 'nameNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No profile data found.`
+  String get noProfileData {
+    return Intl.message(
+      'No profile data found.',
+      name: 'noProfileData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User Information`
+  String get userInfo {
+    return Intl.message(
+      'User Information',
+      name: 'userInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Full Name`
   String get fullName {
     return Intl.message(
@@ -1117,6 +1057,36 @@ class S {
       name: 'fullName',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Contact`
+  String get contact {
+    return Intl.message(
+      'Contact',
+      name: 'contact',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown`
+  String get unknown {
+    return Intl.message(
+      'Unknown',
+      name: 'unknown',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error: {errorMessage}`
+  String errorLabel(Object errorMessage) {
+    return Intl.message(
+      'Error: $errorMessage',
+      name: 'errorLabel',
+      desc: '',
+      args: [errorMessage],
     );
   }
 
@@ -1307,6 +1277,36 @@ class S {
       name: 'signup_as_role',
       desc: '',
       args: [role],
+    );
+  }
+
+  /// `English`
+  String get language_english {
+    return Intl.message(
+      'English',
+      name: 'language_english',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Portuguese`
+  String get language_portuguese {
+    return Intl.message(
+      'Portuguese',
+      name: 'language_portuguese',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Arabic`
+  String get language_arabic {
+    return Intl.message(
+      'Arabic',
+      name: 'language_arabic',
+      desc: '',
+      args: [],
     );
   }
 
@@ -1535,6 +1535,16 @@ class S {
     return Intl.message(
       'Access denied: Incorrect role.',
       name: 'accessDeniedIncorrectRole',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown role`
+  String get unknownRole {
+    return Intl.message(
+      'Unknown role',
+      name: 'unknownRole',
       desc: '',
       args: [],
     );
