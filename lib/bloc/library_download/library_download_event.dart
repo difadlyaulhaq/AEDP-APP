@@ -5,9 +5,9 @@ class DownloadFile extends LibraryDownloadEvent {
 
   DownloadFile(this.filePath);
 }
+
 class LoadLibraryFiles extends LibraryDownloadEvent {
   final String userId;
+
   LoadLibraryFiles(this.userId);
 }
-
-

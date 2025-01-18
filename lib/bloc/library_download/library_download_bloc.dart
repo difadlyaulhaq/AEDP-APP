@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
@@ -6,10 +6,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:project_aedp/bloc/library_download/library_download_event.dart';
 import 'package:project_aedp/bloc/library_download/library_download_state.dart';
+
 // Bloc Implementation
 class LibraryDownloadBloc extends Bloc<LibraryDownloadEvent, LibraryDownloadState> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
   LibraryDownloadBloc() : super(LibraryDownloadInitial()) {
     on<LoadLibraryFiles>(_onLoadLibraryFiles);
     on<DownloadFile>(_onDownloadFile);
@@ -32,7 +33,6 @@ class LibraryDownloadBloc extends Bloc<LibraryDownloadEvent, LibraryDownloadStat
       final userDoc = await _firestore
           .collection('users')
           .where('id', isEqualTo: userId)
-
           .get();
 
       if (userDoc.docs.isEmpty) {
@@ -97,7 +97,7 @@ class LibraryDownloadBloc extends Bloc<LibraryDownloadEvent, LibraryDownloadStat
 
       emit(LibraryDownloadLoaded(files: files));
     } catch (e) {
-      emit(LibraryDownloadError("Error loading files: $e"));
+      emit(LibraryDownloadError("Error loading library files: $e"));
     }
   }
 
@@ -105,18 +105,7 @@ class LibraryDownloadBloc extends Bloc<LibraryDownloadEvent, LibraryDownloadStat
     DownloadFile event,
     Emitter<LibraryDownloadState> emit,
   ) async {
-    emit(LibraryDownloadLoading());
-
     try {
-      final status = await Permission.storage.status;
-      if (!status.isGranted) {
-        final result = await Permission.storage.request();
-        if (!result.isGranted) {
-          emit(LibraryDownloadError("Storage permission is required to download files"));
-          return;
-        }
-      }
-
       const baseUrl = "https://gold-tiger-632820.hostingersite.com/";
       final downloadUrl = Uri.parse(baseUrl).resolve(event.filePath).toString();
 
@@ -135,11 +124,11 @@ class LibraryDownloadBloc extends Bloc<LibraryDownloadEvent, LibraryDownloadStat
         final file = File(filePathToSave);
         await file.writeAsBytes(response.bodyBytes);
 
-        emit(LibraryDownloadLoaded());
+        emit(LibraryDownloadSuccess(filePathToSave));
       } else {
         emit(LibraryDownloadError("Failed to download file: ${response.statusCode}"));
       }
-    } catch (e) {
+    } catch (e) {              
       emit(LibraryDownloadError("Error downloading file: $e"));
     }
   }

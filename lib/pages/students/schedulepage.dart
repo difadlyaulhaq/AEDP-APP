@@ -18,9 +18,7 @@ class SchedulePage extends StatefulWidget {
   _SchedulePageState createState() => _SchedulePageState();
 }
 
-class _SchedulePageState extends State<SchedulePage> with TickerProviderStateMixin {
-  late TabController _tabController;
-
+class _SchedulePageState extends State<SchedulePage> {
   Future<bool> _requestStoragePermission(BuildContext context) async {
     if (Platform.isAndroid) {
       // Handle permissions for Android 13 and above
@@ -150,40 +148,14 @@ class _SchedulePageState extends State<SchedulePage> with TickerProviderStateMix
 
             if (state is ScheduleLoaded) {
               final scheduleData = state.scheduleData;
-              _tabController = TabController(
-                length: scheduleData.keys.length, 
-                vsync: this
-              );
 
-              return Column(
-                children: [
-                  TabBar(
-                    controller: _tabController,
-                    isScrollable: true,
-                    tabs: scheduleData.keys.map((day) => Tab(text: day)).toList(),
-                    indicatorColor: Colors.blue,
-                    labelColor: Colors.blue,
-                    unselectedLabelColor: Colors.grey,
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: scheduleData.keys.map((day) {
-                        final daySchedule = scheduleData[day] ?? [];
-                        return daySchedule.isNotEmpty
-                            ? ListView(
-                                padding: const EdgeInsets.all(16),
-                                children: daySchedule.map((classInfo) {
-                                  return _buildClassCard(classInfo);
-                                }).toList(),
-                              )
-                            : Center(
-                                child: Text(S.of(context).noScheduleAvailable),
-                              );
-                      }).toList(),
-                    ),
-                  ),
-                ],
+              return ListView(
+                padding: const EdgeInsets.all(16),
+                children: scheduleData.values.expand((daySchedule) {
+                  return daySchedule.map((classInfo) {
+                    return _buildClassCard(classInfo);
+                  }).toList();
+                }).toList(),
               );
             }
 
@@ -232,11 +204,5 @@ class _SchedulePageState extends State<SchedulePage> with TickerProviderStateMix
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 }

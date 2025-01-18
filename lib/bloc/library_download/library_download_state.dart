@@ -13,18 +13,16 @@ class LibraryDownloadError extends LibraryDownloadState {
 }
 
 class LibraryDownloadSuccess extends LibraryDownloadState {
-  final List<File> files; // Assuming File is a class that holds file information
+  final String filePath;
 
-  LibraryDownloadSuccess({required this.files});
+  LibraryDownloadSuccess(this.filePath);
 }
 
 class LibraryDownloadLoaded extends LibraryDownloadState {
   final List<LibraryFile> files;
-  final String? filePath;  // Optional parameter for file path
 
-  LibraryDownloadLoaded({this.files = const [], this.filePath});
+  LibraryDownloadLoaded({this.files = const []});
 }
-
 
 class LibraryFile {
   final String name;
