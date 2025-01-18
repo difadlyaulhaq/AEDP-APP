@@ -140,18 +140,18 @@ class DashboardStudentsHome extends StatelessWidget {
           crossAxisSpacing: 16.0, // Add horizontal spacing
           mainAxisSpacing: 16.0, // Add vertical spacing
           children: [
-            _buildIconButton(
-              context,
-              Icons.calendar_today,
-              S.of(context).dashboard_schedule,
-              () {
-                dev.log("Navigating to Schedule");
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const TeacherSchedule()),
-                );
-              },
-            ),
+            // _buildIconButton(
+            //   context,
+            //   Icons.calendar_today,
+            //   S.of(context).dashboard_schedule,
+            //   () {
+            //     dev.log("Navigating to Schedule");
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => const TeacherSchedule()),
+            //     );
+            //   },
+            // ),
             _buildIconButton(
               context,
               Icons.book,
