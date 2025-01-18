@@ -41,7 +41,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       final userData = userDoc.docs.first.data();
       final role = userData['role'] as String?;
 
-      String? studentGrade;
+      Query<Map<String, dynamic>> scheduleQuery = firestore.collection('schedules');
       if (role?.toLowerCase() == 'student') {
         final studentDoc = await firestore
             .collection('students')
@@ -55,12 +55,17 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         }
 
         final studentData = studentDoc.docs.first.data();
-        studentGrade = studentData['grade_class'];
-      }
-
-      Query<Map<String, dynamic>> scheduleQuery = firestore.collection('schedules');
-      if (studentGrade != null) {
+        final studentGrade = studentData['grade_class'];
         scheduleQuery = scheduleQuery.where('grade', isEqualTo: studentGrade);
+      } else if (role?.toLowerCase() == 'teacher') {
+        // Fetch all schedules for teachers
+        scheduleQuery = firestore.collection('schedules');
+      }else if (role?.toLowerCase() == 'parent') {
+        // Fetch all schedules for parents
+        scheduleQuery = firestore.collection('schedules');
+      }else {
+        emit(ScheduleError("Invalid role"));
+        return;
       }
 
       final snapshot = await scheduleQuery.get();

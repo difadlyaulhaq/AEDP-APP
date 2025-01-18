@@ -7,7 +7,6 @@ import 'package:project_aedp/pages/teacher/teacher_materialpage.dart';
 import 'package:project_aedp/pages/teacher/teacher_schedule.dart';
 import 'dart:developer' as dev;
 
-
 class TeacherDashboard extends StatefulWidget {
   const TeacherDashboard({super.key});
 
@@ -19,7 +18,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = const [
-    DashboardStudentsHome(), 
+    DashboardStudentsHome(),
     SchedulePage(),
     ProfilePage(),
   ];
@@ -140,18 +139,19 @@ class DashboardStudentsHome extends StatelessWidget {
           crossAxisSpacing: 16.0, // Add horizontal spacing
           mainAxisSpacing: 16.0, // Add vertical spacing
           children: [
-            // _buildIconButton(
-            //   context,
-            //   Icons.calendar_today,
-            //   S.of(context).dashboard_schedule,
-            //   () {
-            //     dev.log("Navigating to Schedule");
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => const TeacherSchedule()),
-            //     );
-            //   },
-            // ),
+            _buildIconButton(
+              context,
+              Icons.calendar_today,
+              S.of(context).dashboard_schedule,
+              () {
+                dev.log("Navigating to Schedule");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const TeacherSchedule()),
+                );
+              },
+            ),
             _buildIconButton(
               context,
               Icons.book,
@@ -160,21 +160,18 @@ class DashboardStudentsHome extends StatelessWidget {
                 dev.log("Navigating to Materials");
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const TeacherMaterialPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const TeacherMaterialPage()),
                 );
               },
             ),
-           _buildIconButton(
-              context,
-              Icons.library_books,
-              S.of(context).e_library,
-              () {
-                dev.log("E-library button clicked");
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ELibraryPage()),
-                );
-              },
+            _buildIconButton(
+                context, Icons.library_books, S.of(context).e_library, () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ELibraryPage()),
+              );
+            }
             ),
             // _buildIconButton(
             //   context,
@@ -213,9 +210,12 @@ class CustomAppBarClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     final path = Path();
     path.lineTo(0, size.height - 40); // Start from the bottom-left corner
-    path.quadraticBezierTo(0, size.height, 40, size.height); // Left corner curve
-    path.lineTo(size.width - 40, size.height); // Straight line at the bottom middle
-    path.quadraticBezierTo(size.width, size.height, size.width, size.height - 40); // Right corner curve
+    path.quadraticBezierTo(
+        0, size.height, 40, size.height); // Left corner curve
+    path.lineTo(
+        size.width - 40, size.height); // Straight line at the bottom middle
+    path.quadraticBezierTo(size.width, size.height, size.width,
+        size.height - 40); // Right corner curve
     path.lineTo(size.width, 0); // Straight line at the top-right corner
     path.close(); // Close the path
     return path;

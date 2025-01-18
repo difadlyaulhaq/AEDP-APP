@@ -43,47 +43,41 @@ class LibraryDownloadBloc extends Bloc<LibraryDownloadEvent, LibraryDownloadStat
       final userData = userDoc.docs.first.data();
       final role = userData['role'] as String?;
 
-      if (role?.toLowerCase() != 'student') {
-        // For non-student roles, fetch all library books
-        final snapshot = await _firestore
-            .collection('library')
+      Query<Map<String, dynamic>> libraryQuery = _firestore.collection('library');
+
+      if (role?.toLowerCase() == 'student') {
+        // For students, get their grade and filter books
+        final studentDoc = await _firestore
+            .collection('students')
+            .where('school_id', isEqualTo: userId.toString())
+            .limit(1)
             .get();
 
-        final files = snapshot.docs.map((doc) {
-          final data = doc.data();
-          return LibraryFile(
-            name: data['name'] as String? ?? "Unknown Name",
-            filePath: data['file_path'] as String? ?? "",
-          );
-        }).toList();
+        if (studentDoc.docs.isEmpty) {
+          emit(LibraryDownloadError("Student data not found"));
+          return;
+        }
 
-        emit(LibraryDownloadLoaded(files: files));
+        final studentData = studentDoc.docs.first.data();
+        final studentGrade = studentData['grade_class'];
+
+        // Fetch library books for student's grade
+        libraryQuery = libraryQuery.where('grade', isEqualTo: studentGrade);
+      } else if (role?.toLowerCase() == 'teacher') {
+        // For teachers, fetch all library books
+        libraryQuery = _firestore.collection('library');
+      }else if (role?.toLowerCase() == 'parent') {
+        // For parents, fetch all library books
+        libraryQuery = _firestore.collection('library');
+      } else {
+        emit(LibraryDownloadError("Invalid role"));
         return;
       }
 
-      // For students, get their grade and filter books
-      final studentDoc = await _firestore
-          .collection('students')
-          .where('school_id', isEqualTo: userId.toString())
-          .limit(1)
-          .get();
-
-      if (studentDoc.docs.isEmpty) {
-        emit(LibraryDownloadError("Student data not found"));
-        return;
-      }
-
-      final studentData = studentDoc.docs.first.data();
-      final studentGrade = studentData['grade_class'];
-
-      // Fetch library books for student's grade
-      final snapshot = await _firestore
-          .collection('library')
-          .where('grade', isEqualTo: studentGrade)
-          .get();
+      final snapshot = await libraryQuery.get();
 
       if (snapshot.docs.isEmpty) {
-        emit(LibraryDownloadError("No books available for your grade"));
+        emit(LibraryDownloadError("No books available"));
         return;
       }
 

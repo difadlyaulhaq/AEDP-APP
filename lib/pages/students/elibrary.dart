@@ -145,7 +145,11 @@ class _ELibraryPageState extends State<ELibraryPage> {
           }
           if (authState is AuthLoginSuccess && authState.role.toLowerCase() == 'student') {
             bloc.add(LoadLibraryFiles(authState.userId.toString()));
-          } else {
+          } else if (authState is AuthLoginSuccess && authState.role.toLowerCase() == 'teacher') {
+            bloc.add(LoadLibraryFiles(authState.userId.toString()));
+          } else if (authState is AuthLoginSuccess && authState.role.toLowerCase() == 'parent') {
+            bloc.add(LoadLibraryFiles(authState.userId.toString()));
+          }else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(S.of(context).errorLabel('user role not found'))),
             );
