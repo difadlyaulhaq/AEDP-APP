@@ -1,4 +1,4 @@
-# AEDP (Academic Education Development Platform)
+# AEDP 
 
 AEDP is a Flutter-based mobile application designed to streamline the learning management process. This platform provides tools for students and educators to manage courses, track progress, and communicate effectively.
 
