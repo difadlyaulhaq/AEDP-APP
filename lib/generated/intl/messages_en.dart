@@ -59,10 +59,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Attendance Tracking"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "cancelLabel": MessageLookupByLibrary.simpleMessage("Cancel"),
-        "certificates_and_reports":
-            MessageLookupByLibrary.simpleMessage("Certificates and Reports"),
+        "certificates": MessageLookupByLibrary.simpleMessage("Certificates"),
         "classes": MessageLookupByLibrary.simpleMessage("Classes"),
         "contact": MessageLookupByLibrary.simpleMessage("Contact"),
+        "contact_school_id":
+            MessageLookupByLibrary.simpleMessage("Contact / School ID"),
         "dashboard_attendance":
             MessageLookupByLibrary.simpleMessage("Attendance"),
         "dashboard_grades": MessageLookupByLibrary.simpleMessage("Grades"),
@@ -230,6 +231,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "todo_online_learning5":
             MessageLookupByLibrary.simpleMessage("Online Learning #05"),
         "todo_title": MessageLookupByLibrary.simpleMessage("To-Do:"),
+        "transcript": MessageLookupByLibrary.simpleMessage("Transcript"),
         "tuitionFee": MessageLookupByLibrary.simpleMessage("Tuition Fee"),
         "tuition_fee": MessageLookupByLibrary.simpleMessage("Tuition Fee"),
         "unknown": MessageLookupByLibrary.simpleMessage("Unknown"),

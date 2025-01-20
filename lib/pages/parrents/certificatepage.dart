@@ -136,7 +136,7 @@ class CertificateView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).certificates_and_reports),
+        title: Text(S.of(context).certificates),
       ),
       body: BlocConsumer<CertificatesDownloadBloc, CertificatesDownloadState>(
         listener: (context, state) {

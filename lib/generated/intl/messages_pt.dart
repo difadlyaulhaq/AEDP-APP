@@ -60,10 +60,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Acompanhamento de Presença"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
         "cancelLabel": MessageLookupByLibrary.simpleMessage("Cancelar"),
-        "certificates_and_reports":
-            MessageLookupByLibrary.simpleMessage("Certificados e Relatórios"),
+        "certificates": MessageLookupByLibrary.simpleMessage("Certificados"),
         "classes": MessageLookupByLibrary.simpleMessage("Classes"),
         "contact": MessageLookupByLibrary.simpleMessage("Contato"),
+        "contact_school_id":
+            MessageLookupByLibrary.simpleMessage("Contato / ID da Escola"),
         "dashboard_attendance":
             MessageLookupByLibrary.simpleMessage("Presença"),
         "dashboard_grades": MessageLookupByLibrary.simpleMessage("Notas"),
@@ -236,6 +237,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "todo_online_learning5":
             MessageLookupByLibrary.simpleMessage("Aprendizado Online #05"),
         "todo_title": MessageLookupByLibrary.simpleMessage("A Fazer:"),
+        "transcript": MessageLookupByLibrary.simpleMessage("Transcrição"),
         "tuitionFee": MessageLookupByLibrary.simpleMessage("Taxa de Matrícula"),
         "tuition_fee":
             MessageLookupByLibrary.simpleMessage("Taxa de matrícula"),

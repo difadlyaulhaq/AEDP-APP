@@ -1,5 +1,6 @@
 {
   "@@locale": "pt",
+   "transcript": "Transcrição",
   "teacher_dashboard": "Painel do Professor",
   "appTitle": "Biblioteca Eletrônica",
   "noFilesAvailable": "Nenhum arquivo disponível.",
@@ -21,7 +22,7 @@
   "schoolId": "ID da Escola",
   "fatherName": "Nome do Pai",
   "studentName": "Nome do Aluno",
-
+     "contact_school_id": "Contato / ID da Escola",
   "grades_title": "Suas Notas",
   "subject_list_title": "Lista de Disciplinas",
   "nav_dashboard": "Painel de Controle",
@@ -29,7 +30,7 @@
   "attendance_tracking": "Acompanhamento de Presença",
   "student_progress_monitoring": "Monitoramento do Progresso do Aluno",
   "fee_payment_management": "Gerenciamento de Pagamento de Taxas",
-  "certificates_and_reports": "Certificados e Relatórios",
+  "certificates": "Certificados",
   "parent_dashboard": "Painel dos Pais",
   "student_dashboard": "Painel do Aluno",
   "invoices": "Faturas",

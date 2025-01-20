@@ -147,7 +147,7 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
                     const SizedBox(height: 20),
                     _buildTextField(
                       controller: idController,
-                      label: localization.contact,
+                      label: localization.contact_school_id,
                       icon: Icons.call,
                       keyboardType: TextInputType.number,
                     ),

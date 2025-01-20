@@ -59,10 +59,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تتبع الحضور"),
         "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
         "cancelLabel": MessageLookupByLibrary.simpleMessage("إلغاء"),
-        "certificates_and_reports":
-            MessageLookupByLibrary.simpleMessage("الشهادات والتقارير"),
+        "certificates": MessageLookupByLibrary.simpleMessage("الشهادات"),
         "classes": MessageLookupByLibrary.simpleMessage("الفصول"),
         "contact": MessageLookupByLibrary.simpleMessage("التواصل"),
+        "contact_school_id":
+            MessageLookupByLibrary.simpleMessage("الاتصال / رقم تعريف المدرسة"),
         "dashboard_attendance": MessageLookupByLibrary.simpleMessage("الحضور"),
         "dashboard_grades": MessageLookupByLibrary.simpleMessage("الدرجات"),
         "dashboard_materials": MessageLookupByLibrary.simpleMessage("المواد"),
@@ -223,6 +224,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "todo_online_learning5":
             MessageLookupByLibrary.simpleMessage("التعلم عن بعد #05"),
         "todo_title": MessageLookupByLibrary.simpleMessage("المهام:"),
+        "transcript": MessageLookupByLibrary.simpleMessage("النص"),
         "tuitionFee": MessageLookupByLibrary.simpleMessage("الرسوم الدراسية"),
         "tuition_fee": MessageLookupByLibrary.simpleMessage("رسوم الدراسة"),
         "unknown": MessageLookupByLibrary.simpleMessage("غير معروف"),

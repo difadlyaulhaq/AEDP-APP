@@ -1,0 +1,20 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "generate-intl",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"pub",
+				"run",
+				"intl_utils:generate"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "silent"
+			}
+		}
+	]
+}

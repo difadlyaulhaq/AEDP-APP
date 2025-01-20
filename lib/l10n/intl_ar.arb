@@ -1,5 +1,7 @@
 {
   "@@locale": "ar",
+  "contact_school_id": "الاتصال / رقم تعريف المدرسة",
+   "transcript": "النص",
   "teacher_dashboard": "لوحة تحكم المعلم",
   "appTitle": "المكتبة الإلكترونية",
   "noFilesAvailable": "لا توجد ملفات متاحة.",
@@ -25,7 +27,7 @@
   "attendance_tracking": "تتبع الحضور",
   "student_progress_monitoring": "مراقبة تقدم الطالب",
   "fee_payment_management": "إدارة دفع الرسوم",
-  "certificates_and_reports": "الشهادات والتقارير",
+  "certificates": "الشهادات",
   "parent_dashboard": "لوحة تحكم الوالدين",
   "student_dashboard": "لوحة الطالب",
   "invoices": "الفواتير",

@@ -1,5 +1,7 @@
 {
   "@@locale": "en",
+   "contact_school_id": "Contact / School ID",
+  "transcript": "Transcript",
   "appTitle": "E-Library",
   "teacher_dashboard": "Teacher Dashboard",
   "noFilesAvailable": "No files available.",
@@ -27,7 +29,7 @@
   "attendance_tracking": "Attendance Tracking",
   "student_progress_monitoring": "Student Progress Monitoring",
   "fee_payment_management": "Fee Payment Management",
-  "certificates_and_reports": "Certificates and Reports",
+  "certificates": "Certificates",
    "parent_dashboard": "Parent Dashboard",
   "student_dashboard": "Student Dashboard",
   "invoices": "Invoices",

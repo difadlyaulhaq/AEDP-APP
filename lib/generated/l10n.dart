@@ -50,6 +50,26 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Contact / School ID`
+  String get contact_school_id {
+    return Intl.message(
+      'Contact / School ID',
+      name: 'contact_school_id',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transcript`
+  String get transcript {
+    return Intl.message(
+      'Transcript',
+      name: 'transcript',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `E-Library`
   String get appTitle {
     return Intl.message(
@@ -320,11 +340,11 @@ class S {
     );
   }
 
-  /// `Certificates and Reports`
-  String get certificates_and_reports {
+  /// `Certificates`
+  String get certificates {
     return Intl.message(
-      'Certificates and Reports',
-      name: 'certificates_and_reports',
+      'Certificates',
+      name: 'certificates',
       desc: '',
       args: [],
     );
