@@ -4,42 +4,60 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:open_file/open_file.dart';
-import 'package:project_aedp/bloc/auth/auth_bloc.dart';
-import 'package:project_aedp/bloc/auth/auth_state.dart';
+import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
 import 'package:project_aedp/bloc/transcript_downloads/transcript_downloads_bloc.dart';
 import 'package:project_aedp/generated/l10n.dart';
+import 'package:http/http.dart' as http;
+import '../../bloc/load_profile/profile_state.dart';
+import '../../bloc/transcript_downloads/transcript_item.dart';
 
-class TranscriptPage extends StatefulWidget {
-  const TranscriptPage({Key? key}) : super(key: key);
+class TranscriptPage extends StatelessWidget {
+  const TranscriptPage({super.key});
 
   @override
-  _TranscriptPageState createState() => _TranscriptPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) {
+        final profileBloc = context.read<LoadProfileBloc>();
+        final state = profileBloc.state;
+        String fatherName = 'Father Name'; // Default value
+
+        if (state is LoadProfileLoaded &&
+            state.profileData['role'] == 'parent') {
+          fatherName = state.profileData['fullName'] ?? 'Father Name';
+        }
+
+        return TranscriptDownloadsBloc()..add(LoadTranscripts(fatherName));
+      },
+      child: const TranscriptView(),
+    );
+  }
 }
 
-class _TranscriptPageState extends State<TranscriptPage> {
+class TranscriptView extends StatelessWidget {
+  const TranscriptView({super.key});
+
   Future<bool> _requestStoragePermission(BuildContext context) async {
     if (Platform.isAndroid) {
-      final storagePermissionStatus = await Permission.storage.request();
-      if (storagePermissionStatus.isGranted) {
+      // Handle permissions for Android 13 and above
+      if (await Permission.photos.request().isGranted &&
+          await Permission.videos.request().isGranted &&
+          await Permission.audio.request().isGranted) {
+        return true;
+      }
+      // Handle permissions for Android 12 and below
+      if (await Permission.storage.request().isGranted) {
         return true;
       }
 
-      if (await Permission.storage.isDenied ||
-          await Permission.mediaLibrary.isDenied) {
-        final mediaPermissionStatus = await Permission.mediaLibrary.request();
-        if (mediaPermissionStatus.isGranted) {
-          return true;
-        }
-      }
-
-      if (await Permission.storage.isPermanentlyDenied ||
-          await Permission.mediaLibrary.isPermanentlyDenied) {
+      // Handle permanently denied permissions
+      if (await Permission.storage.isPermanentlyDenied) {
         final bool shouldOpenSettings = await showDialog(
               context: context,
               builder: (context) => AlertDialog(
                 title: const Text('Storage Permission Required'),
                 content: const Text(
-                  'This permission is required to download and save files. Please enable it in settings.',
+                  'This permission is required to download and save certificates. Please enable it in settings.',
                 ),
                 actions: [
                   TextButton(
@@ -59,7 +77,6 @@ class _TranscriptPageState extends State<TranscriptPage> {
           await openAppSettings();
         }
       }
-
       return false;
     }
     return true;
@@ -81,34 +98,31 @@ class _TranscriptPageState extends State<TranscriptPage> {
     }
   }
 
-  Future<void> _downloadFile(BuildContext context, String filePath) async {
+  Future<void> _downloadTranscript(
+      BuildContext context, TranscriptItem item) async {
     try {
       final downloadPath = await _getDownloadPath(context);
       if (downloadPath == null) {
         throw Exception('Storage permission not granted');
       }
 
-      context
-          .read<TranscriptDownloadsBloc>()
-          .add(DownloadTranscriptFile(filePath));
+      const baseUrl = "https://gold-tiger-632820.hostingersite.com/";
+      final downloadUrl = Uri.parse(baseUrl).resolve(item.filePath).toString();
 
-      await for (final state
-          in context.read<TranscriptDownloadsBloc>().stream) {
-        if (state is TranscriptDownloadSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Downloaded to $downloadPath')),
-          );
-          final file = File('$downloadPath/${filePath.split('/').last}');
-          final result = await OpenFile.open(file.path);
-          if (result.type != ResultType.done) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to open the file')),
-            );
-          }
-          break;
-        } else if (state is TranscriptDownloadsError) {
-          throw Exception(state.message);
-        }
+      final response = await http.get(Uri.parse(downloadUrl));
+      if (response.statusCode == 200) {
+        final fileName = item.filePath.split('/').last;
+        final filePath = '$downloadPath/$fileName';
+        final file = File(filePath);
+        await file.writeAsBytes(response.bodyBytes);
+
+        await OpenFile.open(filePath);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Downloaded to $filePath')),
+        );
+      } else {
+        throw Exception('Failed to download file: ${response.statusCode}');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -117,106 +131,74 @@ class _TranscriptPageState extends State<TranscriptPage> {
     }
   }
 
-  String getUserId() {
-    final authState = context.read<AuthBloc>().state;
-    if (authState is AuthLoginSuccess) {
-      return authState.userId.toString();
-    } else {
-      throw Exception('User not logged in');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).transcript),
-        centerTitle: true,
-        backgroundColor: const Color(0xFF1E71A2),
       ),
-      body: BlocProvider(
-        create: (context) {
-          final bloc = TranscriptDownloadsBloc();
-          final authState = context.read<AuthBloc>().state;
-          if (authState is AuthLoginSuccess) {
-            final userId = authState.userId;
-            bloc.add(LoadTranscriptFiles(userId.toString()));
-          } else {
+      body: BlocConsumer<TranscriptDownloadsBloc, TranscriptDownloadsState>(
+        listener: (context, state) {
+          if (state is TranscriptDownloadsError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content:
-                      Text(S.of(context).errorLabel('user not logged in'))),
+              SnackBar(content: Text(state.message)),
             );
           }
-          return bloc;
         },
-        child: BlocConsumer<TranscriptDownloadsBloc, TranscriptDownloadsState>(
-          listener: (context, state) {
-            if (state is TranscriptDownloadsError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
-            }
-          },
-          builder: (context, state) {
-            if (state is TranscriptDownloadsLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+        builder: (context, state) {
+          if (state is TranscriptsLoading || 
+          state is TranscriptsDownloading) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            if (state is TranscriptDownloadsLoaded) {
-              if (state.files.isEmpty) {
-                return Center(
-                  child: Text(
-                    S.of(context).noFilesAvailable,
-                    style: const TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                );
-              }
-
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ListView.builder(
-                  itemCount: state.files.length,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemBuilder: (context, index) {
-                    final file = state.files[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: Card(
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: ListTile(
-                          leading: const Icon(Icons.file_present,
-                              color: Colors.deepPurple),
-                          title: Text(
-                            file.name,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          trailing: IconButton(
-                            icon:
-                                const Icon(Icons.download, color: Colors.green),
-                            onPressed: () =>
-                                _downloadFile(context, file.filePath),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+          if (state is TranscriptsLoaded ) {
+            if (state.transcripts.isEmpty) {
+              return Center(
+                child: Text(
+                  S.of(context).noFilesAvailable,
+                  style: const TextStyle(fontSize: 18, color: Colors.grey),
                 ),
               );
             }
 
-            return Center(
-              child: Text(
-                S.of(context).loadingLabel,
-                style: const TextStyle(fontSize: 18, color: Colors.blue),
-              ),
+            return ListView.builder(
+              itemCount: state.transcripts.length,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemBuilder: (context, index) {
+                final file = state.transcripts[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ListTile(
+                      leading: const Icon(Icons.file_present,
+                          color: Colors.deepPurple),
+                      title: Text(
+                        file.name,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.download, color: Colors.green),
+                        onPressed: () => _downloadTranscript(context, file),
+                      ),
+                    ),
+                  ),
+                );
+              },
             );
-          },
-        ),
+          }
+
+          return Center(
+            child: Text(
+              S.of(context).loadingLabel,
+              style: const TextStyle(fontSize: 18, color: Colors.blue),
+            ),
+          );
+        },
       ),
     );
   }

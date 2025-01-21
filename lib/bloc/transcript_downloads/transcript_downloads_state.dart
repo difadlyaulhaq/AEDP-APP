@@ -1,46 +1,41 @@
 part of 'transcript_downloads_bloc.dart';
 
-sealed class TranscriptDownloadsState extends Equatable {
+abstract class TranscriptDownloadsState extends Equatable {
   const TranscriptDownloadsState();
-  
+
   @override
   List<Object> get props => [];
 }
 
-final class TranscriptDownloadsInitial extends TranscriptDownloadsState {}
+class TranscriptDownloadsInitial extends TranscriptDownloadsState {}
 
-final class TranscriptDownloadsLoading extends TranscriptDownloadsState {}
+class TranscriptsLoading extends TranscriptDownloadsState {}
 
-final class TranscriptDownloadsLoaded extends TranscriptDownloadsState {
-  final List<TranscriptFile> files;
+class TranscriptsDownloading extends TranscriptDownloadsState {}
 
-  const TranscriptDownloadsLoaded({required this.files});
+class TranscriptsLoaded extends TranscriptDownloadsState {
+  final List<TranscriptItem> transcripts;
+  
+  const TranscriptsLoaded({required this.transcripts});
 
   @override
-  List<Object> get props => [files];
+  List<Object> get props => [transcripts];
 }
 
-final class TranscriptDownloadsError extends TranscriptDownloadsState {
+class TranscriptDownloaded extends TranscriptDownloadsState {
+  final String filePath;
+
+  const TranscriptDownloaded(this.filePath);
+
+  @override
+  List<Object> get props => [filePath];
+}
+
+class TranscriptDownloadsError extends TranscriptDownloadsState {
   final String message;
 
   const TranscriptDownloadsError(this.message);
 
   @override
   List<Object> get props => [message];
-}
-
-final class TranscriptDownloadSuccess extends TranscriptDownloadsState {
-  final String filePath;
-
-  const TranscriptDownloadSuccess(this.filePath);
-
-  @override
-  List<Object> get props => [filePath];
-}
-
-final class TranscriptDownloadInProgress extends TranscriptDownloadsState {
-  const TranscriptDownloadInProgress();
-
-  @override
-  List<Object> get props => [];
 }

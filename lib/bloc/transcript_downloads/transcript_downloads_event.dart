@@ -7,20 +7,22 @@ abstract class TranscriptDownloadsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadTranscriptFiles extends TranscriptDownloadsEvent {
-  final String userId;
+class LoadTranscripts extends TranscriptDownloadsEvent {
+  final String fatherName;
 
-  const LoadTranscriptFiles(this.userId);
+  const LoadTranscripts(this.fatherName);
 
   @override
-  List<Object> get props => [userId];
+  List<Object> get props => [fatherName];
 }
 
-class DownloadTranscriptFile extends TranscriptDownloadsEvent {
-  final String filePath;
+class DownloadTranscript extends TranscriptDownloadsEvent {
+  final String fatherName;
+  final String pdfPath;
+  final BuildContext context;
 
-  const DownloadTranscriptFile(this.filePath);
-
+  const DownloadTranscript(this.fatherName, this.pdfPath, this.context);
+  
   @override
-  List<Object> get props => [filePath];
+  List<Object> get props => [fatherName, pdfPath, context];
 }
