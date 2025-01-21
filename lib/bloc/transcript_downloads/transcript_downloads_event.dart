@@ -26,3 +26,12 @@ class DownloadTranscript extends TranscriptDownloadsEvent {
   @override
   List<Object> get props => [fatherName, pdfPath, context];
 }
+
+class ReloadTranscripts extends TranscriptDownloadsEvent {
+  final String fatherName;
+
+  const ReloadTranscripts(this.fatherName);
+
+  @override
+  List<Object> get props => [fatherName];
+}

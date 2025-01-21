@@ -100,6 +100,14 @@ class TranscriptView extends StatelessWidget {
 
   Future<void> _downloadTranscript(
       BuildContext context, TranscriptItem item) async {
+    final bloc = context.read<TranscriptDownloadsBloc>();
+    final state = context.read<LoadProfileBloc>().state;
+
+    String fatherName = 'Father Name';
+    if (state is LoadProfileLoaded && state.profileData['role'] == 'parent') {
+      fatherName = state.profileData['fullName'] ?? 'Father Name';
+    }
+
     try {
       final downloadPath = await _getDownloadPath(context);
       if (downloadPath == null) {
@@ -121,6 +129,9 @@ class TranscriptView extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Downloaded to $filePath')),
         );
+
+        // Reload transcripts
+        bloc.add(ReloadTranscripts(fatherName));
       } else {
         throw Exception('Failed to download file: ${response.statusCode}');
       }
