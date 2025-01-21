@@ -17,7 +17,36 @@ class CertificatesDownloadBloc extends Bloc<CertificatesDownloadEvent, Certifica
   CertificatesDownloadBloc() : super(CertificatesDownloadInitial()) {
     on<LoadCertificates>(_onLoadCertificates);
     on<DownloadCertificate>(_onDownloadCertificate);
+     on<ReloadCertificates>(_onReloadCertificates);
   }
+ 
+
+Future<void> _onReloadCertificates(
+  ReloadCertificates event,
+  Emitter<CertificatesDownloadState> emit,
+) async {
+  emit(CertificatesLoading());
+  try {
+    // Query ulang data sertifikat
+    final certificatesSnapshot = await _firestore
+        .collection('certificates')
+        .where('father_name', isEqualTo: event.fatherName)
+        .get();
+
+    final certificates = certificatesSnapshot.docs.map((doc) {
+      final data = doc.data();
+      return CertificateItem(
+        data['father_name'] ?? 'Unknown',
+        data['file_name'] ?? 'Unknown File',
+        data['pdf_path'] ?? '',
+      );
+    }).toList();
+
+    emit(CertificatesLoaded(certificates));
+  } catch (e) {
+    emit(CertificatesDownloadError('Error reloading certificates: $e'));
+  }
+}
 
   Future<void> _onLoadCertificates(
     LoadCertificates event,

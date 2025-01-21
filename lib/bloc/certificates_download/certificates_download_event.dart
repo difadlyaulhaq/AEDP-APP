@@ -26,3 +26,12 @@ class DownloadCertificate extends CertificatesDownloadEvent {
   @override
   List<Object> get props => [fatherName, pdfPath, context];
 }
+
+class ReloadCertificates extends CertificatesDownloadEvent {
+  final String fatherName;
+
+  const ReloadCertificates(this.fatherName);
+
+  @override
+  List<Object> get props => [fatherName];
+}

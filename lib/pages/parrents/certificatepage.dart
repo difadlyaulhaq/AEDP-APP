@@ -100,37 +100,48 @@ class CertificateView extends StatelessWidget {
   }
 
   Future<void> _downloadCertificate(
-      BuildContext context, CertificateItem item) async {
-    try {
-      final downloadPath = await _getDownloadPath(context);
-      if (downloadPath == null) {
-        throw Exception('Storage permission not granted');
-      }
+    BuildContext context, CertificateItem item) async {
+  final bloc = context.read<CertificatesDownloadBloc>();
+  final state = context.read<LoadProfileBloc>().state;
 
-      const baseUrl = "https://gold-tiger-632820.hostingersite.com/";
-      final downloadUrl = Uri.parse(baseUrl).resolve(item.pdfPath).toString();
-
-      final response = await http.get(Uri.parse(downloadUrl));
-      if (response.statusCode == 200) {
-        final fileName = item.pdfPath.split('/').last;
-        final filePath = '$downloadPath/$fileName';
-        final file = File(filePath);
-        await file.writeAsBytes(response.bodyBytes);
-
-        await OpenFile.open(filePath);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Downloaded to $filePath')),
-        );
-      } else {
-        throw Exception('Failed to download file: ${response.statusCode}');
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
-    }
+  String fatherName = 'Father Name';
+  if (state is LoadProfileLoaded && state.profileData['role'] == 'parent') {
+    fatherName = state.profileData['fullName'] ?? 'Father Name';
   }
+
+  try {
+    final downloadPath = await _getDownloadPath(context);
+    if (downloadPath == null) {
+      throw Exception('Storage permission not granted');
+    }
+
+    const baseUrl = "https://gold-tiger-632820.hostingersite.com/";
+    final downloadUrl = Uri.parse(baseUrl).resolve(item.pdfPath).toString();
+
+    final response = await http.get(Uri.parse(downloadUrl));
+    if (response.statusCode == 200) {
+      final fileName = item.pdfPath.split('/').last;
+      final filePath = '$downloadPath/$fileName';
+      final file = File(filePath);
+      await file.writeAsBytes(response.bodyBytes);
+
+      await OpenFile.open(filePath);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Downloaded to $filePath')),
+      );
+
+      // Reload certificates
+      bloc.add(ReloadCertificates(fatherName));
+    } else {
+      throw Exception('Failed to download file: ${response.statusCode}');
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(e.toString())),
+    );
+  }
+}
 
   @override
   Widget build(BuildContext context) {
