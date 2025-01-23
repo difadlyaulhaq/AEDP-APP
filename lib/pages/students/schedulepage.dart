@@ -19,45 +19,15 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
+  String? _downloadingItemId;
+
   Future<bool> _requestStoragePermission(BuildContext context) async {
     if (Platform.isAndroid) {
-      // Handle permissions for Android 13 and above
-      if (await Permission.photos.request().isGranted &&
-          await Permission.videos.request().isGranted &&
-          await Permission.audio.request().isGranted) {
-        return true;
-      }
-      // Handle permissions for Android 12 and below
       if (await Permission.storage.request().isGranted) {
         return true;
       }
-
-      // Handle permanently denied permissions
       if (await Permission.storage.isPermanentlyDenied) {
-        final bool shouldOpenSettings = await showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Storage Permission Required'),
-                content: const Text(
-                  'This permission is required to download and save schedules. Please enable it in settings.',
-                ),
-                actions: [
-                  TextButton(
-                    child: const Text('Cancel'),
-                    onPressed: () => Navigator.of(context).pop(false),
-                  ),
-                  TextButton(
-                    child: const Text('Open Settings'),
-                    onPressed: () => Navigator.of(context).pop(true),
-                  ),
-                ],
-              ),
-            ) ??
-            false;
-
-        if (shouldOpenSettings) {
-          await openAppSettings();
-        }
+        await openAppSettings();
       }
       return false;
     }
@@ -80,8 +50,13 @@ class _SchedulePageState extends State<SchedulePage> {
     }
   }
 
-  Future<void> _downloadAndOpenSchedule(BuildContext context, String pdfPath) async {
+  Future<void> _downloadAndOpenSchedule(
+      BuildContext context, String pdfPath, String itemId) async {
     try {
+      setState(() {
+        _downloadingItemId = itemId;
+      });
+
       final downloadPath = await _getDownloadPath(context);
       if (downloadPath == null) {
         throw Exception('Storage permission not granted');
@@ -106,6 +81,10 @@ class _SchedulePageState extends State<SchedulePage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );
+    } finally {
+      setState(() {
+        _downloadingItemId = null;
+      });
     }
   }
 
@@ -167,6 +146,8 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   Widget _buildClassCard(Map<String, dynamic> classInfo) {
+    final itemId = classInfo['id'] ?? '';
+
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -192,14 +173,19 @@ class _SchedulePageState extends State<SchedulePage> {
             ),
             const SizedBox(height: 8),
             if (classInfo['pdf_path'] != null)
-              ElevatedButton.icon(
-                onPressed: () => _downloadAndOpenSchedule(
-                  context,
-                  classInfo['pdf_path'],
-                ),
-                icon: const Icon(Icons.download),
-                label: const Text('Download Schedule'),
-              ),
+              _downloadingItemId == itemId
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ElevatedButton.icon(
+                      onPressed: () => _downloadAndOpenSchedule(
+                        context,
+                        classInfo['pdf_path'],
+                        itemId,
+                      ),
+                      icon: const Icon(Icons.download),
+                      label: const Text('Download Schedule'),
+                    ),
           ],
         ),
       ),
