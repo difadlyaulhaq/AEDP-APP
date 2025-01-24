@@ -82,7 +82,7 @@ class TeacherDetailMaterial extends StatelessWidget {
                     ),
                     const PopupMenuItem<String>(
                       value: 'upload_assignment',
-                      child: Text('Upload Assignment'),
+                      child: Text('Upload Assignment '),
                     ),
                   ],
                 ),
@@ -184,114 +184,93 @@ class TeacherDetailMaterial extends StatelessWidget {
   }
 
   void showUploadDialog(BuildContext context, String title, String subject) {
-    final TextEditingController titleController = TextEditingController();
-    final TextEditingController descriptionController = TextEditingController();
-    String? filePath;
-
-    // Store the scaffold context
-    final scaffoldMessengerContext =
-        ScaffoldMessenger.of(context); // Rename to avoid conflict
+    final titleController = TextEditingController();
+    final descriptionController = TextEditingController();
+    final fileLinkController = TextEditingController();
 
     showDialog(
       context: context,
-      builder: (dialogContext) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: Text(title),
-              content: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: titleController,
-                      decoration: const InputDecoration(
-                        labelText: 'Title',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: descriptionController,
-                      maxLines: 3,
-                      decoration: const InputDecoration(
-                        labelText: 'Description',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      decoration: const InputDecoration(
-                        labelText: 'File Link',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          filePath = value;
-                        });
-                      },
-                    ),
-                  ],
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Title',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext),
-                  child: const Text('Cancel'),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: descriptionController,
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                    labelText: 'Description',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    try {
-                      print('Upload button pressed'); // Fix syntax error
-                      if (titleController.text.isNotEmpty &&
-                          descriptionController.text.isNotEmpty &&
-                          filePath != null &&
-                          Uri.tryParse(filePath!)?.hasAbsolutePath == true) {
-                        print('All fields validated');
-                        final material = MaterialModel(
-                          id: DateTime.now().toIso8601String(),
-                          title: titleController.text,
-                          description: descriptionController.text,
-                          fileLink: filePath!,
-                          createdAt: DateTime.now(),
-                          subjectId:
-                              subject, // Add the required subjectId argument
-                        );
-
-                        print('Material model created: ${material.toMap()}');
-                        BlocProvider.of<MaterialBloc>(
-                                scaffoldMessengerContext.context)
-                            .add(AddMaterial(material));
-                        print('Add material event dispatched');
-                        Navigator.pop(dialogContext); // Fix syntax error
-                      } else {
-                        print('Validation failed');
-                        Navigator.pop(dialogContext);
-                        ScaffoldMessenger.of(scaffoldMessengerContext.context)
-                            .showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                                'Please fill all fields and provide a valid file link.'),
-                          ),
-                        );
-                      }
-                    } catch (e) {
-                      print('Error during upload: $e');
-                      ScaffoldMessenger.of(scaffoldMessengerContext.context)
-                          .showSnackBar(
-                        SnackBar(
-                          content: Text('Error uploading material: $e'),
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text('Upload'),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: fileLinkController,
+                  decoration: const InputDecoration(
+                    labelText: 'File Link',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ],
-            );
-          },
-        );
-      },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final title = titleController.text.trim();
+                final description = descriptionController.text.trim();
+                final fileLink = fileLinkController.text.trim();
+
+                final isValid = title.isNotEmpty &&
+                    description.isNotEmpty &&
+                    fileLink.isNotEmpty &&
+                    Uri.tryParse(fileLink)?.hasAbsolutePath == true;
+
+                if (isValid) {
+                  final material = MaterialModel(
+                    id: DateTime.now().toIso8601String(),
+                    title: title,
+                    description: description,
+                    fileLink: fileLink,
+                    createdAt: DateTime.now(),
+                    subjectId: subject,
+                  );
+
+                  BlocProvider.of<MaterialBloc>(context)
+                      .add(AddMaterial(material));
+                  Navigator.pop(dialogContext);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Material uploaded successfully!')),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          'Please fill all fields and provide a valid file link.'),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Upload'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

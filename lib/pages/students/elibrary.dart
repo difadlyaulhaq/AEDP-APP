@@ -19,6 +19,8 @@ class ELibraryPage extends StatefulWidget {
 }
 
 class _ELibraryPageState extends State<ELibraryPage> {
+  bool _isDownloading = false; // Menyimpan status unduhan
+
   Future<bool> _requestStoragePermission(BuildContext context) async {
     if (Platform.isAndroid) {
       final storagePermissionStatus = await Permission.storage.request();
@@ -81,13 +83,17 @@ class _ELibraryPageState extends State<ELibraryPage> {
   }
 
   Future<void> _downloadFile(BuildContext context, String filePath) async {
+    setState(() {
+      _isDownloading = true; // Menampilkan indikator proses
+    });
+
     try {
       final downloadPath = await _getDownloadPath(context);
       if (downloadPath == null) {
         throw Exception('Storage permission not granted');
       }
 
-      context.read<LibraryDownloadBloc>().add(DownloadFile(filePath));
+      context.read<LibraryDownloadBloc>().add(DownloadFile(filePath, getUserId()));
 
       await for (final state in context.read<LibraryDownloadBloc>().stream) {
         if (state is LibraryDownloadSuccess) {
@@ -111,6 +117,10 @@ class _ELibraryPageState extends State<ELibraryPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );
+    } finally {
+      setState(() {
+        _isDownloading = false; // Menyembunyikan indikator proses
+      });
     }
   }
 
@@ -131,94 +141,87 @@ class _ELibraryPageState extends State<ELibraryPage> {
         centerTitle: true,
         backgroundColor: const Color(0xFF1E71A2),
       ),
-      body: BlocProvider(
-        create: (context) {
-          final bloc = LibraryDownloadBloc();
-          final authState = context.read<AuthBloc>().state;
-          if (authState is AuthLoginSuccess) {
-            final userId = authState.userId;
-            bloc.add(LoadLibraryFiles(userId.toString()));
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(S.of(context).errorLabel('user not logged in'))),
-            );
-          }
-          if (authState is AuthLoginSuccess && authState.role.toLowerCase() == 'student') {
-            bloc.add(LoadLibraryFiles(authState.userId.toString()));
-          } else if (authState is AuthLoginSuccess && authState.role.toLowerCase() == 'teacher') {
-            bloc.add(LoadLibraryFiles(authState.userId.toString()));
-          } else if (authState is AuthLoginSuccess && authState.role.toLowerCase() == 'parent') {
-            bloc.add(LoadLibraryFiles(authState.userId.toString()));
-          }else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(S.of(context).errorLabel('user role not found'))),
-            );
-          }
-          return bloc;
-        },
-        child: BlocConsumer<LibraryDownloadBloc, LibraryDownloadState>(
-          listener: (context, state) {
-            if (state is LibraryDownloadError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
-            }
-          },
-          builder: (context, state) {
-            if (state is LibraryDownloadLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (state is LibraryDownloadLoaded) {
-              if (state.files.isEmpty) {
-                return Center(
-                  child: Text(
-                    S.of(context).noFilesAvailable,
-                    style: const TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
+      body: Stack(
+        children: [
+          BlocProvider(
+            create: (context) {
+              final bloc = LibraryDownloadBloc();
+              final authState = context.read<AuthBloc>().state;
+              if (authState is AuthLoginSuccess) {
+                final userId = authState.userId;
+                bloc.add(LoadLibraryFiles(userId.toString()));
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(S.of(context).errorLabel('user not logged in'))),
                 );
               }
+              return bloc;
+            },
+            child: BlocBuilder<LibraryDownloadBloc, LibraryDownloadState>(
+              builder: (context, state) {
+                if (state is LibraryDownloadLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ListView.builder(
-                  itemCount: state.files.length,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemBuilder: (context, index) {
-                    final file = state.files[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: Card(
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: ListTile(
-                          leading: const Icon(Icons.file_present, color: Colors.deepPurple),
-                          title: Text(
-                            file.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.download, color: Colors.green),
-                            onPressed: () => _downloadFile(context, file.filePath),
-                          ),
-                        ),
+                if (state is LibraryDownloadLoaded) {
+                  if (state.files.isEmpty) {
+                    return Center(
+                      child: Text(
+                        S.of(context).noFilesAvailable,
+                        style: const TextStyle(fontSize: 18, color: Colors.grey),
                       ),
                     );
-                  },
-                ),
-              );
-            }
+                  }
 
-            return Center(
-              child: Text(
-                S.of(context).loadingLabel,
-                style: const TextStyle(fontSize: 18, color: Colors.blue),
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: ListView.builder(
+                      itemCount: state.files.length,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemBuilder: (context, index) {
+                        final file = state.files[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16.0),
+                          child: Card(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: ListTile(
+                              leading: const Icon(Icons.file_present, color: Colors.deepPurple),
+                              title: Text(
+                                file.name,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.download, color: Colors.green),
+                                onPressed: () => _downloadFile(context, file.filePath),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
+
+                return Center(
+                  child: Text(
+                    S.of(context).loadingLabel,
+                    style: const TextStyle(fontSize: 18, color: Colors.blue),
+                  ),
+                );
+              },
+            ),
+          ),
+          if (_isDownloading)
+            Container(
+              color: Colors.black54,
+              child: const Center(
+                child: CircularProgressIndicator(),
               ),
-            );
-          },
-        ),
+            ),
+        ],
       ),
     );
   }
