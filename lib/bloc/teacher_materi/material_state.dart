@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:project_aedp/bloc/teacher_materi/subject_model.dart';
 import 'material_model.dart';
 
 abstract class MaterialState extends Equatable {
@@ -26,4 +27,8 @@ class MaterialError extends MaterialState {
 
   @override
   List<Object> get props => [errorMessage];
+}
+class SubjectsLoaded extends MaterialState {
+  final List<SubjectModel> subjects;
+  SubjectsLoaded(this.subjects);
 }

@@ -1,20 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_aedp/bloc/teacher_materi/material_event.dart';
+import 'package:project_aedp/bloc/teacher_materi/material_state.dart' as custom;
+import 'package:project_aedp/bloc/teacher_materi/subject_model.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/teacher/teacher_detailmaterial.dart';
 import '../../bloc/teacher_materi/teacher_bloc.dart';
 
 class TeacherMaterialPage extends StatefulWidget {
-  const TeacherMaterialPage({super.key});
+  final String teacherClasses; // Add this parameter
+
+  const TeacherMaterialPage({
+    super.key,
+    required this.teacherClasses,
+  });
 
   @override
   TeacherMaterialPageState createState() => TeacherMaterialPageState();
 }
 
 class TeacherMaterialPageState extends State<TeacherMaterialPage> {
-  List<Map<String, dynamic>> filteredSubjects = List.from(subjects);
   String selectedFilter = "All";
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch subjects when the page loads
+    context.read<MaterialBloc>().add(
+          FetchSubjects(
+            isTeacher: true,
+            teacherClasses: widget.teacherClasses,
+            studentGradeClass: '', // Empty for teachers
+          ),
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,23 +81,35 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
           ),
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: screenWidth * 0.04,
-          vertical: screenHeight * 0.02,
-        ),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: screenWidth > 600 ? 3 : 2,
-            crossAxisSpacing: screenWidth * 0.04,
-            mainAxisSpacing: screenHeight * 0.02,
-          ),
-          itemCount: filteredSubjects.length,
-          itemBuilder: (context, index) {
-            final subject = filteredSubjects[index];
-            return _buildCardItem(context, subject['name'], subject['icon']);
-          },
-        ),
+      body: BlocBuilder<MaterialBloc, custom.MaterialState>(
+        builder: (context, state) {
+          if (state is custom.MaterialLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is custom.SubjectsLoaded) {
+            final subjects = state.subjects;
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.04,
+                vertical: screenHeight * 0.02,
+              ),
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: screenWidth > 600 ? 3 : 2,
+                  crossAxisSpacing: screenWidth * 0.04,
+                  mainAxisSpacing: screenHeight * 0.02,
+                ),
+                itemCount: subjects.length,
+                itemBuilder: (context, index) {
+                  final subject = subjects[index];
+                  return _buildCardItem(context, subject);
+                },
+              ),
+            );
+          } else if (state is custom.SubjectsLoaded) {
+            return Center(child: Text('Error: ${state is custom.MaterialError}'));
+          }
+          return const Center(child: Text('No subjects available'));
+        },
       ),
     );
   }
@@ -89,30 +120,30 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
       builder: (context) {
         return AlertDialog(
           title: Text(S.of(context).filterSubjects),
-          content: DropdownButton<String>(
-            value: selectedFilter,
-            items: <String>[
-              S.of(context).all,
-              S.of(context).math,
-              S.of(context).science,
-              S.of(context).history,
-              S.of(context).geography,
-              S.of(context).art,
-              S.of(context).music,
-              S.of(context).arabic,
-              S.of(context).english
-            ].map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (value) {
-              setState(() {
-                selectedFilter = value!;
-                _applyFilter(selectedFilter);
-              });
-              Navigator.pop(context);
+          content: BlocBuilder<MaterialBloc, custom.MaterialState>(
+            builder: (context, state) {
+              if (state is custom.SubjectsLoaded) {
+                final subjects = state.subjects;
+                final subjectNames = ['All', ...subjects.map((s) => s.subjectName)];
+                
+                return DropdownButton<String>(
+                  value: selectedFilter,
+                  items: subjectNames.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedFilter = value!;
+                      // Implement filtering logic here if needed
+                    });
+                    Navigator.pop(context);
+                  },
+                );
+              }
+              return const CircularProgressIndicator();
             },
           ),
           actions: [
@@ -126,22 +157,7 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
     );
   }
 
-  void _applyFilter(String filter) {
-    if (filter == S.of(context).all) {
-      setState(() {
-        filteredSubjects = List.from(subjects);
-      });
-    } else {
-      setState(() {
-        filteredSubjects = subjects
-            .where((subject) =>
-                subject['name'].toLowerCase().contains(filter.toLowerCase()))
-            .toList();
-      });
-    }
-  }
-
-  Widget _buildCardItem(BuildContext context, String subject, IconData icon) {
+  Widget _buildCardItem(BuildContext context, SubjectModel subject) {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return InkWell(
@@ -149,10 +165,9 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) =>
-                  MaterialBloc()..add(FetchMaterials(subjectId: subject)),
-              child: TeacherDetailMaterial(subject: subject),
+            builder: (context) => TeacherDetailMaterial(
+              subject: subject.subjectName,
+              subjectId: subject.id,
             ),
           ),
         );
@@ -174,20 +189,22 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                icon,
-                color: Colors.white,
-                size: screenWidth * 0.1,
-              ),
               SizedBox(height: screenWidth * 0.02),
               Text(
-                subject,
+                subject.subjectName,
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: screenWidth * 0.045,
                 ),
                 textAlign: TextAlign.center,
+              ),
+              Text(
+                'Grade: ${subject.grade}',
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: screenWidth * 0.035,
+                ),
               ),
             ],
           ),
@@ -196,7 +213,6 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
     );
   }
 }
-
 class CustomAppBarClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
@@ -220,12 +236,12 @@ class CustomAppBarClipper extends CustomClipper<Path> {
 }
 
 final List<Map<String, dynamic>> subjects = [
-  {'name': S.current.history, 'icon': Icons.history_edu},
-  {'name': S.current.math, 'icon': Icons.calculate},
-  {'name': S.current.science, 'icon': Icons.science},
-  {'name': S.current.art, 'icon': Icons.brush},
-  {'name': S.current.arabic, 'icon': Icons.language},
-  {'name': S.current.music, 'icon': Icons.music_note},
-  {'name': S.current.geography, 'icon': Icons.public},
-  {'name': S.current.english, 'icon': Icons.book},
+  {'name': S.current.history},
+  {'name': S.current.math},
+  {'name': S.current.science},
+  {'name': S.current.art},
+  {'name': S.current.arabic},
+  {'name': S.current.music},
+  {'name': S.current.geography},
+  {'name': S.current.english},
 ];

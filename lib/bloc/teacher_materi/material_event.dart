@@ -23,3 +23,14 @@ class AddMaterial extends MaterialEvent {
   @override
   List<Object?> get props => [material];
 }
+class FetchSubjects extends MaterialEvent {
+  final bool isTeacher;
+  final String teacherClasses; // Classes from the teacher
+  final String studentGradeClass; // Grade class for students
+
+  FetchSubjects({
+    required this.isTeacher,
+    required this.teacherClasses,
+    required this.studentGradeClass,
+  });
+}
