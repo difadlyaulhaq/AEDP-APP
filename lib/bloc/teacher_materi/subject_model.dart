@@ -10,12 +10,18 @@ class SubjectModel {
   });
 
   factory SubjectModel.fromMap(String id, Map<String, dynamic> data) {
-    return SubjectModel(
-      id: id,
-      subjectName: data['subject_name'],
-      grade: data['grade'],
-    );
+  if (!data.containsKey('grade')) {
+    print("⚠️ Warning: Subject ${id} is missing 'grade' field!");
   }
+
+  return SubjectModel(
+    id: id,
+    subjectName: data['subject_name'] ?? 'Unknown Subject',
+    grade: data['grade']?.toString().trim() ?? 'Unknown Grade',  // Handle null values
+  );
+}
+
+
 
   Map<String, dynamic> toMap() {
     return {

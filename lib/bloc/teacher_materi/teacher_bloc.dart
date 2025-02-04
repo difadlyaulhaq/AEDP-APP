@@ -30,33 +30,43 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
     });
 
     // Fetch subjects based on filtering rules
-    on<FetchSubjects>((event, emit) async {
-      try {
-        emit(MaterialLoading());
+   on<FetchSubjects>((event, emit) async {
+  try {
+    emit(MaterialLoading());
 
-        Query query = firestore.collection('subjects');
+    Query query = firestore.collection('subjects');
 
-        // Check if the user is a teacher or student
-        if (event.isTeacher) {
-          // Filter by classes (split by ",")
-          List<String> classes = event.teacherClasses.split(',');
-          query = query.where('grade', whereIn: classes);
-        } else {
-          // Filter by grade_class for students
-          query = query.where('grade', isEqualTo: event.studentGradeClass);
-        }
+    if (event.isTeacher) {
+      List<String> classes = event.teacherClasses.split(',');
+      query = query.where('grade', whereIn: classes);
+    } else {
+      query = query.where('grade', isEqualTo: event.studentGradeClass);
+    }
 
-        final snapshot = await query.get();
+final snapshot = await query.get();
+  print(snapshot.docs);
+snapshot.docs.forEach((doc) {
+  print("Firestore Subject I : ${doc.id} | Data: ${doc.data()}");
+});
 
-        final subjects = snapshot.docs
-            .map((doc) => SubjectModel.fromMap(doc.id, doc.data() as Map<String, dynamic>))
-            .toList();
 
-        emit(SubjectsLoaded(subjects));
-      } catch (e) {
-        emit(MaterialError(e.toString()));
-      }
+    // Debug: Print jumlah data yang ditemukan
+    print("Subjects fetched count: ${snapshot.docs.length}");
+    snapshot.docs.forEach((doc) {
+      print("Subject: ${doc.id} | Data: ${doc.data()}");
     });
+
+    final subjects = snapshot.docs.map(
+      (doc) => SubjectModel.fromMap(doc.id, doc.data() as Map<String, dynamic>)
+    ).toList();
+
+    emit(SubjectsLoaded(subjects));
+  } catch (e) {
+    print("Error fetching subjects: $e");
+    emit(MaterialError(e.toString()));
+  }
+});
+
 
     // Add new material
     on<AddMaterial>((event, emit) async {

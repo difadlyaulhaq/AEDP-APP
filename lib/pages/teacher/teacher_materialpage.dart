@@ -24,17 +24,19 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
   String selectedFilter = "All";
 
   @override
-  void initState() {
-    super.initState();
-    // Fetch subjects when the page loads
-    context.read<MaterialBloc>().add(
-          FetchSubjects(
-            isTeacher: true,
-            teacherClasses: widget.teacherClasses,
-            studentGradeClass: '', // Empty for teachers
-          ),
-        );
-  }
+void initState() {
+  super.initState();
+  print("Fetching subjects for teacherClasses: '${widget.teacherClasses}'");
+
+  context.read<MaterialBloc>().add(
+    FetchSubjects(
+      isTeacher: true,
+      teacherClasses: widget.teacherClasses,
+      studentGradeClass: '',
+    ),
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
