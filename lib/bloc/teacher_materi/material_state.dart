@@ -30,5 +30,5 @@ class MaterialError extends MaterialState {
 }
 class SubjectsLoaded extends MaterialState {
   final List<SubjectModel> subjects;
-  SubjectsLoaded(this.subjects);
+  const SubjectsLoaded(this.subjects);
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_aedp/bloc/teacher_materi/material_model.dart';
-import '../../bloc/teacher_materi/teacher_bloc.dart';
 import '../../bloc/teacher_materi/material_event.dart';
 import '../../bloc/teacher_materi/material_state.dart' as teacher_material_state;
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../bloc/teacher_materi/teacher_bloc.dart';
 
 class TeacherDetailMaterial extends StatefulWidget {
   final String subject;

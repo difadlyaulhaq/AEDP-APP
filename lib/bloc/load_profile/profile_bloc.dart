@@ -57,38 +57,40 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
         throw Exception('Role-specific profile data not found');
       }
 
-      // Gabungkan data user dengan data spesifik role
       final profileData = {
         'id': userId.toString(),
         'role': role,
-        'fullName': fullName, // Tambahkan nama pengguna
+        'fullName': fullName,
+        'classes': roleData ['classes'], // Tambahkan classes ke dalam profileData
         ...roleData,
       };
 
       emit(LoadProfileLoaded(profileData: profileData));
+
     } catch (e) {
       emit(LoadProfileError(e.toString()));
     }
   }
 
-  Future<Map<String, dynamic>?> _fetchTeacherData(String userId) async {
-    final teacherDoc = await _firestore
-        .collection('teachers')
-        .where('contact', isEqualTo: userId) // Cocokkan dengan string userId
-        .limit(1)
-        .get();
+ Future<Map<String, dynamic>?> _fetchTeacherData(String userId) async {
+  final teacherDoc = await _firestore
+      .collection('teachers')
+      .where('contact', isEqualTo: userId) // Sesuai dengan kontak user
+      .limit(1)
+      .get();
 
-    if (teacherDoc.docs.isNotEmpty) {
-      final data = teacherDoc.docs.first.data();
-      return {
-        ...data,
-        'classes': List<String>.from(data['classes']?.split(',') ?? []), // Jika classes berbentuk string, pecah jadi list
-        'contact': data['contact'] ?? '',
-        'whatsapp': data['whatsapp'] ?? '',
-      };
-    }
-    return null;
+  if (teacherDoc.docs.isNotEmpty) {
+    final data = teacherDoc.docs.first.data();
+    return {
+      ...data,
+      'classes': (data['classes'] as String).split(','), // Ubah dari string ke List<String>
+      'contact': data['contact'] ?? '',
+      'whatsapp': data['whatsapp'] ?? '',
+    };
   }
+  return null;
+}
+
 
   Future<Map<String, dynamic>?> _fetchStudentData(num userId) async {
     final studentDoc = await _firestore

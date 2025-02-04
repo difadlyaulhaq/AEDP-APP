@@ -7,8 +7,9 @@ import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/teacher/teacher_detailmaterial.dart';
 import '../../bloc/teacher_materi/teacher_bloc.dart';
 
+
 class TeacherMaterialPage extends StatefulWidget {
-  final String teacherClasses; // Add this parameter
+  final String teacherClasses;
 
   const TeacherMaterialPage({
     super.key,
@@ -105,8 +106,8 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
                 },
               ),
             );
-          } else if (state is custom.SubjectsLoaded) {
-            return Center(child: Text('Error: ${state is custom.MaterialError}'));
+          } else if (state is custom.MaterialError) {
+            return Center(child: Text('Error: ${state.errorMessage}'));
           }
           return const Center(child: Text('No subjects available'));
         },
@@ -213,6 +214,7 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
     );
   }
 }
+
 class CustomAppBarClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
@@ -234,14 +236,3 @@ class CustomAppBarClipper extends CustomClipper<Path> {
     return false;
   }
 }
-
-final List<Map<String, dynamic>> subjects = [
-  {'name': S.current.history},
-  {'name': S.current.math},
-  {'name': S.current.science},
-  {'name': S.current.art},
-  {'name': S.current.arabic},
-  {'name': S.current.music},
-  {'name': S.current.geography},
-  {'name': S.current.english},
-];
