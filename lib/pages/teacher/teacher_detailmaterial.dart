@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_aedp/bloc/teacher_materi/material_model.dart';
 import '../../bloc/teacher_materi/material_event.dart';
 import '../../bloc/teacher_materi/material_state.dart' as teacher_material_state;
@@ -10,11 +12,13 @@ import '../../bloc/teacher_materi/teacher_bloc.dart';
 class TeacherDetailMaterial extends StatefulWidget {
   final String subject;
   final String subjectId;
+  final String grade; // Tambahkan grade untuk upload material
 
   const TeacherDetailMaterial({
-    super.key, 
+    super.key,
     required this.subject,
     required this.subjectId,
+    required this.grade,
   });
 
   @override
@@ -101,29 +105,13 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
   Widget _buildAddButton(BuildContext context) {
     return Align(
       alignment: Alignment.centerRight,
-      child: PopupMenuButton<String>(
-        onSelected: (value) {
-          if (value == 'upload_material') {
-            _showUploadDialog(context, 'Upload Material');
-          } else if (value == 'upload_assignment') {
-            _showUploadDialog(context, 'Upload Assignment');
-          }
-        },
+      child: IconButton(
         icon: const Icon(
           Icons.add_circle,
           color: Color.fromRGBO(30, 113, 162, 1),
           size: 32,
         ),
-        itemBuilder: (context) => [
-          const PopupMenuItem<String>(
-            value: 'upload_material',
-            child: Text('Upload Material'),
-          ),
-          const PopupMenuItem<String>(
-            value: 'upload_assignment',
-            child: Text('Upload Assignment'),
-          ),
-        ],
+        onPressed: () => _showUploadDialog(context),
       ),
     );
   }
@@ -135,10 +123,10 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
           if (state is teacher_material_state.MaterialLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is teacher_material_state.MaterialLoaded) {
-            if (state.materials.isEmpty) {
-              return const Center(child: Text('No materials available.'));
-            }
-            return ListView.builder(
+          print("Materials Loaded: ${state.materials.length}");
+          for (var material in state.materials) {
+            print("Material: ${material.title}, SubjectId: ${material.subjectId}");
+          }return ListView.builder(
               itemCount: state.materials.length,
               itemBuilder: (context, index) {
                 final material = state.materials[index];
@@ -244,7 +232,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
     }
   }
 
-  void _showUploadDialog(BuildContext context, String title) {
+  void _showUploadDialog(BuildContext context) {
     final titleController = TextEditingController();
     final descriptionController = TextEditingController();
     final fileLinkController = TextEditingController();
@@ -252,7 +240,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text(title),
+        title: const Text('Upload Material'),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -324,13 +312,14 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
       title: title,
       description: description,
       fileLink: fileLink,
+      grade: widget.grade, // Gunakan grade dari widget
+      subjectId: widget.subjectId, // Gunakan subjectId dari widget
       createdAt: DateTime.now(),
-      subjectId: widget.subjectId,
     );
 
     _materialBloc.add(AddMaterial(material));
     Navigator.pop(context);
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Material uploaded successfully!')),
     );

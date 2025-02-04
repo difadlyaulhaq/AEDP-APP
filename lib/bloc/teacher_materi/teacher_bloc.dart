@@ -14,10 +14,15 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
       try {
         emit(MaterialLoading());
 
-        final snapshot = await firestore
-            .collection('materials')
-            .where('subjectId', isEqualTo: event.subjectId)
-            .get();
+       final snapshot = await firestore
+        .collection('materials')
+        .where('subjectId', isEqualTo: event.subjectId)
+        .get();
+
+        print("Fetching materials for subjectId: ${event.subjectId}");
+        snapshot.docs.forEach((doc) {
+          print("Material found: ${doc.id} | Data: ${doc.data()}");
+        });
 
         final materials = snapshot.docs
             .map((doc) => MaterialModel.fromMap(doc.id, doc.data()))
@@ -69,7 +74,7 @@ snapshot.docs.forEach((doc) {
 
 
     // Add new material
-    on<AddMaterial>((event, emit) async {
+ on<AddMaterial>((event, emit) async {
       try {
         await firestore
             .collection('materials')

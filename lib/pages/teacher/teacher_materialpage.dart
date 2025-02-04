@@ -171,6 +171,7 @@ void initState() {
             builder: (context) => TeacherDetailMaterial(
               subject: subject.subjectName,
               subjectId: subject.id,
+              grade: subject.grade,
             ),
           ),
         );
