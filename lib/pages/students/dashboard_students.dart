@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
+import 'package:project_aedp/bloc/load_profile/profile_state.dart';
+import 'package:project_aedp/bloc/teacher_materi/material_event.dart';
+import 'package:project_aedp/bloc/teacher_materi/material_state.dart' as custom;
+import 'package:project_aedp/bloc/teacher_materi/teacher_bloc.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/parrents/invoice_page.dart';
-import 'package:project_aedp/pages/students/Elibrary.dart';
+import 'package:project_aedp/pages/students/elibrary.dart';
 import 'package:project_aedp/pages/students/materialpage.dart';
 import 'package:project_aedp/pages/profile_page.dart';
 import 'package:project_aedp/pages/students/schedulepage.dart';
+
+import '../../bloc/teacher_materi/material_state.dart';
 
 class DashboardStudents extends StatefulWidget {
   const DashboardStudents({super.key});
@@ -35,38 +43,25 @@ class _DashboardStudentsState extends State<DashboardStudents> {
         index: _selectedIndex,
         children: _pages,
       ),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF4A90E2),
-              Color(0xFF003C8F),
-            ],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onNavbarTap,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        items: [
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home),
+            label: S.of(context).nav_home,
           ),
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onNavbarTap,
-          backgroundColor: Colors.transparent,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white70,
-          items: [
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.home),
-              label: S.of(context).nav_home,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.receipt_long),
-              label: S.of(context).nav_invoice,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.person),
-              label: S.of(context).nav_profile,
-            ),
-          ],
-        ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.receipt_long),
+            label: S.of(context).nav_invoice,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.person),
+            label: S.of(context).nav_profile,
+          ),
+        ],
       ),
     );
   }
@@ -75,133 +70,80 @@ class _DashboardStudentsState extends State<DashboardStudents> {
 class DashboardStudentsHome extends StatelessWidget {
   const DashboardStudentsHome({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    return Column(
-      children: [
-        // Padding(
-        //   padding: EdgeInsets.all(screenWidth * 0.04),
-        //   child: Align(
-        //     alignment: Alignment.centerLeft,
-        //     child: Text(
-        //       S.of(context).todo_title,
-        //       style: blackColorTextStyle.copyWith(
-        //         fontSize: screenWidth * 0.06,
-        //         fontWeight: FontWeight.bold,
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        // Container(
-        //   margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-        //   padding: EdgeInsets.all(screenWidth * 0.04),
-        //   decoration: BoxDecoration(
-        //     color: Colors.grey[300],
-        //     borderRadius: BorderRadius.circular(15),
-        //   ),
-        //   // child: Column(
-        //   //   children: [
-        //   //     _buildTodoItem(S.of(context).assignment_1, S.of(context).assignment_1_due),
-        //   //     _buildTodoItem(S.of(context).online_learning_04, S.of(context).online_learning_04_due),
-        //   //     _buildTodoItem(S.of(context).online_learning_05, S.of(context).online_learning_05_due),
-        //   //   ],
-        //   // ),
-        // ),
-        SizedBox(height: screenHeight * 0.03),
-        Expanded(
-          child: GridView.count(
-            crossAxisCount: screenWidth > 600 ? 4 : 3,
-            crossAxisSpacing: screenWidth * 0.03,
-            mainAxisSpacing: screenWidth * 0.03,
-            padding: EdgeInsets.all(screenWidth * 0.04),
-            children: [
-              _buildIconButton(
-                  context, Icons.calendar_today, S.of(context).schedule, () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SchedulePage()),
-                );
-              }),
-              _buildIconButton(context, Icons.book, S.of(context).materials,
-                  () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const StudentMaterialPage()),
-                );
-              }),
-              // _buildIconButton(context, Icons.check_circle_outline, S.of(context).grades, () {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(builder: (context) => const GradesPage()),
-              //   );
-              // }),
-              // _buildIconButton(
-              //     context, Icons.insert_drive_file, S.of(context).reports, () {
-              //   // Navigate or display message for "Reports"
-              // }),
-              // _buildIconButton(context, Icons.notifications, S.of(context).notifications, () {
-              //   // Navigate or display message for "Notifications"
-              // }),
-              _buildIconButton(context, Icons.library_books, S.of(context).e_library, () {
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ELibraryPage()),
-                );
-              }),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildIconButton(
       BuildContext context, IconData icon, String label, VoidCallback onTap) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-            horizontal: screenWidth * 0.04, vertical: screenWidth * 0.03),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withAlpha(51),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: const Color(0xFF1E71A2),
-              size: screenWidth * 0.08,
-            ),
-            SizedBox(height: screenWidth * 0.02),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+      child: Column(
+        children: [
+          Icon(icon, size: 40, color: Colors.blue),
+          const SizedBox(height: 8),
+          Text(label, textAlign: TextAlign.center),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(S.of(context).student_dashboard)),
+      body: BlocBuilder<LoadProfileBloc, LoadProfileState>(
+        builder: (context, state) {
+          if (state is LoadProfileLoaded) {
+            final studentGradeClass = state.profileData['grade_class'] ?? '';
+
+            return BlocProvider(
+              create: (context) => MaterialBloc()
+                ..add(FetchSubjects(isTeacher: false, studentGradeClass: studentGradeClass, teacherClasses: '')), 
+              child: BlocBuilder<MaterialBloc, custom.MaterialState>(
+                builder: (context, materialState) {
+                  if (materialState is SubjectsLoaded) {
+                    final subjects = materialState.subjects;
+
+                    return GridView.count(
+                      crossAxisCount: 3,
+                      children: [
+                        _buildIconButton(
+                          context,
+                          Icons.calendar_today,
+                          S.of(context).dashboard_schedule,
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const SchedulePage()),
+                          ),
+                        ),
+                        _buildIconButton(
+                          context,
+                          Icons.book,
+                          S.of(context).materials,
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StudentMaterialPage( studentGradeClass: studentGradeClass ),
+                            ),
+                          ),
+                        ),
+                        _buildIconButton(
+                          context,
+                          Icons.library_books,
+                          S.of(context).e_library,
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const ELibraryPage()),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                },
               ),
-            ),
-          ],
-        ),
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }

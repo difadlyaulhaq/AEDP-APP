@@ -4,7 +4,6 @@ import 'package:project_aedp/pages/parrents/TranscriptPage.dart';
 import 'package:project_aedp/pages/parrents/certificatepage.dart';
 
 import 'package:project_aedp/pages/parrents/invoice_page.dart';
-import 'package:project_aedp/pages/students/materialpage.dart';
 import 'package:project_aedp/pages/students/schedulepage.dart';
 
 class DashboardParentHome extends StatelessWidget {
@@ -45,16 +44,16 @@ class DashboardParentHome extends StatelessWidget {
                           builder: (context) => const CertificatePage()),
                     );
                   }),
-              _buildIconButton(context, Icons.book, S
-                  .of(context)
-                  .materials,
-                      () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const StudentMaterialPage()),
-                    );
-                  }),
+              // _buildIconButton(context, Icons.book, S
+              //     .of(context)
+              //     .materials,
+              //         () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => const StudentMaterialPage()),
+              //       );
+              //     }),
               _buildIconButton(context,
                Icons.file_copy_sharp,
                 S.of(context).transcript,

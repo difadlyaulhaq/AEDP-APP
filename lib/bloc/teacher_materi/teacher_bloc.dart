@@ -11,31 +11,31 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
   MaterialBloc() : super(MaterialLoading()) {
     // Fetch materials filtered by subjectId
     on<FetchMaterials>((event, emit) async {
-      try {
-        emit(MaterialLoading());
+  try {
+    emit(MaterialLoading());
 
-       final snapshot = await firestore
-        .collection('materials')
-        .where('subjectId', isEqualTo: event.subjectId)
-        .get();
+    final snapshot = await firestore
+      .collection('materials')
+      .where('subjectId', isEqualTo: event.subjectId)
+      .get();
 
-        print("Fetching materials for subjectId: ${event.subjectId}");
-        snapshot.docs.forEach((doc) {
-          print("Material found: ${doc.id} | Data: ${doc.data()}");
-        });
-
-        final materials = snapshot.docs
-            .map((doc) => MaterialModel.fromMap(doc.id, doc.data()))
-            .toList();
-
-        emit(MaterialLoaded(materials));
-      } catch (e) {
-        emit(MaterialError(e.toString()));
-      }
+    print("Fetching materials for subjectId: ${event.subjectId}");
+    snapshot.docs.forEach((doc) {
+      print("Material found: ${doc.id} | Data: ${doc.data()}");
     });
 
-    // Fetch subjects based on filtering rules
-   on<FetchSubjects>((event, emit) async {
+    final materials = snapshot.docs
+        .map((doc) => MaterialModel.fromMap(doc.id, doc.data()))
+        .toList();
+
+    emit(MaterialLoaded(materials));
+  } catch (e) {
+    emit(MaterialError(e.toString()));
+  }
+});
+
+
+    on<FetchSubjects>((event, emit) async {
   try {
     emit(MaterialLoading());
 
@@ -48,14 +48,8 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
       query = query.where('grade', isEqualTo: event.studentGradeClass);
     }
 
-final snapshot = await query.get();
-  print(snapshot.docs);
-snapshot.docs.forEach((doc) {
-  print("Firestore Subject I : ${doc.id} | Data: ${doc.data()}");
-});
+    final snapshot = await query.get();
 
-
-    // Debug: Print jumlah data yang ditemukan
     print("Subjects fetched count: ${snapshot.docs.length}");
     snapshot.docs.forEach((doc) {
       print("Subject: ${doc.id} | Data: ${doc.data()}");
@@ -71,7 +65,6 @@ snapshot.docs.forEach((doc) {
     emit(MaterialError(e.toString()));
   }
 });
-
 
     // Add new material
  on<AddMaterial>((event, emit) async {

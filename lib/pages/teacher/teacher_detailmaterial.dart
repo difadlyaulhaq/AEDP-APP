@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_aedp/bloc/teacher_materi/material_model.dart';
 import '../../bloc/teacher_materi/material_event.dart';
 import '../../bloc/teacher_materi/material_state.dart' as teacher_material_state;
@@ -48,7 +46,6 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return BlocProvider.value(
