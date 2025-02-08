@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_aedp/bloc/teacher_materi/material_event.dart';
-import 'package:project_aedp/bloc/teacher_materi/material_state.dart' as custom;
-import 'package:project_aedp/bloc/teacher_materi/teacher_bloc.dart';
+import 'package:project_aedp/bloc/material_and_subject/material_event.dart';
+import 'package:project_aedp/bloc/material_and_subject/material_state.dart' as custom;
+import 'package:project_aedp/bloc/material_and_subject/teacher_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailMaterial extends StatefulWidget {

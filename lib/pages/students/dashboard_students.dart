@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
 import 'package:project_aedp/bloc/load_profile/profile_state.dart';
-import 'package:project_aedp/bloc/teacher_materi/material_event.dart';
-import 'package:project_aedp/bloc/teacher_materi/material_state.dart' as custom;
-import 'package:project_aedp/bloc/teacher_materi/teacher_bloc.dart';
+import 'package:project_aedp/bloc/material_and_subject/material_event.dart';
+import 'package:project_aedp/bloc/material_and_subject/material_state.dart' as custom;
+import 'package:project_aedp/bloc/material_and_subject/teacher_bloc.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/parrents/invoice_page.dart';
 import 'package:project_aedp/pages/students/elibrary.dart';
 import 'package:project_aedp/pages/students/materialpage.dart';
 import 'package:project_aedp/pages/profile_page.dart';
 import 'package:project_aedp/pages/students/schedulepage.dart';
-
-import '../../bloc/teacher_materi/material_state.dart';
+import '../../bloc/material_and_subject/material_state.dart';
 
 class DashboardStudents extends StatefulWidget {
   const DashboardStudents({super.key});

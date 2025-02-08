@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_aedp/bloc/teacher_materi/material_event.dart';
-import 'package:project_aedp/bloc/teacher_materi/material_state.dart' as custom;
-import 'package:project_aedp/bloc/teacher_materi/subject_model.dart';
+import 'package:project_aedp/bloc/material_and_subject/material_event.dart';
+import 'package:project_aedp/bloc/material_and_subject/material_state.dart' as custom;
+import 'package:project_aedp/bloc/material_and_subject/subject_model.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/students/detailmaterial.dart';
-import '../../bloc/teacher_materi/teacher_bloc.dart';
+import '../../bloc/material_and_subject/teacher_bloc.dart';
 
 class StudentMaterialPage extends StatefulWidget {
   final String studentGradeClass;

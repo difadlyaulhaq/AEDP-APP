@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:project_aedp/bloc/teacher_materi/subject_model.dart';
+import 'package:project_aedp/bloc/material_and_subject/subject_model.dart';
 import 'material_model.dart';
 
 abstract class MaterialState extends Equatable {

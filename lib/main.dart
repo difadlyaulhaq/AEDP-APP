@@ -6,13 +6,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:project_aedp/bloc/schedule/schedule_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'bloc/auth/auth_bloc.dart';
 import 'bloc/auth/auth_repository.dart';
 import 'bloc/auth/auth_state.dart';
 import 'bloc/language/language_cubit.dart';
 import 'bloc/load_profile/profile_bloc.dart';
-import 'bloc/teacher_materi/teacher_bloc.dart';
+import 'bloc/material_and_subject/teacher_bloc.dart';
 import 'firebase_options.dart';
 import 'generated/l10n.dart';
 import 'routes/router.dart';
