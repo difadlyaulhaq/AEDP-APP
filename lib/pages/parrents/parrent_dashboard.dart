@@ -16,68 +16,71 @@ class DashboardParentHome extends StatelessWidget {
         .size
         .width;
 
-    return Column(
-      children: [
-        Expanded(
-          child: GridView.count(
-            crossAxisCount: 2,
-            // Maksimal 2 tombol per baris
-            crossAxisSpacing: screenWidth * 0.03,
-            mainAxisSpacing: screenWidth * 0.03,
-            padding: EdgeInsets.all(screenWidth * 0.04),
-            children: [
-              _buildIconButton(
-                  context, Icons.calendar_today, S
-                  .of(context)
-                  .schedule, () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SchedulePage()),
-                );
-              }),
-              _buildIconButton(context, Icons.assignment, 
-                  S.of(context).certificates,
-                      () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const CertificatePage()),
-                    );
-                  }),
-              // _buildIconButton(context, Icons.book, S
-              //     .of(context)
-              //     .materials,
-              //         () {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //             builder: (context) => const StudentMaterialPage()),
-              //       );
-              //     }),
-              _buildIconButton(context,
-               Icons.file_copy_sharp,
-                S.of(context).transcript,
-                      () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const TranscriptPage()),
-                    );
-                  }),
-              _buildIconButton(context, Icons.receipt, S
-                  .of(context)
-                  .invoices,
-                      () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const InvoicePage()),
-                    );
-                  }),
-            ],
+    return Scaffold(
+      appBar: AppBar(title: Text(S.of(context).parent_dashboard,style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500),)),
+      body: Column(
+        children: [
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 3,
+              // Maksimal 2 tombol per baris
+              crossAxisSpacing: screenWidth * 0.03,
+              mainAxisSpacing: screenWidth * 0.03,
+              padding: EdgeInsets.all(screenWidth * 0.04),
+              children: [
+                _buildIconButton(
+                    context, Icons.calendar_today, S
+                    .of(context)
+                    .schedule, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SchedulePage()),
+                  );
+                }),
+                _buildIconButton(context, Icons.assignment, 
+                    S.of(context).certificates,
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CertificatePage()),
+                      );
+                    }),
+                // _buildIconButton(context, Icons.book, S
+                //     .of(context)
+                //     .materials,
+                //         () {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (context) => const StudentMaterialPage()),
+                //       );
+                //     }),
+                _buildIconButton(context,
+                 Icons.file_copy_sharp,
+                  S.of(context).transcript,
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TranscriptPage()),
+                      );
+                    }),
+                _buildIconButton(context, Icons.receipt, S
+                    .of(context)
+                    .invoices,
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const InvoicePage()),
+                      );
+                    }),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

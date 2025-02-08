@@ -100,8 +100,6 @@ class DashboardStudentsHome extends StatelessWidget {
               child: BlocBuilder<MaterialBloc, custom.MaterialState>(
                 builder: (context, materialState) {
                   if (materialState is SubjectsLoaded) {
-                    final subjects = materialState.subjects;
-
                     return GridView.count(
                       crossAxisCount: 3,
                       children: [

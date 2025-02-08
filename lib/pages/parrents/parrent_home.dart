@@ -29,29 +29,8 @@ class _ParrentHomeState extends State<ParrentHome> {
 
   @override
    Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(screenHeight * 0.15),
-        child: ClipPath(
-          clipper: CustomAppBarClipper(),
-          child: AppBar(
-            title: Text(S.of(context).parent_dashboard,style: TextStyle(color: whiteColor),),
-            centerTitle: true,
-            toolbarHeight: 60,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF1E71A2), Color(0xFF0B2A3C)],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
+      
       body: IndexedStack(
         index: _selectedIndex,
         children: _pages,
@@ -70,21 +49,4 @@ class _ParrentHomeState extends State<ParrentHome> {
       ),
     );
   }
-}
-
-class CustomAppBarClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.lineTo(0, size.height - 30); // Mengurangi tinggi
-    path.quadraticBezierTo(0, size.height, 20, size.height); // Sesuaikan offset
-    path.lineTo(size.width - 30, size.height); // Sesuaikan offset
-    path.quadraticBezierTo(size.width, size.height, size.width, size.height - 20); // Mengurangi tinggi
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
