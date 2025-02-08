@@ -86,45 +86,48 @@ class DashboardStudentsHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.of(context).teacher_dashboard)),
+      appBar: AppBar(title: Text(S.of(context).teacher_dashboard,style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500),)),
       body: BlocBuilder<LoadProfileBloc, LoadProfileState>(
         builder: (context, state) {
           if (state is LoadProfileLoaded) {
             final teacherClasses = state.profileData['classes'] as List<String>? ?? [];
 
-            return GridView.count(
-              crossAxisCount: 3,
-              children: [
-                _buildIconButton(
-                  context,
-                  Icons.calendar_today,
-                  S.of(context).dashboard_schedule,
-                  () => Navigator.push(
+            return Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: GridView.count(
+                crossAxisCount: 3,
+                children: [
+                  _buildIconButton(
                     context,
-                    MaterialPageRoute(builder: (context) => const TeacherSchedule()),
-                  ),
-                ),
-                _buildIconButton(
-                  context,
-                  Icons.book,
-                  S.of(context).dashboard_materials,
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TeacherMaterialPage(teacherClasses: teacherClasses.join(',')),  
+                    Icons.calendar_today,
+                    S.of(context).dashboard_schedule,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const TeacherSchedule()),
                     ),
                   ),
-                ),
-                _buildIconButton(
-                  context,
-                  Icons.library_books,
-                  S.of(context).e_library,
-                  () => Navigator.push(
+                  _buildIconButton(
                     context,
-                    MaterialPageRoute(builder: (context) => const ELibraryPage()),
+                    Icons.book,
+                    S.of(context).dashboard_materials,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TeacherMaterialPage(teacherClasses: teacherClasses.join(',')),  
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  _buildIconButton(
+                    context,
+                    Icons.library_books,
+                    S.of(context).e_library,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ELibraryPage()),
+                    ),
+                  ),
+                ],
+              ),
             );
           }
           return Center(child: CircularProgressIndicator());

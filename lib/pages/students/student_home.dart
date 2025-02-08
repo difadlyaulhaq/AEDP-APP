@@ -28,31 +28,8 @@ class _StudentHomeState extends State<StudentHome> {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    return Scaffold(
-      appBar: _selectedIndex == 1 // Jika SchedulePage dipilih
-          ? null // Tidak menampilkan AppBar
-          : PreferredSize(
-              preferredSize: Size.fromHeight(screenHeight * 0.15),
-              child: ClipPath(
-                clipper: CustomAppBarClipper(),
-                child: AppBar(
-                  title: Text(S.of(context).student_dashboard),
-                  centerTitle: true,
-                  toolbarHeight: 60,
-                  flexibleSpace: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Color(0xFF1E71A2), Color(0xFF0B2A3C)],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+     return Scaffold(
+    // appBar: AppBar(title: Text(S.of(context).student_dashboard,style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500),)),
       body: IndexedStack(
         index: _selectedIndex,
         children: _pages,
@@ -73,19 +50,3 @@ class _StudentHomeState extends State<StudentHome> {
   }
 }
 
-class CustomAppBarClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.lineTo(0, size.height - 20); // Mengurangi tinggi
-    path.quadraticBezierTo(0, size.height, 20, size.height); // Sesuaikan offset
-    path.lineTo(size.width - 20, size.height); // Sesuaikan offset
-    path.quadraticBezierTo(size.width, size.height, size.width, size.height - 20); // Mengurangi tinggi
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-}

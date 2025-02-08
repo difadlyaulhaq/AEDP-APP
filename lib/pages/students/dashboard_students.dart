@@ -88,7 +88,7 @@ class DashboardStudentsHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.of(context).student_dashboard)),
+       appBar: AppBar(title: Text(S.of(context).student_dashboard,style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500),)),
       body: BlocBuilder<LoadProfileBloc, LoadProfileState>(
         builder: (context, state) {
           if (state is LoadProfileLoaded) {
