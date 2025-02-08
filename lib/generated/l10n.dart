@@ -50,6 +50,66 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Loading...`
+  String get loading {
+    return Intl.message(
+      'Loading...',
+      name: 'loading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No students found`
+  String get noStudents {
+    return Intl.message(
+      'No students found',
+      name: 'noStudents',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `School ID`
+  String get schoolId {
+    return Intl.message(
+      'School ID',
+      name: 'schoolId',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Class: {grade}`
+  String class1(Object grade) {
+    return Intl.message(
+      'Class: $grade',
+      name: 'class1',
+      desc: '',
+      args: [grade],
+    );
+  }
+
+  /// `Input Grades for {name}`
+  String inputGrades(Object name) {
+    return Intl.message(
+      'Input Grades for $name',
+      name: 'inputGrades',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Submit Grades`
+  String get submitGrades {
+    return Intl.message(
+      'Submit Grades',
+      name: 'submitGrades',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Contact / School ID`
   String get contact_school_id {
     return Intl.message(
@@ -255,16 +315,6 @@ class S {
     return Intl.message(
       'Grade/Class',
       name: 'gradeClass',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `School ID`
-  String get schoolId {
-    return Intl.message(
-      'School ID',
-      name: 'schoolId',
       desc: '',
       args: [],
     );

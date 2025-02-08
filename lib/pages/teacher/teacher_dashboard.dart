@@ -6,6 +6,7 @@ import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/profile_page.dart';
 import 'package:project_aedp/pages/students/elibrary.dart';
 import 'package:project_aedp/pages/students/schedulepage.dart';
+import 'package:project_aedp/pages/teacher/teacher_grades_page.dart';
 import 'package:project_aedp/pages/teacher/teacher_materialpage.dart';
 import 'package:project_aedp/pages/teacher/teacher_schedule.dart';
 
@@ -125,6 +126,13 @@ class DashboardStudentsHome extends StatelessWidget {
                       context,
                       MaterialPageRoute(builder: (context) => const ELibraryPage()),
                     ),
+                  ),
+                  _buildIconButton(context, 
+                  Icons.school, S.of(context).grade, 
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TeacherGradesPage(teacherClasses: teacherClasses.join(','))),
+                  ),
                   ),
                 ],
               ),

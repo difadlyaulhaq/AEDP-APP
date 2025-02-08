@@ -1,5 +1,10 @@
 {
   "@@locale": "ar",
+    "loading": "جار التحميل...",
+    "noStudents": "لم يتم العثور على طلاب",
+    "class1": "الصف: {grade}",
+    "inputGrades": "إدخال الدرجات لـ {name}",
+    "submitGrades": "إرسال الدرجات",  
   "contact_school_id": "الاتصال / رقم تعريف المدرسة",
    "transcript": "النص",
   "teacher_dashboard": "لوحة تحكم المعلم",

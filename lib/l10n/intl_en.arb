@@ -1,5 +1,11 @@
 {
   "@@locale": "en",
+    "loading": "Loading...",
+    "noStudents": "No students found",
+    "schoolId": "School ID: {id}",
+    "class1": "Class: {grade}",
+    "inputGrades": "Input Grades for {name}",
+    "submitGrades": "Submit Grades",  
    "contact_school_id": "Contact / School ID",
   "transcript": "Transcript",
   "appTitle": "E-Library",
