@@ -21,7 +21,7 @@ class TeacherMaterialPage extends StatefulWidget {
 }
 
 class TeacherMaterialPageState extends State<TeacherMaterialPage> {
-  String selectedFilter = "All";
+  // String selectedFilter = "All";
 
   @override
 void initState() {
@@ -75,12 +75,12 @@ void initState() {
               ),
             ),
             centerTitle: true,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.filter_alt_rounded, color: Colors.white),
-                onPressed: _showFilterDialog,
-              ),
-            ],
+            // actions: [
+            //   IconButton(
+            //     icon: const Icon(Icons.filter_alt_rounded, color: Colors.white),
+            //     onPressed: _showFilterDialog,
+            //   ),
+            // ],
           ),
         ),
       ),
@@ -117,48 +117,48 @@ void initState() {
     );
   }
 
-  void _showFilterDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(S.of(context).filterSubjects),
-          content: BlocBuilder<MaterialBloc, custom.MaterialState>(
-            builder: (context, state) {
-              if (state is custom.SubjectsLoaded) {
-                final subjects = state.subjects;
-                final subjectNames = ['All', ...subjects.map((s) => s.subjectName)];
+  // void _showFilterDialog() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         title: Text(S.of(context).filterSubjects),
+  //         content: BlocBuilder<MaterialBloc, custom.MaterialState>(
+  //           builder: (context, state) {
+  //             if (state is custom.SubjectsLoaded) {
+  //               final subjects = state.subjects;
+  //               final subjectNames = ['All', ...subjects.map((s) => s.subjectName)];
                 
-                return DropdownButton<String>(
-                  value: selectedFilter,
-                  items: subjectNames.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedFilter = value!;
-                      // Implement filtering logic here if needed
-                    });
-                    Navigator.pop(context);
-                  },
-                );
-              }
-              return const CircularProgressIndicator();
-            },
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(S.of(context).cancel),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  //               return DropdownButton<String>(
+  //                 value: selectedFilter,
+  //                 items: subjectNames.map<DropdownMenuItem<String>>((String value) {
+  //                   return DropdownMenuItem<String>(
+  //                     value: value,
+  //                     child: Text(value),
+  //                   );
+  //                 }).toList(),
+  //                 onChanged: (value) {
+  //                   setState(() {
+  //                     selectedFilter = value!;
+  //                     // Implement filtering logic here if needed
+  //                   });
+  //                   Navigator.pop(context);
+  //                 },
+  //               );
+  //             }
+  //             return const CircularProgressIndicator();
+  //           },
+  //         ),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: Text(S.of(context).cancel),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget _buildCardItem(BuildContext context, SubjectModel subject) {
     final screenWidth = MediaQuery.of(context).size.width;
