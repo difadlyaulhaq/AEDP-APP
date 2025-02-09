@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project_aedp/generated/l10n.dart';
 
 class TeacherGradesPage extends StatelessWidget {
   final String teacherClasses;
@@ -12,7 +13,7 @@ class TeacherGradesPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Teacher Grades Page'),
+        title: Text(S.of(context).grades),
         backgroundColor: Colors.blueAccent,
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -25,7 +26,7 @@ class TeacherGradesPage extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No students found'));
+            return Center(child: Text(S.of(context).noStudents));
           }
           
           var students = snapshot.data!.docs;
@@ -47,10 +48,10 @@ class TeacherGradesPage extends StatelessWidget {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('School ID: ${student['school_id']}',
+                      Text('${S.of(context).schoolId} ${student['school_id']}',
                           style: TextStyle(fontSize: 18, color: Colors.grey.shade600)),
                       const SizedBox(height: 4),
-                      Text('Class: ${student['grade_class']}',
+                      Text('${S.of(context).classes} ${student['grade_class']}',
                           style: TextStyle(fontSize: 18, color: Colors.grey.shade600)),
                     ],
                   ),
@@ -97,37 +98,64 @@ class _InputGradeState extends State<InputGrade> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Map<String, TextEditingController> _controllers = {};
   final Map<String, String> _subjectNames = {};
-  
+  final Map<String, String?> _existingGrades = {}; // Simpan ID nilai jika sudah ada
+
   @override
   void initState() {
     super.initState();
-    _fetchSubjects();
+    _fetchSubjectsAndGrades();
   }
 
-  Future<void> _fetchSubjects() async {
+  Future<void> _fetchSubjectsAndGrades() async {
     QuerySnapshot subjectDocs = await _firestore
         .collection('subjects')
         .where('grade', isEqualTo: widget.gradeClass)
         .get();
-    
-    setState(() {
-      for (var doc in subjectDocs.docs) {
-        _controllers[doc.id] = TextEditingController();
-        _subjectNames[doc.id] = doc['subject_name'];
+
+    for (var doc in subjectDocs.docs) {
+      _controllers[doc.id] = TextEditingController();
+      _subjectNames[doc.id] = doc['subject_name'];
+    }
+
+    // Fetch existing grades
+    QuerySnapshot gradeDocs = await _firestore
+        .collection('grades')
+        .where('school_id', isEqualTo: widget.schoolId)
+        .where('class', isEqualTo: widget.gradeClass)
+        .get();
+
+    for (var doc in gradeDocs.docs) {
+      String subjectId = doc['subjectId'];
+      if (_controllers.containsKey(subjectId)) {
+        _controllers[subjectId]!.text = doc['grade'];
+        _existingGrades[subjectId] = doc.id; // Simpan ID nilai jika sudah ada
       }
-    });
+    }
+    
+    setState(() {});
   }
 
   Future<void> _submitGrades() async {
     for (var entry in _controllers.entries) {
-      await _firestore.collection('grades').add({
-        'school_id': widget.schoolId,
-        'student_name': widget.studentName,
-        'class': widget.gradeClass,
-        'subject': _subjectNames[entry.key],
-        'subjectId': entry.key,
-        'grade': entry.value.text,
-      });
+      String? gradeId = _existingGrades[entry.key];
+      String gradeValue = entry.value.text;
+
+      if (gradeId != null) {
+        // Jika nilai sudah ada, update
+        await _firestore.collection('grades').doc(gradeId).update({
+          'grade': gradeValue,
+        });
+      } else {
+        // Jika nilai belum ada, tambahkan
+        await _firestore.collection('grades').add({
+          'school_id': widget.schoolId,
+          'student_name': widget.studentName,
+          'class': widget.gradeClass,
+          'subject': _subjectNames[entry.key],
+          'subjectId': entry.key,
+          'grade': gradeValue,
+        });
+      }
     }
     Navigator.pop(context);
   }
@@ -178,7 +206,7 @@ class _InputGradeState extends State<InputGrade> {
                         ),
                       ),
                       child: const Text('Submit Grades',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                     ),
                   ),
                 ],

@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "teacher_input_grades": "Teacher Input Grades Page",
     "loading": "Loading...",
     "noStudents": "No students found",
     "schoolId": "School ID: {id}",

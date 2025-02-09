@@ -1,5 +1,6 @@
 {
   "@@locale": "ar",
+  "teacher_input_grades": "صفحة إدخال الدرجات للمعلم",
     "loading": "جار التحميل...",
     "noStudents": "لم يتم العثور على طلاب",
     "class1": "الصف: {grade}",

@@ -1,5 +1,6 @@
 {
   "@@locale": "pt",
+  "teacher_input_grades": "Página de Entrada de Notas do Professor",
    "transcript": "Transcrição",
   "teacher_dashboard": "Painel do Professor",
   "noFilesAvailable": "Nenhum arquivo disponível.",

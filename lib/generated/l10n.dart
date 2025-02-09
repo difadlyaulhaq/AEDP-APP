@@ -50,6 +50,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Teacher Input Grades Page`
+  String get teacher_input_grades {
+    return Intl.message(
+      'Teacher Input Grades Page',
+      name: 'teacher_input_grades',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Loading...`
   String get loading {
     return Intl.message(
