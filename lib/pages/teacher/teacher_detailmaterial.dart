@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_model.dart';
@@ -120,10 +123,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
             return const Center(child: CircularProgressIndicator());
           } 
           else if (state is teacher_material_state.MaterialLoaded) {
-          // print("Materials Loaded: ${state.materials.length}");
-          for (var material in state.materials) {
-            // print("Material: ${material.title}, SubjectId: ${material.subjectId}");
-        }return ListView.builder(
+        return ListView.builder(
               itemCount: state.materials.length,
               itemBuilder: (context, index) {
                 final material = state.materials[index];
@@ -230,97 +230,92 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
   }
 
   void _showUploadDialog(BuildContext context) {
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
-    final fileLinkController = TextEditingController();
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+  File? selectedFile;
 
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Upload Material'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Title',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: descriptionController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: fileLinkController,
-                decoration: const InputDecoration(
-                  labelText: 'File Link',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () => _handleMaterialUpload(
-              dialogContext,
-              titleController.text.trim(),
-              descriptionController.text.trim(),
-              fileLinkController.text.trim(),
+  showDialog(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('Upload Material'),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: titleController,
+              decoration: const InputDecoration(labelText: 'Title', border: OutlineInputBorder()),
             ),
-            child: const Text('Upload'),
-          ),
-        ],
+            const SizedBox(height: 16),
+            TextField(
+              controller: descriptionController,
+              maxLines: 3,
+              decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () async {
+                final result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+                if (result != null) {
+                  selectedFile = File(result.files.single.path!);
+                }
+              },
+              child: const Text('Select PDF File'),
+            ),
+          ],
+        ),
       ),
-    );
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            if (selectedFile != null) {
+              _handleMaterialUpload(
+                dialogContext,
+                titleController.text.trim(),
+                descriptionController.text.trim(),
+                selectedFile!,
+              );
+            } else {
+              _showErrorSnackBar(dialogContext, 'Please select a PDF file.');
+            }
+          },
+          child: const Text('Upload'),
+        ),
+      ],
+    ),
+  );
+}
+
+
+  void _handleMaterialUpload(BuildContext context, String title, String description, File file) {
+  if (title.isEmpty || description.isEmpty) {
+    _showErrorSnackBar(context, 'Please fill all fields');
+    return;
   }
 
-  void _handleMaterialUpload(
-    BuildContext context,
-    String title,
-    String description,
-    String fileLink,
-  ) {
-    if (title.isEmpty || description.isEmpty || fileLink.isEmpty) {
-      _showErrorSnackBar(context, 'Please fill all fields');
-      return;
-    }
+  final material = MaterialModel(
+    id: DateTime.now().toIso8601String(),
+    title: title,
+    description: description,
+    fileLink: '', // Nanti akan diperbarui setelah upload
+    grade: widget.grade,
+    subjectId: widget.subjectId,
+    createdAt: DateTime.now(),
+  );
 
-    if (!isValidUrl(fileLink)) {
-      _showErrorSnackBar(context, 'Please provide a valid URL');
-      return;
-    }
-
-    final material = MaterialModel(
-      id: DateTime.now().toIso8601String(),
-      title: title,
-      description: description,
-      fileLink: fileLink,
-      grade: widget.grade, // Gunakan grade dari widget
-      subjectId: widget.subjectId, // Gunakan subjectId dari widget
-      createdAt: DateTime.now(),
-    );
-
-    _materialBloc.add(AddMaterial(material));
-    Navigator.pop(context);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Material uploaded successfully!')),
-    );
-  }
+  context.read<MaterialBloc>().add(AddMaterial(material: material, file: file));
+  Navigator.pop(context);
+  Future.delayed(Duration(milliseconds: 300), () {
+    _materialBloc.add(FetchMaterials(subjectId: widget.subjectId));
+  });  
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text('Material uploaded successfully!')),
+  );
+}
 
   void _showErrorSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(

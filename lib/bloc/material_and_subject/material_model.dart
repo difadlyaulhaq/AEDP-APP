@@ -39,4 +39,24 @@ class MaterialModel {
       createdAt: DateTime.parse(data['createdAt']),
     );
   }
+
+  MaterialModel copyWith({
+    String? id,
+    String? title,
+    String? description,
+    String? fileLink,
+    String? grade,
+    String? subjectId,
+    DateTime? createdAt,
+  }) {
+    return MaterialModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      fileLink: fileLink ?? this.fileLink,
+      grade: grade ?? this.grade,
+      subjectId: subjectId ?? this.subjectId,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }

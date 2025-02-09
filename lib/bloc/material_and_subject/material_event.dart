@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'material_model.dart';
 
@@ -7,7 +8,7 @@ abstract class MaterialEvent extends Equatable {
 }
 
 class FetchMaterials extends MaterialEvent {
-  final String subjectId; // Fetch by subject ID
+  final String subjectId;
 
   FetchMaterials({required this.subjectId});
 
@@ -17,12 +18,14 @@ class FetchMaterials extends MaterialEvent {
 
 class AddMaterial extends MaterialEvent {
   final MaterialModel material;
+  final File file;
 
-  AddMaterial(this.material);
+  AddMaterial({required this.material, required this.file});
 
   @override
-  List<Object?> get props => [material];
+  List<Object?> get props => [material, file];
 }
+
 class FetchSubjects extends MaterialEvent {
   final bool isTeacher;
   final String teacherClasses;

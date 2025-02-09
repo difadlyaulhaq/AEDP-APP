@@ -19,6 +19,7 @@ class MaterialLoaded extends MaterialState {
   @override
   List<Object> get props => [materials];
 }
+class MaterialUploading extends MaterialState {}
 
 class MaterialError extends MaterialState {
   final String errorMessage;
@@ -28,6 +29,7 @@ class MaterialError extends MaterialState {
   @override
   List<Object> get props => [errorMessage];
 }
+
 class SubjectsLoaded extends MaterialState {
   final List<SubjectModel> subjects;
   const SubjectsLoaded(this.subjects);
