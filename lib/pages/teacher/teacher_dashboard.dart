@@ -67,7 +67,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
 }
 
 class DashboardStudentsHome extends StatelessWidget {
-  const DashboardStudentsHome({Key? key}) : super(key: key);
+  const DashboardStudentsHome({super.key});
 
   Widget _buildIconButton(
       BuildContext context, IconData icon, String label, VoidCallback onTap) {

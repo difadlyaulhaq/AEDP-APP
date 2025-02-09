@@ -118,11 +118,12 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
         builder: (context, state) {
           if (state is teacher_material_state.MaterialLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is teacher_material_state.MaterialLoaded) {
-          print("Materials Loaded: ${state.materials.length}");
+          } 
+          else if (state is teacher_material_state.MaterialLoaded) {
+          // print("Materials Loaded: ${state.materials.length}");
           for (var material in state.materials) {
-            print("Material: ${material.title}, SubjectId: ${material.subjectId}");
-          }return ListView.builder(
+            // print("Material: ${material.title}, SubjectId: ${material.subjectId}");
+        }return ListView.builder(
               itemCount: state.materials.length,
               itemBuilder: (context, index) {
                 final material = state.materials[index];

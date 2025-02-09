@@ -11,7 +11,7 @@ class SubjectModel {
 
   factory SubjectModel.fromMap(String id, Map<String, dynamic> data) {
   if (!data.containsKey('grade')) {
-    print("⚠️ Warning: Subject ${id} is missing 'grade' field!");
+    // print("⚠️ Warning: Subject ${id} is missing 'grade' field!");
   }
 
   return SubjectModel(

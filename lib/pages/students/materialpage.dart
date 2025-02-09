@@ -22,7 +22,7 @@ class _StudentMaterialPageState extends State<StudentMaterialPage> {
   @override
   void initState() {
     super.initState();
-    print("Fetching subjects for studentGradeClass: '${widget.studentGradeClass}'");
+    // print("Fetching subjects for studentGradeClass: '${widget.studentGradeClass}'");
 
     context.read<MaterialBloc>().add(
       FetchSubjects(

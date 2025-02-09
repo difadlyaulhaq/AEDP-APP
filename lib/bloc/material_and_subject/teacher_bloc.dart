@@ -19,9 +19,9 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
       .where('subjectId', isEqualTo: event.subjectId)
       .get();
 
-    print("Fetching materials for subjectId: ${event.subjectId}");
+    // print("Fetching materials for subjectId: ${event.subjectId}");
     snapshot.docs.forEach((doc) {
-      print("Material found: ${doc.id} | Data: ${doc.data()}");
+      // print("Material found: ${doc.id} | Data: ${doc.data()}");
     });
 
     final materials = snapshot.docs
@@ -50,9 +50,9 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
 
     final snapshot = await query.get();
 
-    print("Subjects fetched count: ${snapshot.docs.length}");
+    // print("Subjects fetched count: ${snapshot.docs.length}");
     snapshot.docs.forEach((doc) {
-      print("Subject: ${doc.id} | Data: ${doc.data()}");
+      // print("Subject: ${doc.id} | Data: ${doc.data()}");
     });
 
     final subjects = snapshot.docs.map(
@@ -61,7 +61,7 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
 
     emit(SubjectsLoaded(subjects));
   } catch (e) {
-    print("Error fetching subjects: $e");
+    // print("Error fetching subjects: $e");
     emit(MaterialError(e.toString()));
   }
 });

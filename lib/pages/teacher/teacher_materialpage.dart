@@ -26,7 +26,7 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
   @override
 void initState() {
   super.initState();
-  print("Fetching subjects for teacherClasses: '${widget.teacherClasses}'");
+  // print("Fetching subjects for teacherClasses: '${widget.teacherClasses}'");
 
   context.read<MaterialBloc>().add(
     FetchSubjects(
