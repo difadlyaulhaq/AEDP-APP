@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_aedp/bloc/language/language_cubit.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_event.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_state.dart' as custom;
 import 'package:project_aedp/bloc/material_and_subject/subject_model.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/teacher/teacher_detailmaterial.dart';
 import '../../bloc/material_and_subject/teacher_bloc.dart';
-
 
 class TeacherMaterialPage extends StatefulWidget {
   final String teacherClasses;
@@ -21,22 +21,21 @@ class TeacherMaterialPage extends StatefulWidget {
 }
 
 class TeacherMaterialPageState extends State<TeacherMaterialPage> {
-  // String selectedFilter = "All";
-
   @override
-void initState() {
-  super.initState();
-  // print("Fetching subjects for teacherClasses: '${widget.teacherClasses}'");
+  void initState() {
+    super.initState();
+    final selectedLanguage =
+        context.read<LanguageCubit>().state.locale.languageCode;
 
-  context.read<MaterialBloc>().add(
-    FetchSubjects(
-      isTeacher: true,
-      teacherClasses: widget.teacherClasses,
-      studentGradeClass: '',
-    ),
-  );
-}
-
+    context.read<MaterialBloc>().add(
+          FetchSubjects(
+            isTeacher: true,
+            teacherClasses: widget.teacherClasses,
+            studentGradeClass: '',
+            selectedLanguage: selectedLanguage,
+          ),
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +44,7 @@ void initState() {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(screenHeight * 0.2),
+        preferredSize: Size.fromHeight(screenHeight * 0.09),
         child: ClipPath(
           clipper: CustomAppBarClipper(),
           child: AppBar(
@@ -75,12 +74,6 @@ void initState() {
               ),
             ),
             centerTitle: true,
-            // actions: [
-            //   IconButton(
-            //     icon: const Icon(Icons.filter_alt_rounded, color: Colors.white),
-            //     onPressed: _showFilterDialog,
-            //   ),
-            // ],
           ),
         ),
       ),
@@ -95,12 +88,7 @@ void initState() {
                 horizontal: screenWidth * 0.04,
                 vertical: screenHeight * 0.02,
               ),
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: screenWidth > 600 ? 3 : 2,
-                  crossAxisSpacing: screenWidth * 0.04,
-                  mainAxisSpacing: screenHeight * 0.02,
-                ),
+              child: ListView.builder(
                 itemCount: subjects.length,
                 itemBuilder: (context, index) {
                   final subject = subjects[index];
@@ -117,125 +105,42 @@ void initState() {
     );
   }
 
-  // void _showFilterDialog() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return AlertDialog(
-  //         title: Text(S.of(context).filterSubjects),
-  //         content: BlocBuilder<MaterialBloc, custom.MaterialState>(
-  //           builder: (context, state) {
-  //             if (state is custom.SubjectsLoaded) {
-  //               final subjects = state.subjects;
-  //               final subjectNames = ['All', ...subjects.map((s) => s.subjectName)];
-                
-  //               return DropdownButton<String>(
-  //                 value: selectedFilter,
-  //                 items: subjectNames.map<DropdownMenuItem<String>>((String value) {
-  //                   return DropdownMenuItem<String>(
-  //                     value: value,
-  //                     child: Text(value),
-  //                   );
-  //                 }).toList(),
-  //                 onChanged: (value) {
-  //                   setState(() {
-  //                     selectedFilter = value!;
-  //                     // Implement filtering logic here if needed
-  //                   });
-  //                   Navigator.pop(context);
-  //                 },
-  //               );
-  //             }
-  //             return const CircularProgressIndicator();
-  //           },
-  //         ),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () => Navigator.pop(context),
-  //             child: Text(S.of(context).cancel),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
   Widget _buildCardItem(BuildContext context, SubjectModel subject) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TeacherDetailMaterial(
-              subject: subject.subjectName,
-              subjectId: subject.id,
-              grade: subject.grade,
-            ),
-          ),
-        );
-      },
-      child: Card(
-        elevation: 5,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(screenWidth * 0.04),
+    return Card(
+      elevation: 4,
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(16),
+        leading: CircleAvatar(
+          backgroundColor: Colors.blueAccent,
+          child: Icon(Icons.book, color: Colors.white),
         ),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF1E88E5), Color(0xFF1976D2)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(screenWidth * 0.04),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: screenWidth * 0.02),
-              Text(
-                subject.subjectName,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: screenWidth * 0.045,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                'Grade: ${subject.grade}',
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: screenWidth * 0.035,
-                ),
-              ),
-            ],
-          ),
+        title: Text(
+          subject.subjectName,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
+        subtitle: Text(
+          '${S.of(context).classes} ${subject.grade}',
+          style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, color: Colors.blueAccent),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TeacherDetailMaterial(
+                subject: subject.subjectName,
+                subjectId: subject.id,
+                grade: subject.grade,
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 }
 
-class CustomAppBarClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.lineTo(0, size.height - 50);
-    path.quadraticBezierTo(
-      size.width / 2,
-      size.height,
-      size.width,
-      size.height - 50,
-    );
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return false;
-  }
-}

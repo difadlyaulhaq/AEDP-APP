@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_aedp/bloc/language/language_cubit.dart';
 import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
 import 'package:project_aedp/bloc/load_profile/profile_state.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_event.dart';
@@ -88,59 +89,70 @@ class DashboardStudentsHome extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
        appBar: AppBar(title: Text(S.of(context).student_dashboard,style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500),)),
-      body: BlocBuilder<LoadProfileBloc, LoadProfileState>(
-        builder: (context, state) {
-          if (state is LoadProfileLoaded) {
-            final studentGradeClass = state.profileData['grade_class'] ?? '';
-
-            return BlocProvider(
-              create: (context) => MaterialBloc()
-                ..add(FetchSubjects(isTeacher: false, studentGradeClass: studentGradeClass, teacherClasses: '')), 
-              child: BlocBuilder<MaterialBloc, custom.MaterialState>(
-                builder: (context, materialState) {
-                  if (materialState is SubjectsLoaded) {
-                    return GridView.count(
-                      crossAxisCount: 3,
-                      children: [
-                        _buildIconButton(
-                          context,
-                          Icons.calendar_today,
-                          S.of(context).dashboard_schedule,
-                          () => Navigator.push(
+      body: Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: BlocBuilder<LoadProfileBloc, LoadProfileState>(
+          builder: (context, state) {
+            if (state is LoadProfileLoaded) {
+              final studentGradeClass = state.profileData['grade_class'] ?? '';
+        
+              return BlocProvider(
+               create: (context) {
+                final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
+                  return MaterialBloc()
+                    ..add(FetchSubjects(
+                      isTeacher: false, 
+                      studentGradeClass: studentGradeClass, 
+                      teacherClasses: '',
+                      selectedLanguage: selectedLanguage, // Tambahkan parameter bahasa
+                    ));
+                },
+                child: BlocBuilder<MaterialBloc, custom.MaterialState>(
+                  builder: (context, materialState) {
+                    if (materialState is SubjectsLoaded) {
+                      return GridView.count(
+                        crossAxisCount: 3,
+                        children: [
+                          _buildIconButton(
                             context,
-                            MaterialPageRoute(builder: (context) => const SchedulePage()),
-                          ),
-                        ),
-                        _buildIconButton(
-                          context,
-                          Icons.book,
-                          S.of(context).materials,
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => StudentMaterialPage( studentGradeClass: studentGradeClass ),
+                            Icons.calendar_today,
+                            S.of(context).dashboard_schedule,
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const SchedulePage()),
                             ),
                           ),
-                        ),
-                        _buildIconButton(
-                          context,
-                          Icons.library_books,
-                          S.of(context).e_library,
-                          () => Navigator.push(
+                          _buildIconButton(
                             context,
-                            MaterialPageRoute(builder: (context) => const ELibraryPage()),
+                            Icons.book,
+                            S.of(context).materials,
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => StudentMaterialPage( studentGradeClass: studentGradeClass ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  }
-                  return const Center(child: CircularProgressIndicator());
-                },
-              ),
-            );
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
+                          _buildIconButton(
+                            context,
+                            Icons.library_books,
+                            S.of(context).e_library,
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const ELibraryPage()),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                ),
+              );
+            }
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
       ),
     );
   }

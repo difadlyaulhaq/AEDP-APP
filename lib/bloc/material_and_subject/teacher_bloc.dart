@@ -4,6 +4,7 @@ import 'material_event.dart';
 import 'material_state.dart';
 import 'material_model.dart';
 import 'subject_model.dart';
+import 'package:translator/translator.dart'; // Import translator package
 
 class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -34,8 +35,7 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
   }
 });
 
-
-    on<FetchSubjects>((event, emit) async {
+on<FetchSubjects>((event, emit) async {
   try {
     emit(MaterialLoading());
 
@@ -49,22 +49,37 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
     }
 
     final snapshot = await query.get();
+    final translator = GoogleTranslator();
 
-    // print("Subjects fetched count: ${snapshot.docs.length}");
-    snapshot.docs.forEach((doc) {
-      // print("Subject: ${doc.id} | Data: ${doc.data()}");
-    });
+    final List<SubjectModel> subjects = [];
 
-    final subjects = snapshot.docs.map(
-      (doc) => SubjectModel.fromMap(doc.id, doc.data() as Map<String, dynamic>)
-    ).toList();
+    for (var doc in snapshot.docs) {
+      var data = doc.data() as Map<String, dynamic>;
+      String subjectName = data['subject_name'] ?? 'Unknown';
+
+      // Terjemahkan berdasarkan bahasa yang dipilih
+      String translatedSubject = subjectName; // Default ke original
+      if (event.selectedLanguage == 'ar') {
+        translatedSubject = (await translator.translate(subjectName, to: 'ar')).text;
+      } else if (event.selectedLanguage == 'en') {
+        translatedSubject = (await translator.translate(subjectName, to: 'en')).text;
+      } else if (event.selectedLanguage == 'pt') {
+        translatedSubject = (await translator.translate(subjectName, to: 'pt')).text;
+      }
+
+      subjects.add(SubjectModel(
+        id: doc.id,
+        grade: data['grade'] ?? '',
+        subjectName: translatedSubject,
+      ));
+    }
 
     emit(SubjectsLoaded(subjects));
   } catch (e) {
-    // print("Error fetching subjects: $e");
     emit(MaterialError(e.toString()));
   }
 });
+
 
     // Add new material
  on<AddMaterial>((event, emit) async {

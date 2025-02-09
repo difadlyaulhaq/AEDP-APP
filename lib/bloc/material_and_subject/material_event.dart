@@ -25,12 +25,14 @@ class AddMaterial extends MaterialEvent {
 }
 class FetchSubjects extends MaterialEvent {
   final bool isTeacher;
-  final String teacherClasses; // Classes from the teacher
-  final String studentGradeClass; // Grade class for students
+  final String teacherClasses;
+  final String studentGradeClass;
+  final String selectedLanguage; // Tambahkan parameter bahasa
 
   FetchSubjects({
     required this.isTeacher,
     required this.teacherClasses,
     required this.studentGradeClass,
+    required this.selectedLanguage, // Tambahkan ke konstruktor
   });
 }
