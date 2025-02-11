@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -291,7 +290,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
 }
 
 
-  void _handleMaterialUpload(BuildContext context, String title, String description, File file) {
+void _handleMaterialUpload(BuildContext context, String title, String description, File file) {
   if (title.isEmpty || description.isEmpty) {
     _showErrorSnackBar(context, 'Please fill all fields');
     return;
@@ -304,17 +303,12 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
     fileLink: '', // Nanti akan diperbarui setelah upload
     grade: widget.grade,
     subjectId: widget.subjectId,
-    createdAt: DateTime.now(),
+    // createdAt: DateTime.now(),
   );
 
   context.read<MaterialBloc>().add(AddMaterial(material: material, file: file));
-  Navigator.pop(context);
-  Future.delayed(Duration(milliseconds: 300), () {
-    _materialBloc.add(FetchMaterials(subjectId: widget.subjectId));
-  });  
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(content: Text('Material uploaded successfully!')),
-  );
+  Navigator.pop(context); // Tutup dialog upload
+  _materialBloc.add(FetchMaterials(subjectId: widget.subjectId)); // Fetch ulang materials
 }
 
   void _showErrorSnackBar(BuildContext context, String message) {

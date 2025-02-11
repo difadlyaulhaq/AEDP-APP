@@ -6,12 +6,14 @@ import 'package:project_aedp/bloc/auth/auth_bloc.dart';
 import 'package:project_aedp/bloc/auth/auth_event.dart';
 import 'package:project_aedp/bloc/auth/auth_state.dart';
 import 'package:project_aedp/generated/l10n.dart';
-import 'dart:developer' as dev;
+import 'dart:developer' as dev;   
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class LoginPageByRole extends StatefulWidget {
   final String role;
 
-  const LoginPageByRole({Key? key, required this.role}) : super(key: key);
+  const LoginPageByRole({super.key, required this.role});
 
   @override
   _LoginPageByRoleState createState() => _LoginPageByRoleState();
@@ -22,42 +24,40 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordObscured = true;
   bool isLoading = false;
+  ScaffoldMessengerState? _scaffoldMessenger;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _scaffoldMessenger = ScaffoldMessenger.of(context);
   }
 
- void _handleLogin() {
-  final String idText = idController.text.trim();
-  final String password = passwordController.text.trim();
+  void _handleLogin() {
+    final String idText = idController.text.trim();
+    final String password = passwordController.text.trim();
 
-  if (idText.isEmpty || password.isEmpty) {
-    _showSnackBar(S.of(context).pleaseEnterEmailAndPassword);
-    return;
+    if (idText.isEmpty || password.isEmpty) {
+      _showSnackBar('Please enter your ID and password');
+      return;
+    }
+
+    num? id = num.tryParse(idText);
+    if (id == null) {
+      _showSnackBar('Please enter a valid numeric ID');
+      return;
+    }
+
+    setState(() => isLoading = true);
+    dev.log('Attempting login for role: ${widget.role} with ID: $id');
+
+    context.read<AuthBloc>().add(
+          AuthLoginRequested(
+            id: id,
+            password: password,
+            role: widget.role,
+          ),
+        );
   }
-
-  num? id;
-  try {
-    double parsedId = double.parse(idText); // Parsing as double
-    id = parsedId % 1 == 0 ? parsedId.toInt() : parsedId; 
-  } catch (e) {
-    _showSnackBar('Please enter a valid numeric ID');
-    return;
-  }
-
-  setState(() => isLoading = true);
-  dev.log('Attempting login for role: ${widget.role} with ID: $id');
-
-  context.read<AuthBloc>().add(
-        AuthLoginRequested(
-          id: id,
-          password: password,
-          role: widget.role,
-        ),
-      );
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -78,18 +78,17 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
           ),
         ),
         body: BlocConsumer<AuthBloc, AuthState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             dev.log('Auth state changed: $state');
-
             setState(() => isLoading = state is AuthLoading);
 
             if (state is AuthLoginSuccess) {
-              dev.log('Login success, checking role match');
-              if (state.role.toLowerCase() != widget.role.toLowerCase()) {
-                dev.log('Role mismatch: ${state.role} vs ${widget.role}');
-                _showSnackBar(S.of(context).accessDeniedIncorrectRole);
-                return;
-              }
+              dev.log('Login success, saving session');
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setBool('isLoggedIn', true);
+              await prefs.setString('role', state.role);
+             await prefs.setString('userId', state.userId.toInt().toString());
+
 
               switch (state.role.toLowerCase()) {
                 case 'student':
@@ -103,13 +102,8 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
                   break;
                 default:
                   dev.log('Unknown role encountered: ${state.role}');
-                  _showSnackBar(S.of(context).unknownRole);
+                  _showSnackBar(localization.unknownRole);
               }
-            } else if (state is AuthFailure) {
-              dev.log('Auth failure: ${state.errorMessage}');
-              _showSnackBar(
-                '${localization.loginFailed}: ${state.errorMessage}',
-              );
             }
           },
           builder: (context, state) {
@@ -119,11 +113,7 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      "assets/logo.png",
-                      width: 132,
-                      height: 131,
-                    ),
+                    Image.asset("assets/logo.png", width: 132, height: 131),
                     const SizedBox(height: 12),
                     Text(
                       widget.role,
@@ -149,7 +139,6 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
                       controller: idController,
                       label: localization.contact_school_id,
                       icon: Icons.call,
-                      keyboardType: TextInputType.number,
                     ),
                     const SizedBox(height: 12),
                     _buildPasswordField(localization.password),
@@ -168,7 +157,8 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
     );
   }
 
-  Widget _buildLoginButton(S localization) {
+
+   Widget _buildLoginButton(S localization) {
     return SizedBox(
       width: double.infinity,
       height: 45,
@@ -188,7 +178,7 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
     );
   }
 
-  Widget _buildPasswordField(String label) {
+    Widget _buildPasswordField(String label) {
     return TextField(
       controller: passwordController,
       obscureText: isPasswordObscured,
@@ -236,10 +226,12 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
       onSubmitted: (_) => _handleLogin(),
     );
 }
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(message)));
+ void _showSnackBar(String message) {
+    if (mounted && _scaffoldMessenger != null) {
+      _scaffoldMessenger!
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(message)));
+    }
   }
 
   @override

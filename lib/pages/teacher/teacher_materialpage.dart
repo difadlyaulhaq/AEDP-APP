@@ -9,12 +9,8 @@ import 'package:project_aedp/pages/teacher/teacher_detailmaterial.dart';
 import '../../bloc/material_and_subject/teacher_bloc.dart';
 
 class TeacherMaterialPage extends StatefulWidget {
-  final String teacherClasses;
-
-  const TeacherMaterialPage({
-    super.key,
-    required this.teacherClasses,
-  });
+  final List<String> teacherClasses; // Explicitly typed as List<String>
+  const TeacherMaterialPage({super.key, required this.teacherClasses});
 
   @override
   TeacherMaterialPageState createState() => TeacherMaterialPageState();
@@ -27,10 +23,13 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
     final selectedLanguage =
         context.read<LanguageCubit>().state.locale.languageCode;
 
+    // Ensure teacherClasses is not null
+    final teacherClasses = widget.teacherClasses ?? [];
+
     context.read<MaterialBloc>().add(
           FetchSubjects(
             isTeacher: true,
-            teacherClasses: widget.teacherClasses,
+            teacherClasses: teacherClasses.join(','), // Join the list into a string
             studentGradeClass: '',
             selectedLanguage: selectedLanguage,
           ),
@@ -143,4 +142,3 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
     );
   }
 }
-

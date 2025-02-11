@@ -5,7 +5,6 @@ import 'package:project_aedp/bloc/load_profile/profile_state.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/profile_page.dart';
 import 'package:project_aedp/pages/students/elibrary.dart';
-import 'package:project_aedp/pages/students/schedulepage.dart';
 import 'package:project_aedp/pages/teacher/teacher_grades_page.dart';
 import 'package:project_aedp/pages/teacher/teacher_materialpage.dart';
 import 'package:project_aedp/pages/teacher/teacher_schedule.dart';
@@ -24,7 +23,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
 
   final List<Widget> _pages = const [
     DashboardStudentsHome(),
-    SchedulePage(),
+    TeacherSchedule(),
     ProfilePage(),
   ];
 
@@ -87,11 +86,22 @@ class DashboardStudentsHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.of(context).teacher_dashboard,style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500),)),
+      appBar: AppBar(
+        title: Text(
+          S.of(context).teacher_dashboard,
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+        ),
+      ),
       body: BlocBuilder<LoadProfileBloc, LoadProfileState>(
         builder: (context, state) {
           if (state is LoadProfileLoaded) {
-            final teacherClasses = state.profileData['classes'] as List<String>? ?? [];
+            // Ensure teacherClasses is not null and is explicitly typed as List<String>
+            final teacherClassesRaw = state.profileData['classes'];
+            final List<String> teacherClasses = teacherClassesRaw is String
+                ? teacherClassesRaw.split(',').map((e) => e.trim()).toList()
+                : (teacherClassesRaw is List)
+                    ? teacherClassesRaw.cast<String>() // Cast to List<String>
+                    : [];
 
             return Padding(
               padding: const EdgeInsets.only(top: 16),
@@ -104,7 +114,8 @@ class DashboardStudentsHome extends StatelessWidget {
                     S.of(context).dashboard_schedule,
                     () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const TeacherSchedule()),
+                      MaterialPageRoute(
+                          builder: (context) => const TeacherSchedule()),
                     ),
                   ),
                   _buildIconButton(
@@ -114,7 +125,9 @@ class DashboardStudentsHome extends StatelessWidget {
                     () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => TeacherMaterialPage(teacherClasses: teacherClasses.join(',')),  
+                        builder: (context) => TeacherMaterialPage(
+                          teacherClasses: teacherClasses,
+                        ),
                       ),
                     ),
                   ),
@@ -124,21 +137,27 @@ class DashboardStudentsHome extends StatelessWidget {
                     S.of(context).e_library,
                     () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ELibraryPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const ELibraryPage()),
                     ),
                   ),
-                  _buildIconButton(context, 
-                  Icons.school, S.of(context).grade, 
-                  () => Navigator.push(
+                  _buildIconButton(
                     context,
-                    MaterialPageRoute(builder: (context) => TeacherGradesPage(teacherClasses: teacherClasses.join(','))),
-                  ),
+                    Icons.school,
+                    S.of(context).grade,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            TeacherGradesPage(teacherClasses: teacherClasses),
+                      ),
+                    ),
                   ),
                 ],
               ),
             );
           }
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );

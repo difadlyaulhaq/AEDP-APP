@@ -3,13 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project_aedp/generated/l10n.dart';
 
 class TeacherGradesPage extends StatelessWidget {
-  final String teacherClasses;
-
+  final List<String> teacherClasses; // Explicitly typed as List<String>
   const TeacherGradesPage({super.key, required this.teacherClasses});
+
 
   @override
   Widget build(BuildContext context) {
-    List<String> classList = teacherClasses.split(',');
+final List<String> classList = teacherClasses;
+
 
     return Scaffold(
       appBar: AppBar(

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 import 'auth_repository.dart';
@@ -8,44 +9,39 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
 
   AuthBloc({required this.authRepository}) : super(AuthInitial()) {
-    on<AuthLogoutRequested>((event, emit) async {
-      try {
-        dev.log('Processing logout request');
-        emit(AuthLoading());
-        await authRepository.clearLoginStatus();
-        emit(AuthLogoutSuccess());
-        dev.log('Logout successful');
-      } catch (e) {
-        dev.log('Logout failed: $e');
-        emit(AuthFailure('Failed to logout: ${e.toString()}'));
-      }
-    });
-
-    on<AuthLoadLoginStatus>((event, emit) async {
+  on<AuthLogoutRequested>((event, emit) async {
+    try {
+      dev.log('Processing logout request');
       emit(AuthLoading());
-      try {
-        dev.log('Loading login status');
-        final loginStatus = await authRepository.loadLoginStatus();
-        
-        if (loginStatus != null) {
-          final userId = loginStatus['userId'] as num;
-          final role = loginStatus['role'] as String;
-          
-          dev.log('Found existing login status - Role: $role, UserId: $userId');
-          emit(AuthLoginSuccess(
-            role: role,
-            userId: userId,
-          ));
-        } else {
-          dev.log('No existing login status found');
-          emit(AuthInitial());
-        }
-      } catch (e) {
-        dev.log('Error loading login status: $e');
-        emit(AuthFailure(e.toString()));
-      }
-    });
+      await authRepository.clearLoginStatus();
+      emit(AuthLogoutSuccess());
+      dev.log('Logout successful');
+    } catch (e) {
+      dev.log('Logout failed: $e');
+      emit(AuthFailure('Failed to logout: ${e.toString()}'));
+    }
+  });
 
+        on<AuthLoadLoginStatus>((event, emit) async {
+          emit(AuthLoading());
+          try {
+            final prefs = await SharedPreferences.getInstance();
+            final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+            final role = prefs.getString('role');
+            final userId = prefs.getString('userId');
+            dev.log('Loading login status - isLoggedIn: $isLoggedIn, Role: $role, UserId: $userId');
+            if (isLoggedIn && role != null && userId != null) {
+              dev.log('Auto-login: Role: $role, UserId: $userId');
+              emit(AuthLoginSuccess(role: role, userId: num.parse(userId)));      
+              } else {
+              dev.log('No existing login session');
+              emit(AuthInitial());
+            }
+          } catch (e) {
+            dev.log('Error loading login status: $e');
+            emit(AuthFailure(e.toString()));
+          }
+        });
       on<AuthLoginRequested>((event, emit) async {
       emit(AuthLoading());
       try {

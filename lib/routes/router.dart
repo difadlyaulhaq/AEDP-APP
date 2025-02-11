@@ -41,45 +41,45 @@ GoRouter getRouter(AuthState authState) {
         name: RoutesNames.homestudent,
         builder: (context, state) => const StudentHome(),
         redirect: (context, state) {
-        final authState = context.read<AuthBloc>().state;
-        if (authState is! AuthLoginSuccess || 
-            authState.role.toLowerCase() != 'student') {
-          return '/select-role';
-        }
-        return null;
-      },
+          final authState = context.read<AuthBloc>().state;
+          if (authState is! AuthLoginSuccess || 
+              authState.role.toLowerCase() != 'student') {
+            return '/select-role';
+          }
+          return null;
+        },
       ),
       GoRoute(
         path: '/parent-home',
         name: RoutesNames.ParrentHome,
         builder: (context, state) => const ParrentHome(),
         redirect: (context, state) {
-        final authState = context.read<AuthBloc>().state;
-        if (authState is! AuthLoginSuccess || 
-            authState.role.toLowerCase() != 'parent') {
-          return '/select-role';
-        }
-        return null;
-      },
+          final authState = context.read<AuthBloc>().state;
+          if (authState is! AuthLoginSuccess || 
+              authState.role.toLowerCase() != 'parent') {
+            return '/select-role';
+          }
+          return null;
+        },
       ),
       GoRoute(
-      path: '/teacher-dashboard',
-      builder: (context, state) => const TeacherDashboard(),
-      redirect: (context, state) {
-        final authState = context.read<AuthBloc>().state;
-        if (authState is! AuthLoginSuccess || 
-            authState.role.toLowerCase() != 'teacher') {
-          return '/select-role';
-        }
-        return null;
-      },
-    ),
+        path: '/teacher-dashboard',
+        builder: (context, state) => const TeacherDashboard(),
+        redirect: (context, state) {
+          final authState = context.read<AuthBloc>().state;
+          if (authState is! AuthLoginSuccess || 
+              authState.role.toLowerCase() != 'teacher') {
+            return '/select-role';
+          }
+          return null;
+        },
+      ),
       GoRoute(
         path: '*',
         builder: (context, state) => const NotFoundPage(),
       ),
     ],
-      redirect: (context, state) {
+  redirect: (context, state) {
     final authState = context.read<AuthBloc>().state;
     final isLoggingIn = state.matchedLocation.startsWith('/login');
     final isSelectingRole = state.matchedLocation == '/select-role';

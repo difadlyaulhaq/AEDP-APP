@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'load_profile_event.dart';
 import 'profile_state.dart';
+import 'dart:developer' as dev;
 
 class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
   final FirebaseFirestore _firestore;
@@ -52,8 +53,13 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
         default:
           throw Exception('Invalid role');
       }
+      if (roleData == null) {
+        dev.log('Role data not found for role: $role with userId: $userId');
+        throw Exception('Role-specific profile data not found');
+      }
 
-      if (roleData == null || fullName == null) {
+      if (fullName == null) {
+        dev.log('Full name is missing for role: $role with userId: $userId');
         throw Exception('Role-specific profile data not found');
       }
 
@@ -61,7 +67,9 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
         'id': userId.toString(),
         'role': role,
         'fullName': fullName,
-        'classes': roleData ['classes'], // Tambahkan classes ke dalam profileData
+        'classes': roleData['classes'] is String
+            ? (roleData['classes'] as String).split(',').map((e) => e.trim()).toList()
+            : (roleData['classes'] as List<dynamic>?)?.cast<String>() ?? [],
         ...roleData,
       };
 
@@ -72,30 +80,42 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
     }
   }
 
- Future<Map<String, dynamic>?> _fetchTeacherData(String userId) async {
-  final teacherDoc = await _firestore
-      .collection('teachers')
-      .where('contact', isEqualTo: userId) // Sesuai dengan kontak user
-      .limit(1)
-      .get();
+  Future<Map<String, dynamic>?> _fetchTeacherData(String userId) async {
+    final teacherDoc = await _firestore
+        .collection('teachers')
+        .where('contact', isEqualTo: userId) // Sesuai dengan kontak user
+        .limit(1)
+        .get();
 
-  if (teacherDoc.docs.isNotEmpty) {
-    final data = teacherDoc.docs.first.data();
-    return {
-      ...data,
-      'classes': (data['classes'] as String).split(','), // Ubah dari string ke List<String>
-      'contact': data['contact'] ?? '',
-      'whatsapp': data['whatsapp'] ?? '',
-    };
+    if (teacherDoc.docs.isNotEmpty) {
+      final data = teacherDoc.docs.first.data();
+      
+      // Handle the 'classes' field
+      final classes = data['classes'];
+      List<String> classesList = [];
+      
+      if (classes is String) {
+        // Split the string by commas and trim each element
+        classesList = classes.split(',').map((e) => e.trim()).toList();
+      } else if (classes is List<dynamic>) {
+        // Cast to List<String>
+        classesList = classes.cast<String>();
+      }
+
+      return {
+        ...data,
+        'classes': classesList, // Ensure 'classes' is always a List<String>
+        'contact': data['contact'] ?? '',
+        'whatsapp': data['whatsapp'] ?? '',
+      };
+    }
+    return null;
   }
-  return null;
-}
-
 
   Future<Map<String, dynamic>?> _fetchStudentData(num userId) async {
     final studentDoc = await _firestore
         .collection('students')
-        .where('school_id', isEqualTo: userId.toString())
+        .where('school_id', isEqualTo: userId.toString()) // Sesuaikan dengan tipe data di Firestore
         .limit(1)
         .get();
 
@@ -113,7 +133,7 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
   Future<Map<String, dynamic>?> _fetchParentData(num userId) async {
     final parentDoc = await _firestore
         .collection('parents')
-        .where('contact', isEqualTo: userId.toString())
+        .where('contact', isEqualTo: userId.toString()) // Sesuaikan dengan format di Firestore
         .limit(1)
         .get();
 

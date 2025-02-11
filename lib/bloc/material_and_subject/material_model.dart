@@ -5,7 +5,7 @@ class MaterialModel {
   final String fileLink;
   final String grade;
   final String subjectId;
-  final DateTime createdAt;
+  // final DateTime createdAt;
 
   MaterialModel({
     required this.id,
@@ -14,7 +14,7 @@ class MaterialModel {
     required this.fileLink,
     required this.grade,
     required this.subjectId,
-    required this.createdAt,
+    // required this.createdAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -24,7 +24,7 @@ class MaterialModel {
       'fileLink': fileLink,
       'grade': grade,
       'subjectId': subjectId,
-      'createdAt': createdAt.toIso8601String(),
+      // 'createdAt': createdAt.toIso8601String(),
     };
   }
 
@@ -36,7 +36,7 @@ class MaterialModel {
       fileLink: data['fileLink'] ?? '',
       grade: data['grade'] ?? '',
       subjectId: data['subjectId'] ?? '',
-      createdAt: DateTime.parse(data['createdAt']),
+      // createdAt: DateTime.parse(data['createdAt']),
     );
   }
 
@@ -47,7 +47,7 @@ class MaterialModel {
     String? fileLink,
     String? grade,
     String? subjectId,
-    DateTime? createdAt,
+    // DateTime? createdAt,
   }) {
     return MaterialModel(
       id: id ?? this.id,
@@ -56,7 +56,7 @@ class MaterialModel {
       fileLink: fileLink ?? this.fileLink,
       grade: grade ?? this.grade,
       subjectId: subjectId ?? this.subjectId,
-      createdAt: createdAt ?? this.createdAt,
+      // createdAt: createdAt ?? this.createdAt,
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:project_aedp/bloc/auth/auth_event.dart';
 import 'package:project_aedp/bloc/schedule/schedule_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'bloc/auth/auth_bloc.dart';
@@ -17,16 +18,20 @@ import 'generated/l10n.dart';
 import 'routes/router.dart';
 import 'package:provider/provider.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final prefs = await SharedPreferences.getInstance();
+  // await prefs.clear();
   final firestore = FirebaseFirestore.instance;
   final authRepository = AuthRepository(firestore);
   final authBloc = AuthBloc(authRepository: authRepository);
   
   // Inisialisasi router di sini untuk memastikan konsistensi state
   final router = getRouter(AuthInitial());
+
+  authBloc.add(AuthLoadLoginStatus());
 
   runApp(MyApp(
     authBloc: authBloc,
