@@ -16,7 +16,7 @@ class _StudentHomeState extends State<StudentHome> {
 
   final List<Widget> _pages = [
     const DashboardStudentsHome(),
-    const SchedulePage(),
+     const SchedulePage(),
     const ProfilePage(),
   ];
 

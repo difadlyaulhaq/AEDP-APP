@@ -1,15 +1,31 @@
-abstract class InvoiceDownloadState {}
+
+import 'package:equatable/equatable.dart';
+
+abstract class InvoiceDownloadState extends Equatable {
+  const InvoiceDownloadState();
+
+  @override
+  List<Object?> get props => [];
+}
 
 class InvoiceDownloadInitial extends InvoiceDownloadState {}
 
 class InvoiceDownloading extends InvoiceDownloadState {}
 
-class InvoiceDownloadError extends InvoiceDownloadState {
-  final String message;
-  InvoiceDownloadError(this.message);
+class InvoiceDownloadSuccess extends InvoiceDownloadState {
+  final String pdfPath;
+
+  const InvoiceDownloadSuccess(this.pdfPath);
+
+  @override
+  List<Object?> get props => [pdfPath];
 }
 
-class InvoiceDownloaded extends InvoiceDownloadState {
-  final String filePath;
-  InvoiceDownloaded(this.filePath);
+class InvoiceDownloadError extends InvoiceDownloadState {
+  final String message;
+
+  const InvoiceDownloadError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }

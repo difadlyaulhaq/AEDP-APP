@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
-import 'package:open_file/open_file.dart'; // Import the open_file package
 import 'package:project_aedp/bloc/auth/auth_bloc.dart';
 import 'package:project_aedp/bloc/auth/auth_state.dart';
 import 'package:project_aedp/bloc/library_download/library_download_bloc.dart';
 import 'package:project_aedp/bloc/library_download/library_download_event.dart';
 import 'package:project_aedp/bloc/library_download/library_download_state.dart';
 import 'package:project_aedp/generated/l10n.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ELibraryPage extends StatefulWidget {
   const ELibraryPage({super.key});
@@ -21,101 +18,27 @@ class ELibraryPage extends StatefulWidget {
 class _ELibraryPageState extends State<ELibraryPage> {
   bool _isDownloading = false; // Menyimpan status unduhan
 
-  Future<bool> _requestStoragePermission(BuildContext context) async {
-    if (Platform.isAndroid) {
-      final storagePermissionStatus = await Permission.storage.request();
-      if (storagePermissionStatus.isGranted) {
-        return true;
-      }
-
-      if (await Permission.storage.isDenied || await Permission.mediaLibrary.isDenied) {
-        final mediaPermissionStatus = await Permission.mediaLibrary.request();
-        if (mediaPermissionStatus.isGranted) {
-          return true;
-        }
-      }
-
-      if (await Permission.storage.isPermanentlyDenied || await Permission.mediaLibrary.isPermanentlyDenied) {
-        final bool shouldOpenSettings = await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Storage Permission Required'),
-            content: const Text(
-              'This permission is required to download and save files. Please enable it in settings.',
-            ),
-            actions: [
-              TextButton(
-                child: const Text('Cancel'),
-                onPressed: () => Navigator.of(context).pop(false),
-              ),
-              TextButton(
-                child: const Text('Open Settings'),
-                onPressed: () => Navigator.of(context).pop(true),
-              ),
-            ],
-          ),
-        ) ?? false;
-
-        if (shouldOpenSettings) {
-          await openAppSettings();
-        }
-      }
-
-      return false;
-    }
-    return true;
-  }
-
-  Future<String?> _getDownloadPath(BuildContext context) async {
-    if (Platform.isAndroid) {
-      if (await _requestStoragePermission(context)) {
-        Directory directory = Directory('/storage/emulated/0/Download');
-        if (!await directory.exists()) {
-          await directory.create(recursive: true);
-        }
-        return directory.path;
-      }
-      return null;
-    } else {
-      final directory = await getApplicationDocumentsDirectory();
-      return directory.path;
-    }
-  }
-
-  Future<void> _downloadFile(BuildContext context, String filePath) async {
+  Future<void> _downloadFile(String filePath) async {
     setState(() {
       _isDownloading = true; // Menampilkan indikator proses
     });
 
     try {
-      final downloadPath = await _getDownloadPath(context);
-      if (downloadPath == null) {
-        throw Exception('Storage permission not granted');
-      }
+      const baseUrl = "https://gold-tiger-632820.hostingersite.com/";
+      final downloadUrl = Uri.parse(baseUrl).resolve(filePath).toString();
 
-      context.read<LibraryDownloadBloc>().add(DownloadFile(filePath, getUserId()));
-
-      await for (final state in context.read<LibraryDownloadBloc>().stream) {
-        if (state is LibraryDownloadSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Downloaded to $downloadPath')),
-          );
-          // Open the file after downloading
-          final file = File('$downloadPath/${filePath.split('/').last}');
-          final result = await OpenFile.open(file.path);
-          if (result.type != ResultType.done) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to open the file')),
-            );
-          }
-          break;
-        } else if (state is LibraryDownloadError) {
-          throw Exception(state.message);
-        }
+      if (await canLaunchUrl(Uri.parse(downloadUrl))) {
+        await launchUrl(
+          Uri.parse(downloadUrl),
+          mode: LaunchMode.externalApplication,
+        );
+      } else {
+        throw 'Could not launch $downloadUrl';
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
+        SnackBar(content: Text('Failed to open URL: ${e.toString()}')),
       );
     } finally {
       setState(() {
@@ -195,7 +118,7 @@ class _ELibraryPageState extends State<ELibraryPage> {
                               ),
                               trailing: IconButton(
                                 icon: const Icon(Icons.download, color: Colors.green),
-                                onPressed: () => _downloadFile(context, file.filePath),
+                                onPressed: () => _downloadFile(file.filePath),
                               ),
                             ),
                           ),

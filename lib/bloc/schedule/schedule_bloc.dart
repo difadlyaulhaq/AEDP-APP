@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 import 'schedule_event.dart';
 import 'schedule_state.dart';
@@ -12,7 +10,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
   ScheduleBloc({required this.firestore}) : super(ScheduleInitial()) {
     on<FetchSchedule>(_onFetchSchedule);
-    on<DownloadSchedule>(_onDownloadSchedule);
   }
 
   Future<void> _onFetchSchedule(
@@ -60,10 +57,10 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       } else if (role?.toLowerCase() == 'teacher') {
         // Fetch all schedules for teachers
         scheduleQuery = firestore.collection('schedules');
-      }else if (role?.toLowerCase() == 'parent') {
+      } else if (role?.toLowerCase() == 'parent') {
         // Fetch all schedules for parents
         scheduleQuery = firestore.collection('schedules');
-      }else {
+      } else {
         emit(ScheduleError("Invalid role"));
         return;
       }
@@ -83,38 +80,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       emit(ScheduleLoaded(scheduleData));
     } catch (e) {
       emit(ScheduleError("Failed to fetch schedule: $e"));
-    }
-  }
-
-  Future<void> _onDownloadSchedule(
-    DownloadSchedule event,
-    Emitter<ScheduleState> emit,
-  ) async {
-    try {
-      const baseUrl = "https://gold-tiger-632820.hostingersite.com/";
-      final downloadUrl = Uri.parse(baseUrl).resolve(event.filePath).toString();
-
-      final response = await http.get(Uri.parse(downloadUrl));
-      if (response.statusCode == 200) {
-        final directory = Platform.isAndroid
-            ? Directory('/storage/emulated/0/Download')
-            : await getApplicationDocumentsDirectory();
-
-        if (!await directory.exists()) {
-          await directory.create(recursive: true);
-        }
-
-        final fileName = event.filePath.split('/').last;
-        final filePathToSave = '${directory.path}/$fileName';
-        final file = File(filePathToSave);
-        await file.writeAsBytes(response.bodyBytes);
-
-        emit(ScheduleDownloaded(filePathToSave));
-      } else {
-        emit(ScheduleError("Failed to download schedule: ${response.statusCode}"));
-      }
-    } catch (e) {
-      emit(ScheduleError("Error downloading schedule: $e"));
     }
   }
 }

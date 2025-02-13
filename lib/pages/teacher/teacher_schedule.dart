@@ -5,9 +5,46 @@ import 'package:project_aedp/bloc/load_profile/profile_state.dart';
 import 'package:project_aedp/bloc/schedule/schedule_bloc.dart';
 import 'package:project_aedp/bloc/schedule/schedule_event.dart';
 import 'package:project_aedp/bloc/schedule/schedule_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class TeacherSchedule extends StatelessWidget {
+class TeacherSchedule extends StatefulWidget {
   const TeacherSchedule({super.key});
+
+  @override
+  _TeacherScheduleState createState() => _TeacherScheduleState();
+}
+
+class _TeacherScheduleState extends State<TeacherSchedule> {
+  final Set<String> _downloadingItemIds = {};
+
+  Future<void> _downloadAndOpenSchedule(String pdfPath, String itemId) async {
+    try {
+      setState(() {
+        _downloadingItemIds.add(itemId);
+      });
+
+      const baseUrl = "https://gold-tiger-632820.hostingersite.com/";
+      final downloadUrl = Uri.parse(baseUrl).resolve(pdfPath).toString();
+
+      if (await canLaunchUrl(Uri.parse(downloadUrl))) {
+        await launchUrl(
+          Uri.parse(downloadUrl),
+          mode: LaunchMode.externalApplication,
+        );
+      } else {
+        throw 'Could not launch $downloadUrl';
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to open URL: ${e.toString()}')),
+      );
+    } finally {
+      setState(() {
+        _downloadingItemIds.remove(itemId);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +109,8 @@ class TeacherSchedule extends StatelessWidget {
   }
 
   Widget _buildClassCard(Map<String, dynamic> classInfo) {
+    final itemId = classInfo['id'] ?? '';
+
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -91,13 +130,18 @@ class TeacherSchedule extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             if (classInfo['pdf_path'] != null)
-              ElevatedButton.icon(
-                onPressed: () {
-                  // Handle download logic
-                },
-                icon: const Icon(Icons.download),
-                label: const Text('Download Schedule'),
-              ),
+              _downloadingItemIds.contains(itemId)
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ElevatedButton.icon(
+                      onPressed: () => _downloadAndOpenSchedule(
+                        classInfo['pdf_path'],
+                        itemId,
+                      ),
+                      icon: const Icon(Icons.download),
+                      label: const Text('Download Schedule'),
+                    ),
           ],
         ),
       ),

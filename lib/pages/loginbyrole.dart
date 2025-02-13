@@ -205,7 +205,7 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
     required TextEditingController controller,
     required String label,
     required IconData icon,
-    TextInputType? keyboardType,
+    // TextInputType? keyboardType,
 }) {
     return TextField(
       controller: controller,

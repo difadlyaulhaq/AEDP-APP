@@ -23,7 +23,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final prefs = await SharedPreferences.getInstance();
-  // await prefs.clear();
+  //  await prefs.clear();
   final firestore = FirebaseFirestore.instance;
   final authRepository = AuthRepository(firestore);
   final authBloc = AuthBloc(authRepository: authRepository);

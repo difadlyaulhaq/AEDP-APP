@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
-import 'package:open_file/open_file.dart';
 import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
+import 'package:project_aedp/bloc/load_profile/profile_state.dart';
 import 'package:project_aedp/bloc/transcript_downloads/transcript_downloads_bloc.dart';
 import 'package:project_aedp/generated/l10n.dart';
-import 'package:http/http.dart' as http;
-import '../../bloc/load_profile/profile_state.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../../bloc/transcript_downloads/transcript_item.dart';
 
 class TranscriptPage extends StatelessWidget {
@@ -37,107 +34,22 @@ class TranscriptPage extends StatelessWidget {
 class TranscriptView extends StatelessWidget {
   const TranscriptView({super.key});
 
-  Future<bool> _requestStoragePermission(BuildContext context) async {
-    if (Platform.isAndroid) {
-      // Handle permissions for Android 13 and above
-      if (await Permission.photos.request().isGranted &&
-          await Permission.videos.request().isGranted &&
-          await Permission.audio.request().isGranted) {
-        return true;
-      }
-      // Handle permissions for Android 12 and below
-      if (await Permission.storage.request().isGranted) {
-        return true;
-      }
-
-      // Handle permanently denied permissions
-      if (await Permission.storage.isPermanentlyDenied) {
-        final bool shouldOpenSettings = await showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Storage Permission Required'),
-                content: const Text(
-                  'This permission is required to download and save certificates. Please enable it in settings.',
-                ),
-                actions: [
-                  TextButton(
-                    child: const Text('Cancel'),
-                    onPressed: () => Navigator.of(context).pop(false),
-                  ),
-                  TextButton(
-                    child: const Text('Open Settings'),
-                    onPressed: () => Navigator.of(context).pop(true),
-                  ),
-                ],
-              ),
-            ) ??
-            false;
-
-        if (shouldOpenSettings) {
-          await openAppSettings();
-        }
-      }
-      return false;
-    }
-    return true;
-  }
-
-  Future<String?> _getDownloadPath(BuildContext context) async {
-    if (Platform.isAndroid) {
-      if (await _requestStoragePermission(context)) {
-        Directory directory = Directory('/storage/emulated/0/Download');
-        if (!await directory.exists()) {
-          await directory.create(recursive: true);
-        }
-        return directory.path;
-      }
-      return null;
-    } else {
-      final directory = await getApplicationDocumentsDirectory();
-      return directory.path;
-    }
-  }
-
-  Future<void> _downloadTranscript(
-      BuildContext context, TranscriptItem item) async {
-    final bloc = context.read<TranscriptDownloadsBloc>();
-    final state = context.read<LoadProfileBloc>().state;
-
-    String fatherName = 'Father Name';
-    if (state is LoadProfileLoaded && state.profileData['role'] == 'parent') {
-      fatherName = state.profileData['fullName'] ?? 'Father Name';
-    }
-
+  Future<void> _downloadTranscript(BuildContext context, TranscriptItem item) async {
     try {
-      final downloadPath = await _getDownloadPath(context);
-      if (downloadPath == null) {
-        throw Exception('Storage permission not granted');
-      }
-
       const baseUrl = "https://gold-tiger-632820.hostingersite.com/";
       final downloadUrl = Uri.parse(baseUrl).resolve(item.filePath).toString();
 
-      final response = await http.get(Uri.parse(downloadUrl));
-      if (response.statusCode == 200) {
-        final fileName = item.filePath.split('/').last;
-        final filePath = '$downloadPath/$fileName';
-        final file = File(filePath);
-        await file.writeAsBytes(response.bodyBytes);
-
-        await OpenFile.open(filePath);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Downloaded to $filePath')),
+      if (await canLaunchUrl(Uri.parse(downloadUrl))) {
+        await launchUrl(
+          Uri.parse(downloadUrl),
+          mode: LaunchMode.externalApplication,
         );
-
-        // Reload transcripts
-        bloc.add(ReloadTranscripts(fatherName));
       } else {
-        throw Exception('Failed to download file: ${response.statusCode}');
+        throw 'Could not launch $downloadUrl';
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
+        SnackBar(content: Text('Failed to open URL: ${e.toString()}')),
       );
     }
   }
@@ -157,12 +69,11 @@ class TranscriptView extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          if (state is TranscriptsLoading || 
-          state is TranscriptsDownloading) {
+          if (state is TranscriptsLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (state is TranscriptsLoaded ) {
+          if (state is TranscriptsLoaded) {
             if (state.transcripts.isEmpty) {
               return Center(
                 child: Text(

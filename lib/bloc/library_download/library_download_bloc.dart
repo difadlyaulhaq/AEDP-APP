@@ -1,19 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:permission_handler/permission_handler.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:http/http.dart' as http;
 import 'package:project_aedp/bloc/library_download/library_download_event.dart';
 import 'package:project_aedp/bloc/library_download/library_download_state.dart';
 
-// Bloc Implementation
 class LibraryDownloadBloc extends Bloc<LibraryDownloadEvent, LibraryDownloadState> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   LibraryDownloadBloc() : super(LibraryDownloadInitial()) {
     on<LoadLibraryFiles>(_onLoadLibraryFiles);
-    on<DownloadFile>(_onDownloadFile);
   }
 
   Future<void> _onLoadLibraryFiles(
@@ -66,7 +60,7 @@ class LibraryDownloadBloc extends Bloc<LibraryDownloadEvent, LibraryDownloadStat
       } else if (role?.toLowerCase() == 'teacher') {
         // For teachers, fetch all library books
         libraryQuery = _firestore.collection('library');
-      }else if (role?.toLowerCase() == 'parent') {
+      } else if (role?.toLowerCase() == 'parent') {
         // For parents, fetch all library books
         libraryQuery = _firestore.collection('library');
       } else {
@@ -92,38 +86,6 @@ class LibraryDownloadBloc extends Bloc<LibraryDownloadEvent, LibraryDownloadStat
       emit(LibraryDownloadLoaded(files: files));
     } catch (e) {
       emit(LibraryDownloadError("Error loading library files: $e"));
-    }
-  }
-
-  Future<void> _onDownloadFile(
-    DownloadFile event,
-    Emitter<LibraryDownloadState> emit,
-  ) async {
-    try {
-      const baseUrl = "https://gold-tiger-632820.hostingersite.com/";
-      final downloadUrl = Uri.parse(baseUrl).resolve(event.filePath).toString();
-
-      final response = await http.get(Uri.parse(downloadUrl));
-      if (response.statusCode == 200) {
-        final directory = Platform.isAndroid
-            ? Directory('/storage/emulated/0/Download')
-            : await getApplicationDocumentsDirectory();
-
-        if (!await directory.exists()) {
-          await directory.create(recursive: true);
-        }
-
-        final fileName = event.filePath.split('/').last;
-        final filePathToSave = '${directory.path}/$fileName';
-        final file = File(filePathToSave);
-        await file.writeAsBytes(response.bodyBytes);
-
-        emit(LibraryDownloadSuccess(filePathToSave));
-      } else {
-        emit(LibraryDownloadError("Failed to download file: ${response.statusCode}"));
-      }
-    } catch (e) {              
-      emit(LibraryDownloadError("Error downloading file: $e"));
     }
   }
 }
