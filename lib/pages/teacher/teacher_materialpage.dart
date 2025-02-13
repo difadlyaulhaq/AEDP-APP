@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_aedp/bloc/language/language_cubit.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_event.dart';
-import 'package:project_aedp/bloc/material_and_subject/material_state.dart' as custom;
+import 'package:project_aedp/bloc/material_and_subject/material_state.dart'
+    as custom;
 import 'package:project_aedp/bloc/material_and_subject/subject_model.dart';
 import 'package:project_aedp/generated/l10n.dart';
+import 'package:project_aedp/pages/teacher/teacher_dashboard.dart';
 import 'package:project_aedp/pages/teacher/teacher_detailmaterial.dart';
 import '../../bloc/material_and_subject/teacher_bloc.dart';
 
@@ -29,7 +31,8 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
     context.read<MaterialBloc>().add(
           FetchSubjects(
             isTeacher: true,
-            teacherClasses: teacherClasses.join(','), // Join the list into a string
+            teacherClasses:
+                teacherClasses.join(','), // Join the list into a string
             studentGradeClass: '',
             selectedLanguage: selectedLanguage,
           ),
@@ -45,7 +48,7 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(screenHeight * 0.09),
         child: ClipPath(
-          clipper: CustomAppBarClipper(),
+          // clipper: CustomAppBarClipper(),
           child: AppBar(
             automaticallyImplyLeading: true,
             flexibleSpace: Container(
@@ -60,7 +63,7 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
                 ),
               ),
             ),
-            leading: IconButton(
+           leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () => Navigator.pop(context),
             ),
@@ -95,14 +98,34 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
                 },
               ),
             );
-          } else if (state is custom.MaterialError) {
-            return Center(child: Text('Error: ${state.errorMessage}'));
-          }
-          return const Center(child: Text('No subjects available'));
-        },
-      ),
-    );
-  }
+         } else if (state is custom.MaterialError) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Error: ${state.errorMessage}'),
+          ElevatedButton(
+            onPressed: () {
+              // Retry fetch
+              final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
+              context.read<MaterialBloc>().add(
+                FetchSubjects(
+                  isTeacher: true,
+                  teacherClasses: widget.teacherClasses.join(','),
+                  studentGradeClass: '',
+                  selectedLanguage: selectedLanguage,
+                ),
+              );
+            },
+            child: const Text('Retry'),
+          ),
+        ],
+      );
+    }
+    return const Center(child: Text('No subjects available'));
+  },
+),
+);
+}
 
   Widget _buildCardItem(BuildContext context, SubjectModel subject) {
     return Card(
@@ -126,18 +149,29 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
           style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
         ),
         trailing: const Icon(Icons.arrow_forward_ios, color: Colors.blueAccent),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TeacherDetailMaterial(
-                subject: subject.subjectName,
-                subjectId: subject.id,
-                grade: subject.grade,
-              ),
+       onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TeacherDetailMaterial(
+              subject: subject.subjectName,
+              subjectId: subject.id,
+              grade: subject.grade,
+            ),
+          ),
+        ).then((_) { 
+          // Trigger refresh setelah kembali dari detail
+          final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
+          context.read<MaterialBloc>().add(
+            FetchSubjects(
+              isTeacher: true,
+              teacherClasses: widget.teacherClasses.join(','),
+              studentGradeClass: '',
+              selectedLanguage: selectedLanguage,
             ),
           );
-        },
+        });
+      }
       ),
     );
   }
