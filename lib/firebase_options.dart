@@ -47,29 +47,29 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAhuKFGJjT44SKJgTb6JqlBxKNXWegE3a8',
-    appId: '1:40978170905:web:a32039e4a69a9b8041d688',
-    messagingSenderId: '40978170905',
-    projectId: 'aedp-project-app',
-    authDomain: 'aedp-project-app.firebaseapp.com',
-    storageBucket: 'aedp-project-app.firebasestorage.app',
+    apiKey:
+    appId: 
+    messagingSenderId: 
+    projectId: 
+    authDomain: 
+    storageBucket: 
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCRRfJd6U4J8YM7i5K69-Bg7np7PhpdRLk',
-    appId: '1:40978170905:android:afd158a97a0ba14b41d688',
-    messagingSenderId: '40978170905',
-    projectId: 'aedp-project-app',
-    storageBucket: 'aedp-project-app.firebasestorage.app',
+    apiKey: 
+    appId: 
+    messagingSenderId: 
+    projectId: 
+    storageBucket: 
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAow3fdUB9AcZ4sKYHfyFdoT2QIf44Oz5o',
-    appId: '1:40978170905:ios:d1a5814022de673941d688',
-    messagingSenderId: '40978170905',
-    projectId: 'aedp-project-app',
-    storageBucket: 'aedp-project-app.firebasestorage.app',
-    iosBundleId: 'com.example.projectAedp',
+    apiKey: 
+    appId: 
+    messagingSenderId: 
+    projectId: 
+    storageBucket: 
+    iosBundleId: 
   );
 
 }
