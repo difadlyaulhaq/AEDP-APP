@@ -40,7 +40,7 @@ class _StudentMaterialPageState extends State<StudentMaterialPage> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(screenHeight * 0.09),
+        preferredSize: Size.fromHeight(screenHeight * 0.1),
         child: ClipPath(
           clipper: CustomAppBarClipper(),
           child: AppBar(

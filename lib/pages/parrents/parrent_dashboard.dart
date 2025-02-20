@@ -3,7 +3,8 @@ import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/parrents/TranscriptPage.dart';
 // import 'package:project_aedp/pages/parrents/certificatepage.dart';
 
-import 'package:project_aedp/pages/parrents/invoice_page.dart'; 
+import 'package:project_aedp/pages/parrents/invoice_page.dart';
+import 'package:project_aedp/pages/students/elibrary.dart'; 
 import 'package:project_aedp/pages/students/schedulepage.dart';
 
 class DashboardParentHome extends StatelessWidget {
@@ -56,15 +57,15 @@ class DashboardParentHome extends StatelessWidget {
                 //         MaterialPageRoute(
                 //             builder: (context) => const StudentMaterialPage()),
                 //       );
-                //     }),
+                // //     }),
                 _buildIconButton(context,
-                 Icons.file_copy_sharp,
-                  S.of(context).transcript,
+                 Icons.library_books,
+                  S.of(context).e_library,
                         () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const TranscriptPage()),
+                            builder: (context) => const ELibraryPage()),
                       );
                     }),
                 _buildIconButton(context, Icons.receipt, S
