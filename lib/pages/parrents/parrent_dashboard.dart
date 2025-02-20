@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/parrents/TranscriptPage.dart';
-import 'package:project_aedp/pages/parrents/certificatepage.dart';
+// import 'package:project_aedp/pages/parrents/certificatepage.dart';
 
 import 'package:project_aedp/pages/parrents/invoice_page.dart'; 
 import 'package:project_aedp/pages/students/schedulepage.dart';
@@ -38,15 +38,15 @@ class DashboardParentHome extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => const SchedulePage()),
                   );
                 }),
-                _buildIconButton(context, Icons.assignment, 
-                    S.of(context).certificates,
-                        () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const CertificatePage()),
-                      );
-                    }),
+                // _buildIconButton(context, Icons.assignment, 
+                    // S.of(context).certificates,
+                    //     () {
+                    //   Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => const CertificatePage()),
+                    //   );
+                    // }),
                 // _buildIconButton(context, Icons.book, S
                 //     .of(context)
                 //     .materials,

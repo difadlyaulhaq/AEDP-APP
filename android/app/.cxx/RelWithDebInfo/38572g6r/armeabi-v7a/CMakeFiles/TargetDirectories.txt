@@ -1,0 +1,2 @@
+D:/mobile app/AEDP-APP/android/app/.cxx/RelWithDebInfo/38572g6r/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/mobile app/AEDP-APP/android/app/.cxx/RelWithDebInfo/38572g6r/armeabi-v7a/CMakeFiles/rebuild_cache.dir
