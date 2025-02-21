@@ -1,12 +1,13 @@
+import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
+import 'package:translator/translator.dart';
 import 'material_event.dart';
 import 'material_state.dart';
 import 'material_model.dart';
 import 'subject_model.dart';
-import 'package:translator/translator.dart';
 
 class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -14,25 +15,58 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
 
   MaterialBloc() : super(MaterialLoading()) {
     // Fetch materials filtered by subjectId and grade
-    on<FetchMaterials>((event, emit) async {
-      try {
-        emit(MaterialLoading());
+   on<FetchMaterials>((event, emit) async {
+  try {
+    emit(MaterialLoading());
+    final translator = GoogleTranslator();
 
-        final snapshot = await firestore
-            .collection('materials')
-            .where('subjectId', isEqualTo: event.subjectId)
-            .where('grade', isEqualTo: event.grade) // Tambahkan filter berdasarkan grade
-            .get();
+    Query query = firestore.collection('materials').where('subjectId', isEqualTo: event.subjectId);
 
-        final materials = snapshot.docs
-            .map((doc) => MaterialModel.fromMap(doc.id, doc.data()))
-            .toList();
+    if (event.isTeacher) {
+      List<String> teacherClasses = event.teacherClasses.split(',');
+      query = query.where('grade', whereIn: teacherClasses);
+    } else {
+      query = query.where('grade', isEqualTo: event.studentGradeClass);
+    }
 
-        emit(MaterialLoaded(materials));
-      } catch (e) {
-        emit(MaterialError(e.toString()));
+    final snapshot = await query.get();
+    List<MaterialModel> materials = [];
+
+    for (var doc in snapshot.docs) {
+      MaterialModel material = MaterialModel.fromMap(doc.id, doc.data() as Map<String, dynamic>);
+
+      // **Tambahkan Validasi**
+      if (!event.isTeacher && material.grade != event.studentGradeClass) {
+        continue; // Jika siswa, hanya boleh melihat materi dengan grade yang cocok
       }
-    });
+
+      if (event.isTeacher) {
+        List<String> teacherClasses = event.teacherClasses.split(',');
+        if (!teacherClasses.contains(material.grade)) {
+          continue; // Jika guru, hanya boleh melihat materi sesuai kelas yang diajar
+        }
+      }
+
+      // Terjemahkan title materi jika bahasa yang dipilih bukan default
+      String translatedTitle = material.title;
+      if (event.selectedLanguage == 'ar') {
+        translatedTitle = (await translator.translate(material.title, to: 'ar')).text;
+      } else if (event.selectedLanguage == 'en') {
+        translatedTitle = (await translator.translate(material.title, to: 'en')).text;
+      } else if (event.selectedLanguage == 'pt') {
+        translatedTitle = (await translator.translate(material.title, to: 'pt')).text;
+      }
+
+      // Simpan hasil terjemahan ke dalam objek
+      materials.add(material.copyWith(title: translatedTitle));
+    }
+
+    emit(MaterialLoaded(materials));
+  } catch (e) {
+    emit(MaterialError(e.toString()));
+  }
+});
+
 
     // Upload material with PDF
     on<AddMaterial>((event, emit) async {
@@ -56,7 +90,14 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
         await firestore.collection('materials').doc(material.id).set(material.toMap());
 
         // Refresh data setelah upload selesai
-        add(FetchMaterials(subjectId: material.subjectId, grade: event.grade));
+        add(FetchMaterials(
+          subjectId: material.subjectId,
+          grade: event.grade,
+          selectedLanguage: 'en', // Default ke English, bisa diubah
+          isTeacher: false, 
+          teacherClasses: '',
+          studentGradeClass: event.grade
+        ));
       } catch (e) {
         emit(MaterialError(e.toString()));
       }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_aedp/bloc/language/language_cubit.dart';
+import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
+import 'package:project_aedp/bloc/load_profile/profile_state.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_event.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_state.dart' as custom;
 import 'package:project_aedp/bloc/material_and_subject/teacher_bloc.dart';
@@ -24,12 +27,26 @@ class DetailMaterial extends StatefulWidget {
 class _DetailMaterialState extends State<DetailMaterial> {
   late MaterialBloc _materialBloc;
 
-  @override
-  void initState() {
-    super.initState();
-    _materialBloc = MaterialBloc();
-    _materialBloc.add(FetchMaterials(subjectId: widget.subjectId,grade: widget.grade)); // Tambahkan grade
+ @override
+void initState() {
+  super.initState();
+  final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
+  final profilestate = context.read<LoadProfileBloc>().state;
+  if (profilestate is LoadProfileLoaded) {
+    final studentGradeClass = profilestate.profileData['grade_class'];
+    context.read<MaterialBloc>().add(
+      FetchMaterials(
+        subjectId: widget.subjectId,
+        grade: widget.grade,
+        selectedLanguage: selectedLanguage,
+        isTeacher: false,
+        teacherClasses: '',
+        studentGradeClass: studentGradeClass,
+      ),
+    );
   }
+}
+
 
   @override
   void dispose() {

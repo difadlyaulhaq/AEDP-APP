@@ -1,7 +1,11 @@
+import 'dart:developer' as dev;
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_aedp/bloc/language/language_cubit.dart';
+import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
+import 'package:project_aedp/bloc/load_profile/profile_state.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_model.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_event.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_state.dart' as teacher_material_state;
@@ -26,12 +30,37 @@ class TeacherDetailMaterial extends StatefulWidget {
 
 class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
   late MaterialBloc _materialBloc;
+  late LoadProfileBloc _loadprofile;
   String? selectedGrade;
-
+  
   @override
   void initState() {
     super.initState();
-    _materialBloc = MaterialBloc()..add(FetchMaterials(subjectId: widget.subjectId, grade: widget.grade));
+    final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
+    // Ensure teacherClasses is not null and is explicitly typed as List<String>
+    _loadprofile = context.read<LoadProfileBloc>();
+    final state = _loadprofile.state;
+    if (state is LoadProfileLoaded) {
+      // Ensure teacherClasses is not null and is explicitly typed as List<String>
+      final teacherClassesRaw = state.profileData['classes'];
+      final List<String> teacherClasses = teacherClassesRaw is String
+          ? teacherClassesRaw.split(',').map((e) => e.trim()).toList()
+          : (teacherClassesRaw is List)
+              ? teacherClassesRaw.cast<String>() // Cast to List<String>
+              : [];
+            
+        _materialBloc = MaterialBloc()..add(
+      FetchMaterials(subjectId: widget.subjectId,
+       grade: widget.grade, 
+       selectedLanguage: selectedLanguage,
+        isTeacher: true, 
+            teacherClasses:
+            teacherClasses.join(','), // Join the list into a string
+         studentGradeClass: ''));
+
+    } else {
+      dev.log('LoadProfileBloc state is not LoadProfileLoaded');
+    }
   }
 
   @override
@@ -192,6 +221,17 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
   }
 
   void _handleMaterialUpload(BuildContext context, String title, String description, File file, String grade) {
+    final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
+    final state = _loadprofile.state;
+    List<String> teacherClasses = [];
+    if (state is LoadProfileLoaded) {
+      final teacherClassesRaw = state.profileData['classes'];
+      teacherClasses = teacherClassesRaw is String
+          ? teacherClassesRaw.split(',').map((e) => e.trim()).toList()
+          : (teacherClassesRaw is List)
+              ? teacherClassesRaw.cast<String>()
+              : [];
+    }
     final material = MaterialModel(
       id: DateTime.now().toIso8601String(),
       title: title,
@@ -202,7 +242,15 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
     );
     _materialBloc.add(AddMaterial(material: material, file: file, grade: grade));
     Navigator.pop(context);
-    _materialBloc.add(FetchMaterials(subjectId: widget.subjectId, grade: grade));
+    _materialBloc.add(
+      FetchMaterials(subjectId: widget.subjectId,
+       grade: widget.grade, 
+       selectedLanguage: selectedLanguage,
+        isTeacher: true, 
+            teacherClasses:
+            teacherClasses.join(','), // Join the list into a string
+         studentGradeClass: ''
+         ));
   }
 
   void _showErrorSnackBar(BuildContext context, String message) {

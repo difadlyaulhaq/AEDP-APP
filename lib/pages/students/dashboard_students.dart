@@ -94,7 +94,7 @@ class DashboardStudentsHome extends StatelessWidget {
         child: BlocBuilder<LoadProfileBloc, LoadProfileState>(
           builder: (context, state) {
             if (state is LoadProfileLoaded) {
-              final studentGradeClass = state.profileData['grade_class'] ?? '';
+              final studentGradeClass = state.profileData['grade_class'] ;
         
               return BlocProvider(
                create: (context) {
