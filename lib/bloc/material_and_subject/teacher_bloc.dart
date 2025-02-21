@@ -13,7 +13,7 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
   final FirebaseStorage storage = FirebaseStorage.instance;
 
   MaterialBloc() : super(MaterialLoading()) {
-    // Fetch materials filtered by subjectId
+    // Fetch materials filtered by subjectId and grade
     on<FetchMaterials>((event, emit) async {
       try {
         emit(MaterialLoading());
@@ -21,6 +21,7 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
         final snapshot = await firestore
             .collection('materials')
             .where('subjectId', isEqualTo: event.subjectId)
+            .where('grade', isEqualTo: event.grade) // Tambahkan filter berdasarkan grade
             .get();
 
         final materials = snapshot.docs
@@ -38,7 +39,7 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
       try {
         emit(MaterialUploading());
 
-        // Upload PDF file to Firebase Storage
+        // Upload PDF file ke Firebase Storage
         String fileName = basename(event.file.path);
         Reference storageRef = storage.ref().child('materials/$fileName');
         UploadTask uploadTask = storageRef.putFile(event.file);
@@ -46,51 +47,63 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
         TaskSnapshot snapshot = await uploadTask;
         String fileURL = await snapshot.ref.getDownloadURL();
 
-        // Save material data to Firestore
-        MaterialModel material = event.material.copyWith(fileLink: fileURL);
+        // Simpan materi ke Firestore dengan grade
+        MaterialModel material = event.material.copyWith(
+          fileLink: fileURL,
+          grade: event.grade, // Simpan grade
+        );
+
         await firestore.collection('materials').doc(material.id).set(material.toMap());
 
-        add(FetchMaterials(subjectId: material.subjectId));
+        // Refresh data setelah upload selesai
+        add(FetchMaterials(subjectId: material.subjectId, grade: event.grade));
       } catch (e) {
         emit(MaterialError(e.toString()));
       }
     });
 
-    // Fetch subjects with translation
+    // Fetch subjects with translation & grade filtering
     on<FetchSubjects>((event, emit) async {
       try {
         emit(MaterialLoading());
-        Query query = firestore.collection('subjects');
-
-        if (event.isTeacher) {
-          List<String> classes = event.teacherClasses.split(',');
-          query = query.where('grade', whereIn: classes);
-        } else {
-          query = query.where('grade', isEqualTo: event.studentGradeClass);
-        }
-
-        final snapshot = await query.get();
+        QuerySnapshot snapshot = await firestore.collection('subjects').get();
         final translator = GoogleTranslator();
         final List<SubjectModel> subjects = [];
 
         for (var doc in snapshot.docs) {
           var data = doc.data() as Map<String, dynamic>;
           String subjectName = data['subject_name'] ?? 'Unknown';
+          String grades = data['grade'] ?? '';
 
-          String translatedSubject = subjectName;
-          if (event.selectedLanguage == 'ar') {
-            translatedSubject = (await translator.translate(subjectName, to: 'ar')).text;
-          } else if (event.selectedLanguage == 'en') {
-            translatedSubject = (await translator.translate(subjectName, to: 'en')).text;
-          } else if (event.selectedLanguage == 'pt') {
-            translatedSubject = (await translator.translate(subjectName, to: 'pt')).text;
+          // Pecah daftar grade menjadi List<String>
+          List<String> subjectGrades = grades.split(',');
+
+          // Filter berdasarkan role
+          bool isEligible = false;
+          if (event.isTeacher) {
+            List<String> teacherClasses = event.teacherClasses.split(',');
+            isEligible = subjectGrades.any((grade) => teacherClasses.contains(grade));
+          } else {
+            isEligible = subjectGrades.contains(event.studentGradeClass);
           }
 
-          subjects.add(SubjectModel(
-            id: doc.id,
-            grade: data['grade'] ?? '',
-            subjectName: translatedSubject,
-          ));
+          if (isEligible) {
+            // Terjemahkan nama subject jika diperlukan
+            String translatedSubject = subjectName;
+            if (event.selectedLanguage == 'ar') {
+              translatedSubject = (await translator.translate(subjectName, to: 'ar')).text;
+            } else if (event.selectedLanguage == 'en') {
+              translatedSubject = (await translator.translate(subjectName, to: 'en')).text;
+            } else if (event.selectedLanguage == 'pt') {
+              translatedSubject = (await translator.translate(subjectName, to: 'pt')).text;
+            }
+
+            subjects.add(SubjectModel(
+              id: doc.id,
+              grade: grades,
+              subjectName: translatedSubject,
+            ));
+          }
         }
         emit(SubjectsLoaded(subjects));
       } catch (e) {
@@ -99,9 +112,3 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
     });
   }
 }
-
-
-
-
-
-

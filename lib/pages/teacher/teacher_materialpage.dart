@@ -156,7 +156,7 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
             builder: (context) => TeacherDetailMaterial(
               subject: subject.subjectName,
               subjectId: subject.id,
-              grade: subject.grade,
+              grade: subject.grade, 
             ),
           ),
         ).then((_) { 

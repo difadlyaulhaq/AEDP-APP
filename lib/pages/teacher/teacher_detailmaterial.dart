@@ -26,11 +26,12 @@ class TeacherDetailMaterial extends StatefulWidget {
 
 class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
   late MaterialBloc _materialBloc;
+  String? selectedGrade;
 
   @override
   void initState() {
     super.initState();
-    _materialBloc = MaterialBloc()..add(FetchMaterials(subjectId: widget.subjectId));
+    _materialBloc = MaterialBloc()..add(FetchMaterials(subjectId: widget.subjectId, grade: widget.grade));
   }
 
   @override
@@ -132,6 +133,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
     final titleController = TextEditingController();
     final descriptionController = TextEditingController();
     File? selectedFile;
+    List<String> availableGrades = ['1', '2', '3','4','5','6','7','8','9','10','11','12'];
 
     showDialog(
       context: context,
@@ -140,6 +142,21 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            DropdownButtonFormField<String>(
+              value: selectedGrade,
+              hint: const Text('Select Grade'),
+              items: availableGrades.map((grade) {
+                return DropdownMenuItem<String>(
+                  value: grade,
+                  child: Text(grade),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  selectedGrade = value;
+                });
+              },
+            ),
             TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
             const SizedBox(height: 10),
             TextField(controller: descriptionController, maxLines: 3, decoration: const InputDecoration(labelText: 'Description')),
@@ -161,10 +178,10 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
           TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
-              if (selectedFile != null) {
-                _handleMaterialUpload(dialogContext, titleController.text, descriptionController.text, selectedFile!);
+              if (selectedFile != null && selectedGrade != null) {
+                _handleMaterialUpload(dialogContext, titleController.text, descriptionController.text, selectedFile!, selectedGrade!);
               } else {
-                _showErrorSnackBar(dialogContext, 'Please select a PDF file.');
+                _showErrorSnackBar(dialogContext, 'Please fill all fields and select a grade.');
               }
             },
             child: const Text('Upload'),
@@ -174,23 +191,18 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
     );
   }
 
-  void _handleMaterialUpload(BuildContext context, String title, String description, File file) {
-    if (title.isEmpty || description.isEmpty) {
-      _showErrorSnackBar(context, 'Please fill all fields');
-      return;
-    }
+  void _handleMaterialUpload(BuildContext context, String title, String description, File file, String grade) {
     final material = MaterialModel(
       id: DateTime.now().toIso8601String(),
       title: title,
       description: description,
       fileLink: '',
-      grade: widget.grade,
+      grade: grade,
       subjectId: widget.subjectId,
     );
-    _materialBloc.add(AddMaterial(material: material, file: file));
+    _materialBloc.add(AddMaterial(material: material, file: file, grade: grade));
     Navigator.pop(context);
-    _materialBloc.add(FetchMaterials(subjectId: widget.subjectId));
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Material uploaded successfully!')));
+    _materialBloc.add(FetchMaterials(subjectId: widget.subjectId, grade: grade));
   }
 
   void _showErrorSnackBar(BuildContext context, String message) {

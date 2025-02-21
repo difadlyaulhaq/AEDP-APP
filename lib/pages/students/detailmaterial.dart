@@ -8,11 +8,13 @@ import 'package:url_launcher/url_launcher.dart';
 class DetailMaterial extends StatefulWidget {
   final String subject;
   final String subjectId;
+  final String grade; // Tambahkan ini
 
   const DetailMaterial({
     super.key,
     required this.subject,
     required this.subjectId,
+    required this.grade, // Tambahkan ini
   });
 
   @override
@@ -26,7 +28,7 @@ class _DetailMaterialState extends State<DetailMaterial> {
   void initState() {
     super.initState();
     _materialBloc = MaterialBloc();
-    _materialBloc.add(FetchMaterials(subjectId: widget.subjectId));
+    _materialBloc.add(FetchMaterials(subjectId: widget.subjectId,grade: widget.grade)); // Tambahkan grade
   }
 
   @override
