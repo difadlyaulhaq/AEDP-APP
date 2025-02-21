@@ -27,26 +27,27 @@ class DetailMaterial extends StatefulWidget {
 class _DetailMaterialState extends State<DetailMaterial> {
   late MaterialBloc _materialBloc;
 
- @override
-void initState() {
-  super.initState();
-  final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
-  final profilestate = context.read<LoadProfileBloc>().state;
-  if (profilestate is LoadProfileLoaded) {
-    final studentGradeClass = profilestate.profileData['grade_class'];
-    context.read<MaterialBloc>().add(
-      FetchMaterials(
-        subjectId: widget.subjectId,
-        grade: widget.grade,
-        selectedLanguage: selectedLanguage,
-        isTeacher: false,
-        teacherClasses: '',
-        studentGradeClass: studentGradeClass,
-      ),
-    );
+  @override
+  void initState() {
+    super.initState();
+      final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
+    _materialBloc = MaterialBloc();
+    final profilestate = context.read<LoadProfileBloc>().state;
+    if (profilestate is LoadProfileLoaded){
+       final studentGradeClass = profilestate.profileData['grade_class'];
+        _materialBloc.add(
+          FetchMaterials(
+            subjectId: widget.subjectId,
+            grade: widget.grade, // Tambahkan ini
+            selectedLanguage: selectedLanguage,
+            isTeacher: false,
+            teacherClasses: '',
+            studentGradeClass: studentGradeClass,
+          ),
+        );
+    }
+      
   }
-}
-
 
   @override
   void dispose() {
