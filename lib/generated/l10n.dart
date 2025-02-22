@@ -50,6 +50,46 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Enter grade (0-100)`
+  String get enterGrade {
+    return Intl.message(
+      'Enter grade (0-100)',
+      name: 'enterGrade',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grades uploaded successfully`
+  String get gradesUploaded {
+    return Intl.message(
+      'Grades uploaded successfully',
+      name: 'gradesUploaded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Student Details`
+  String get studentDetails {
+    return Intl.message(
+      'Student Details',
+      name: 'studentDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An error occurred`
+  String get error {
+    return Intl.message(
+      'An error occurred',
+      name: 'error',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Teacher Input Grades Page`
   String get teacher_input_grades {
     return Intl.message(

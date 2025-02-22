@@ -92,6 +92,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
         "emailLabel": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
         "english": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
+        "enterGrade":
+            MessageLookupByLibrary.simpleMessage("أدخل الدرجة (0-100)"),
+        "error": MessageLookupByLibrary.simpleMessage("حدث خطأ"),
         "errorLabel": m2,
         "evenSemester": MessageLookupByLibrary.simpleMessage("الفصل الزوجي"),
         "fatherName": MessageLookupByLibrary.simpleMessage("اسم الأب"),
@@ -104,6 +107,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "grade": MessageLookupByLibrary.simpleMessage("الدرجة"),
         "gradeClass": MessageLookupByLibrary.simpleMessage("الصف"),
         "grades": MessageLookupByLibrary.simpleMessage("الدرجات"),
+        "gradesUploaded":
+            MessageLookupByLibrary.simpleMessage("تم تحميل الدرجات بنجاح"),
         "hello": MessageLookupByLibrary.simpleMessage("مرحبًا"),
         "history": MessageLookupByLibrary.simpleMessage("التاريخ"),
         "home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
@@ -202,6 +207,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "signup": MessageLookupByLibrary.simpleMessage("التسجيل"),
         "signup_as_role": m7,
         "student": MessageLookupByLibrary.simpleMessage("طالب"),
+        "studentDetails": MessageLookupByLibrary.simpleMessage("تفاصيل الطالب"),
         "studentInfo": MessageLookupByLibrary.simpleMessage("معلومات الطالب"),
         "studentName": MessageLookupByLibrary.simpleMessage("اسم الطالب"),
         "student_dashboard":

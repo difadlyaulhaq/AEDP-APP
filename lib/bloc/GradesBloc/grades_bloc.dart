@@ -45,7 +45,6 @@ class GradesBloc extends Bloc<GradesEvent, GradesState> {
 
       List<Map<String, dynamic>> grades =
           gradeDocs.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-
       emit(GradesLoaded(grades: grades));
     } catch (e) {
       emit(GradesError(e.toString()));

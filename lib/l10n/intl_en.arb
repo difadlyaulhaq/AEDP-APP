@@ -1,5 +1,9 @@
 {
   "@@locale": "en",
+  "enterGrade": "Enter grade (0-100)",
+  "gradesUploaded": "Grades uploaded successfully",
+  "studentDetails": "Student Details",
+  "error": "An error occurred",
   "teacher_input_grades": "Teacher Input Grades Page",
     "loading": "Loading...",
     "noStudents": "No students found",

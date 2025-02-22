@@ -118,10 +118,6 @@ class _StudentMaterialPageState extends State<StudentMaterialPage> {
           subject.subjectName,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(
-          '${S.of(context).classes} ${subject.grade}',
-          style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
-        ),
         trailing: const Icon(Icons.arrow_forward_ios, color: Colors.blueAccent),
         onTap: () {
           Navigator.push(

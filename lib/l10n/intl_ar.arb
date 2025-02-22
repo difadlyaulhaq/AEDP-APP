@@ -1,5 +1,9 @@
 {
   "@@locale": "ar",
+  "enterGrade": "أدخل الدرجة (0-100)",
+  "gradesUploaded": "تم تحميل الدرجات بنجاح",
+  "studentDetails": "تفاصيل الطالب",
+  "error": "حدث خطأ",
   "teacher_input_grades": "صفحة إدخال الدرجات للمعلم",
     "loading": "جار التحميل...",
     "noStudents": "لم يتم العثور على طلاب",

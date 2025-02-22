@@ -1,5 +1,9 @@
 {
   "@@locale": "pt",
+  "enterGrade": "Insira a nota (0-100)",
+  "gradesUploaded": "Notas enviadas com sucesso",
+  "studentDetails": "Detalhes do Aluno",
+  "error": "Ocorreu um erro",
   "teacher_input_grades": "Página de Entrada de Notas do Professor",
    "transcript": "Transcrição",
   "teacher_dashboard": "Painel do Professor",

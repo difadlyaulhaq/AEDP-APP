@@ -90,6 +90,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "email": MessageLookupByLibrary.simpleMessage("Email"),
         "emailLabel": MessageLookupByLibrary.simpleMessage("Email"),
         "english": MessageLookupByLibrary.simpleMessage("English"),
+        "enterGrade":
+            MessageLookupByLibrary.simpleMessage("Enter grade (0-100)"),
+        "error": MessageLookupByLibrary.simpleMessage("An error occurred"),
         "errorLabel": m2,
         "evenSemester": MessageLookupByLibrary.simpleMessage("Even"),
         "fatherName": MessageLookupByLibrary.simpleMessage("Father\'s Name"),
@@ -103,6 +106,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "grade": MessageLookupByLibrary.simpleMessage("Grade"),
         "gradeClass": MessageLookupByLibrary.simpleMessage("Grade/Class"),
         "grades": MessageLookupByLibrary.simpleMessage("Grades"),
+        "gradesUploaded": MessageLookupByLibrary.simpleMessage(
+            "Grades uploaded successfully"),
         "grades_title": MessageLookupByLibrary.simpleMessage("Your Grades"),
         "hello": MessageLookupByLibrary.simpleMessage("Hello"),
         "history": MessageLookupByLibrary.simpleMessage("History"),
@@ -204,6 +209,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "signup": MessageLookupByLibrary.simpleMessage("Sign Up"),
         "signup_as_role": m7,
         "student": MessageLookupByLibrary.simpleMessage("Student"),
+        "studentDetails":
+            MessageLookupByLibrary.simpleMessage("Student Details"),
         "studentInfo":
             MessageLookupByLibrary.simpleMessage("Student Information"),
         "studentName": MessageLookupByLibrary.simpleMessage("Student Name"),
