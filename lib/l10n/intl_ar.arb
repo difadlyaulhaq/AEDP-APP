@@ -1,5 +1,6 @@
 {
   "@@locale": "ar",
+   "mother_name": "اسم الأم",
   "enterGrade": "أدخل الدرجة (0-100)",
   "gradesUploaded": "تم تحميل الدرجات بنجاح",
   "studentDetails": "تفاصيل الطالب",

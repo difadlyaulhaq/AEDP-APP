@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project_aedp/generated/l10n.dart';
-
+import 'package:translator/translator.dart';
 class TeacherGradesPage extends StatelessWidget {
   final List<String> teacherClasses; // Explicitly typed as List<String>
   const TeacherGradesPage({super.key, required this.teacherClasses});
@@ -110,41 +110,57 @@ class _InputGradeState extends State<InputGrade> {
     _fetchSubjectsAndGrades();
   }
 
-  Future<void> _fetchSubjectsAndGrades() async {
-    // Fetch all subjects
-    QuerySnapshot subjectDocs = await _firestore.collection('subjects').get();
 
-    // Filter subjects by the student's class
-    var filteredSubjects = subjectDocs.docs.where((doc) {
-      String gradeStr = doc['grade'];
-      List<String> grades = gradeStr.split(',');
-      return grades.contains(widget.gradeClass);
-    }).toList();
 
-    // Initialize controllers and subject names
-    for (var doc in filteredSubjects) {
-      _controllers[doc.id] = TextEditingController();
-      _subjectNames[doc.id] = doc['subject_name'];
+Future<void> _fetchSubjectsAndGrades() async {
+  final translator = GoogleTranslator();
+  final String selectedLanguage = "en"; // Gantilah dengan bahasa yang dipilih user
+
+  // Fetch all subjects
+  QuerySnapshot subjectDocs = await _firestore.collection('subjects').get();
+
+  // Filter subjects sesuai kelas siswa
+  var filteredSubjects = subjectDocs.docs.where((doc) {
+    String gradeStr = doc['grade'];
+    List<String> grades = gradeStr.split(',');
+    return grades.contains(widget.gradeClass);
+  }).toList();
+
+  // Inisialisasi controller dan nama mata pelajaran
+  for (var doc in filteredSubjects) {
+    _controllers[doc.id] = TextEditingController();
+    String subjectName = doc['subject_name'];
+
+    // Terjemahkan jika bahasa yang dipilih bukan default
+    if (selectedLanguage == 'ar') {
+      subjectName = (await translator.translate(subjectName, to: 'ar')).text;
+    } else if (selectedLanguage == 'en') {
+      subjectName = (await translator.translate(subjectName, to: 'en')).text;
+    } else if (selectedLanguage == 'pt') {
+      subjectName = (await translator.translate(subjectName, to: 'pt')).text;
     }
 
-    // Fetch existing grades
-    QuerySnapshot gradeDocs = await _firestore
-        .collection('grades')
-        .where('school_id', isEqualTo: widget.schoolId)
-        .where('class', isEqualTo: widget.gradeClass)
-        .get();
-
-    // Update controllers with existing grades
-    for (var doc in gradeDocs.docs) {
-      String subjectId = doc['subjectId'];
-      if (_controllers.containsKey(subjectId)) {
-        _controllers[subjectId]!.text = doc['grade'];
-        _existingGrades[subjectId] = doc.id;
-      }
-    }
-
-    setState(() {});
+    _subjectNames[doc.id] = subjectName;
   }
+
+  // Fetch existing grades
+  QuerySnapshot gradeDocs = await _firestore
+      .collection('grades')
+      .where('school_id', isEqualTo: widget.schoolId)
+      .where('class', isEqualTo: widget.gradeClass)
+      .get();
+
+  // Update controllers dengan nilai yang sudah ada
+  for (var doc in gradeDocs.docs) {
+    String subjectId = doc['subjectId'];
+    if (_controllers.containsKey(subjectId)) {
+      _controllers[subjectId]!.text = doc['grade'];
+      _existingGrades[subjectId] = doc.id;
+    }
+  }
+
+  setState(() {});
+}
 
   Future<void> _submitGrades() async {
     for (var entry in _controllers.entries) {

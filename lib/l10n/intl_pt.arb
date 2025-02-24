@@ -1,5 +1,6 @@
 {
   "@@locale": "pt",
+    "mother_name": "Nome da Mãe",
   "enterGrade": "Insira a nota (0-100)",
   "gradesUploaded": "Notas enviadas com sucesso",
   "studentDetails": "Detalhes do Aluno",

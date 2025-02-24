@@ -145,6 +145,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "logout": MessageLookupByLibrary.simpleMessage("Logout"),
         "materials": MessageLookupByLibrary.simpleMessage("Materials"),
         "math": MessageLookupByLibrary.simpleMessage("Math"),
+        "mother_name": MessageLookupByLibrary.simpleMessage("Mother\'s Name"),
         "music": MessageLookupByLibrary.simpleMessage("Music"),
         "nameNotFound": MessageLookupByLibrary.simpleMessage("Name not found"),
         "nav_attendance": MessageLookupByLibrary.simpleMessage("Attendance"),

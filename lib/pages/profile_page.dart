@@ -139,20 +139,22 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildParentSection(BuildContext context, Map<String, dynamic> profileData, double screenWidth) {
-    return _buildInfoContainer(
-      context,
-      screenWidth,
-      S.of(context).parentInfo,
-      [
-        _buildListTile(context, Icons.location_on, S.of(context).address, profileData['address'] ?? S.of(context).unknown),
-        _buildListTile(context, Icons.person, S.of(context).fatherName, profileData['father_name'] ?? S.of(context).unknown),
-        _buildListTile(context, Icons.person, S.of(context).studentName, profileData['student_name'] ?? S.of(context).unknown),
-        _buildListTile(context, Icons.phone, S.of(context).contact, profileData['contact'] ?? S.of(context).unknown),
-        _buildListTile(context, Icons.call, S.of(context).whatsapp, profileData['whatsapp'] ?? S.of(context).unknown),
-      ],
-    );
-  }
+Widget _buildParentSection(BuildContext context, Map<String, dynamic> profileData, double screenWidth) {
+  return _buildInfoContainer(
+    context,
+    screenWidth,
+    S.of(context).parentInfo,
+    [
+      _buildListTile(context, Icons.location_on, S.of(context).address, profileData['address'] ?? S.of(context).unknown),
+      _buildListTile(context, Icons.person, S.of(context).fatherName, profileData['father_name'] ?? S.of(context).unknown),
+      _buildListTile(context, Icons.person, S.of(context).mother_name, profileData['mother_name'] ?? S.of(context).unknown), // Pastikan ini ada
+      _buildListTile(context, Icons.person, S.of(context).studentName, profileData['student_name'] ?? S.of(context).unknown),
+      _buildListTile(context, Icons.phone, S.of(context).contact, profileData['contact'] ?? S.of(context).unknown),
+      _buildListTile(context, Icons.call, S.of(context).whatsapp, profileData['whatsapp'] ?? S.of(context).unknown),
+    ],
+  );
+}
+
 
   Widget _buildInfoContainer(BuildContext context, double screenWidth, String title, List<Widget> content) {
     return Container(

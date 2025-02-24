@@ -130,21 +130,23 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
     return null;
   }
 
-  Future<Map<String, dynamic>?> _fetchParentData(num userId) async {
-    final parentDoc = await _firestore
-        .collection('parents')
-        .where('contact', isEqualTo: userId.toString()) // Sesuaikan dengan format di Firestore
-        .limit(1)
-        .get();
+ Future<Map<String, dynamic>?> _fetchParentData(num userId) async {
+  final parentDoc = await _firestore
+      .collection('parents')
+      .where('contact', isEqualTo: userId.toString()) // Sesuaikan dengan format di Firestore
+      .limit(1)
+      .get();
 
-    if (parentDoc.docs.isNotEmpty) {
-      final data = parentDoc.docs.first.data();
-      return {
-        ...data,
-        'contact': data['contact'] ?? '',
-        'whatsapp': data['whatsapp'] ?? '',
-      };
-    }
-    return null;
+  if (parentDoc.docs.isNotEmpty) {
+    final data = parentDoc.docs.first.data();
+    return {
+      ...data,
+      'contact': data['contact'] ?? '',
+      'whatsapp': data['whatsapp'] ?? '',
+      'mother_name': data['mother_name'] ?? 'N/A', // Tambahkan ini
+    };
   }
+  return null;
+}
+
 }

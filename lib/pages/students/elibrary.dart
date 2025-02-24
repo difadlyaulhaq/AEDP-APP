@@ -69,15 +69,7 @@ class _ELibraryPageState extends State<ELibraryPage> {
           BlocProvider(
             create: (context) {
               final bloc = LibraryDownloadBloc();
-              final authState = context.read<AuthBloc>().state;
-              if (authState is AuthLoginSuccess) {
-                final userId = authState.userId;
-                bloc.add(LoadLibraryFiles(userId.toString()));
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(S.of(context).errorLabel('user not logged in'))),
-                );
-              }
+              bloc.add(LoadLibraryFiles(getUserId()));
               return bloc;
             },
             child: BlocBuilder<LibraryDownloadBloc, LibraryDownloadState>(
@@ -124,6 +116,15 @@ class _ELibraryPageState extends State<ELibraryPage> {
                           ),
                         );
                       },
+                    ),
+                  );
+                }
+
+                if (state is LibraryDownloadError) {
+                  return Center(
+                    child: Text(
+                      state.message,
+                      style: const TextStyle(fontSize: 18, color: Colors.red),
                     ),
                   );
                 }

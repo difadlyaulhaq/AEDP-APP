@@ -50,6 +50,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Mother's Name`
+  String get mother_name {
+    return Intl.message(
+      'Mother\'s Name',
+      name: 'mother_name',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Enter grade (0-100)`
   String get enterGrade {
     return Intl.message(

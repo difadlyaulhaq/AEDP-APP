@@ -16,75 +16,20 @@ class LibraryDownloadBloc extends Bloc<LibraryDownloadEvent, LibraryDownloadStat
   ) async {
     emit(LibraryDownloadLoading());
     try {
-      // Parse and validate userId
-      final userId = num.tryParse(event.userId);
-      if (userId == null) {
-        emit(LibraryDownloadError("Invalid user ID"));
+      final snapshot = await _firestore.collection('library').get();
+      if(snapshot.docs.isEmpty) {
+        emit(LibraryDownloadError("No library files available"));
         return;
       }
-
-      // First get user data and check role
-      final userDoc = await _firestore
-          .collection('users')
-          .where('id', isEqualTo: userId)
-          .get();
-
-      if (userDoc.docs.isEmpty) {
-        emit(LibraryDownloadError("User not found"));
-        return;
-      }
-
-      final userData = userDoc.docs.first.data();
-      final role = userData['role'] as String?;
-
-      Query<Map<String, dynamic>> libraryQuery = _firestore.collection('library');
-
-      if (role?.toLowerCase() == 'student') {
-        // For students, get their grade and filter books
-        final studentDoc = await _firestore
-            .collection('students')
-            .where('school_id', isEqualTo: userId.toString())
-            .limit(1)
-            .get();
-
-        if (studentDoc.docs.isEmpty) {
-          emit(LibraryDownloadError("Student data not found"));
-          return;
-        }
-
-        final studentData = studentDoc.docs.first.data();
-        final studentGrade = studentData['grade_class'];
-
-        // Fetch library books for student's grade
-        libraryQuery = libraryQuery.where('grade', isEqualTo: studentGrade);
-      } else if (role?.toLowerCase() == 'teacher') {
-        // For teachers, fetch all library books
-        libraryQuery = _firestore.collection('library');
-      } else if (role?.toLowerCase() == 'parent') {
-        // For parents, fetch all library books
-        libraryQuery = _firestore.collection('library');
-      } else {
-        emit(LibraryDownloadError("Invalid role"));
-        return;
-      }
-
-      final snapshot = await libraryQuery.get();
-
-      if (snapshot.docs.isEmpty) {
-        emit(LibraryDownloadError("No books available"));
-        return;
-      }
-
       final files = snapshot.docs.map((doc) {
         final data = doc.data();
         return LibraryFile(
-          name: data['name'] as String? ?? "Unknown Name",
-          filePath: data['file_path'] as String? ?? "",
+          name: data['name'] as String? ?? 'Unknown',
+          filePath: data['file_path'] as String? ?? '',
         );
       }).toList();
-
       emit(LibraryDownloadLoaded(files: files));
-    } catch (e) {
+          } catch (e) {
       emit(LibraryDownloadError("Error loading library files: $e"));
     }
   }
