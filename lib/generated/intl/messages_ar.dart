@@ -34,9 +34,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m6(role) => "تسجيل الدخول كـ ${role}";
 
-  static String m7(role) => "إنشاء حساب كـ ${role}";
+  static String m7(id) => "رقم المدرسة: ${id}";
 
-  static String m8(date) => "يستحق ${date}، 23:59";
+  static String m8(role) => "إنشاء حساب كـ ${role}";
+
+  static String m9(date) => "يستحق ${date}، 23:59";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -65,7 +67,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancelLabel": MessageLookupByLibrary.simpleMessage("إلغاء"),
         "certificates": MessageLookupByLibrary.simpleMessage("الشهادات"),
         "class1": m0,
-        "classes": MessageLookupByLibrary.simpleMessage("الفصول"),
+        "classes": MessageLookupByLibrary.simpleMessage("الصف:"),
+        "classesAssigned":
+            MessageLookupByLibrary.simpleMessage("الصفوف المسندة:"),
         "contact": MessageLookupByLibrary.simpleMessage("التواصل"),
         "contact_school_id":
             MessageLookupByLibrary.simpleMessage("الاتصال / رقم تعريف المدرسة"),
@@ -93,7 +97,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "emailLabel": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
         "english": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
         "enterGrade":
-            MessageLookupByLibrary.simpleMessage("أدخل الدرجة (0-100)"),
+            MessageLookupByLibrary.simpleMessage("أدخل الدرجة (0-20)"),
+        "enterGradeValue":
+            MessageLookupByLibrary.simpleMessage("أدخل الدرجة (0-20)"),
+        "enterGrades": MessageLookupByLibrary.simpleMessage("إدخال الدرجات"),
         "error": MessageLookupByLibrary.simpleMessage("حدث خطأ"),
         "errorLabel": m2,
         "evenSemester": MessageLookupByLibrary.simpleMessage("الفصل الزوجي"),
@@ -101,14 +108,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "fee_payment_management":
             MessageLookupByLibrary.simpleMessage("إدارة دفع الرسوم"),
         "filterSubjects": MessageLookupByLibrary.simpleMessage("تصفية المواد"),
+        "firstPeriod": MessageLookupByLibrary.simpleMessage("الفترة الأولى"),
         "fullName": MessageLookupByLibrary.simpleMessage("الاسم الكامل"),
         "geography": MessageLookupByLibrary.simpleMessage("الجغرافيا"),
         "gpa": MessageLookupByLibrary.simpleMessage("المعدل التراكمي"),
         "grade": MessageLookupByLibrary.simpleMessage("الدرجة"),
         "gradeClass": MessageLookupByLibrary.simpleMessage("الصف"),
+        "gradeValidation":
+            MessageLookupByLibrary.simpleMessage("يجب أن تكون الدرجة بين 0-20"),
         "grades": MessageLookupByLibrary.simpleMessage("الدرجات"),
         "gradesUploaded":
-            MessageLookupByLibrary.simpleMessage("تم تحميل الدرجات بنجاح"),
+            MessageLookupByLibrary.simpleMessage("تم رفع الدرجات"),
         "hello": MessageLookupByLibrary.simpleMessage("مرحبًا"),
         "history": MessageLookupByLibrary.simpleMessage("التاريخ"),
         "home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
@@ -145,6 +155,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
         "materials": MessageLookupByLibrary.simpleMessage("المواد"),
         "math": MessageLookupByLibrary.simpleMessage("الرياضيات"),
+        "maxGrade20":
+            MessageLookupByLibrary.simpleMessage("الحد الأقصى للدرجة هو 20"),
+        "maxGradeValue":
+            MessageLookupByLibrary.simpleMessage("الحد الأقصى للدرجة"),
         "mother_name": MessageLookupByLibrary.simpleMessage("اسم الأم"),
         "music": MessageLookupByLibrary.simpleMessage("الموسيقى"),
         "nameNotFound": MessageLookupByLibrary.simpleMessage("الاسم غير موجود"),
@@ -162,6 +176,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("لا يوجد جدول متاح"),
         "noStudents":
             MessageLookupByLibrary.simpleMessage("لم يتم العثور على طلاب"),
+        "noSubjects":
+            MessageLookupByLibrary.simpleMessage("لا توجد مواد متاحة"),
         "notifications": MessageLookupByLibrary.simpleMessage("الإشعارات"),
         "oddSemester": MessageLookupByLibrary.simpleMessage("الفصل الفردي"),
         "online_learning_04":
@@ -188,6 +204,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "placeOfBirth": MessageLookupByLibrary.simpleMessage("مكان الميلاد"),
         "pleaseEnterEmailAndPassword": MessageLookupByLibrary.simpleMessage(
             "الرجاء إدخال البريد الإلكتروني وكلمة المرور"),
+        "previouslyGraded":
+            MessageLookupByLibrary.simpleMessage("تم تقييمها مسبقًا"),
         "profile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
         "profileTitle": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
         "reports": MessageLookupByLibrary.simpleMessage("التقارير"),
@@ -197,8 +215,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "role_teacher": MessageLookupByLibrary.simpleMessage("معلم"),
         "schedule": MessageLookupByLibrary.simpleMessage("الجدول"),
         "scheduleTitle": MessageLookupByLibrary.simpleMessage("الجدول"),
-        "schoolId": MessageLookupByLibrary.simpleMessage("رقم المدرسة"),
+        "schoolId": m7,
         "science": MessageLookupByLibrary.simpleMessage("العلوم"),
+        "secondPeriod": MessageLookupByLibrary.simpleMessage("الفترة الثانية"),
         "select_role": MessageLookupByLibrary.simpleMessage("اختيار الدور"),
         "select_your_role": MessageLookupByLibrary.simpleMessage("اختر دورك"),
         "semester_even": MessageLookupByLibrary.simpleMessage("زوجي"),
@@ -206,7 +225,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "shortPasswordMessage": MessageLookupByLibrary.simpleMessage(
             "يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل."),
         "signup": MessageLookupByLibrary.simpleMessage("التسجيل"),
-        "signup_as_role": m7,
+        "signup_as_role": m8,
         "student": MessageLookupByLibrary.simpleMessage("طالب"),
         "studentDetails": MessageLookupByLibrary.simpleMessage("تفاصيل الطالب"),
         "studentInfo": MessageLookupByLibrary.simpleMessage("معلومات الطالب"),
@@ -225,17 +244,19 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("التربية البدنية"),
         "subject_science": MessageLookupByLibrary.simpleMessage("علوم"),
         "subjectsTitle": MessageLookupByLibrary.simpleMessage("المواد"),
-        "submitGrades": MessageLookupByLibrary.simpleMessage("إرسال الدرجات"),
+        "submitGrades": MessageLookupByLibrary.simpleMessage("تقديم الدرجات"),
         "teacher": MessageLookupByLibrary.simpleMessage("معلم"),
         "teacherInfo": MessageLookupByLibrary.simpleMessage("معلومات المعلم"),
+        "teacherSchedule": MessageLookupByLibrary.simpleMessage("جدول المعلم"),
         "teacher_dashboard":
             MessageLookupByLibrary.simpleMessage("لوحة تحكم المعلم"),
         "teacher_input_grades":
             MessageLookupByLibrary.simpleMessage("صفحة إدخال الدرجات للمعلم"),
+        "thirdPeriod": MessageLookupByLibrary.simpleMessage("الفترة الثالثة"),
         "todo": MessageLookupByLibrary.simpleMessage("المهام:"),
         "todo_assignment1_title":
             MessageLookupByLibrary.simpleMessage("الواجب 1"),
-        "todo_due_date": m8,
+        "todo_due_date": m9,
         "todo_due_today":
             MessageLookupByLibrary.simpleMessage("يستحق اليوم، 23:59"),
         "todo_online_learning4":
@@ -250,7 +271,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "unknownRole": MessageLookupByLibrary.simpleMessage("دور غير معروف"),
         "unknownRoleMessage":
             MessageLookupByLibrary.simpleMessage("دور غير معروف"),
+        "uploading": MessageLookupByLibrary.simpleMessage("جاري الرفع..."),
         "userInfo": MessageLookupByLibrary.simpleMessage("معلومات المستخدم"),
+        "viewGrades": MessageLookupByLibrary.simpleMessage("عرض الدرجات"),
         "welcome":
             MessageLookupByLibrary.simpleMessage("مرحبًا بك في التطبيق!"),
         "whatsapp": MessageLookupByLibrary.simpleMessage("واتساب"),

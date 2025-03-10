@@ -20,19 +20,25 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'pt';
 
-  static String m0(path) => "Baixado para ${path}";
+  static String m0(grade) => "Turma: ${grade}";
 
-  static String m1(errorMessage) => "Erro: ${errorMessage}";
+  static String m1(path) => "Baixado para ${path}";
 
-  static String m2(errorMessage) => "Falha no login: ${errorMessage}";
+  static String m2(errorMessage) => "Erro: ${errorMessage}";
 
-  static String m3(role) => "Entrar como ${role}";
+  static String m3(name) => "Inserir notas para ${name}";
 
-  static String m4(role) => "Login de ${role}";
+  static String m4(errorMessage) => "Falha no login: ${errorMessage}";
 
-  static String m5(role) => "Registrar como ${role}";
+  static String m5(role) => "Entrar como ${role}";
 
-  static String m6(date) => "Vence em ${date}, 23:59";
+  static String m6(role) => "Login de ${role}";
+
+  static String m7(id) => "ID da Escola: ${id}";
+
+  static String m8(role) => "Registrar como ${role}";
+
+  static String m9(date) => "Vence em ${date}, 23:59";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -48,8 +54,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "administrative_fee":
             MessageLookupByLibrary.simpleMessage("Taxa administrativa"),
         "all": MessageLookupByLibrary.simpleMessage("Todos"),
-        "appTitle":
-            MessageLookupByLibrary.simpleMessage("Biblioteca Eletrônica"),
+        "appTitle": MessageLookupByLibrary.simpleMessage(
+            "Página de Notas do Professor"),
         "arabic": MessageLookupByLibrary.simpleMessage("Árabe"),
         "art": MessageLookupByLibrary.simpleMessage("Arte"),
         "assignment1": MessageLookupByLibrary.simpleMessage("Tarefa 1"),
@@ -61,7 +67,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
         "cancelLabel": MessageLookupByLibrary.simpleMessage("Cancelar"),
         "certificates": MessageLookupByLibrary.simpleMessage("Certificados"),
-        "classes": MessageLookupByLibrary.simpleMessage("Classes"),
+        "class1": m0,
+        "classes": MessageLookupByLibrary.simpleMessage("Turma:"),
+        "classesAssigned":
+            MessageLookupByLibrary.simpleMessage("Turmas Atribuídas:"),
         "contact": MessageLookupByLibrary.simpleMessage("Contato"),
         "contact_school_id":
             MessageLookupByLibrary.simpleMessage("Contato / ID da Escola"),
@@ -80,7 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Data de Nascimento"),
         "download": MessageLookupByLibrary.simpleMessage("Baixar"),
         "downloadLabel": MessageLookupByLibrary.simpleMessage("Baixar"),
-        "downloadedTo": m0,
+        "downloadedTo": m1,
         "due_oct_16": MessageLookupByLibrary.simpleMessage(
             "Vence em 16 de outubro, 23.59"),
         "due_oct_9": MessageLookupByLibrary.simpleMessage(
@@ -90,23 +99,35 @@ class MessageLookup extends MessageLookupByLibrary {
         "email": MessageLookupByLibrary.simpleMessage("E-mail"),
         "emailLabel": MessageLookupByLibrary.simpleMessage("Email"),
         "english": MessageLookupByLibrary.simpleMessage("Inglês"),
-        "errorLabel": m1,
+        "enterGrade":
+            MessageLookupByLibrary.simpleMessage("Insira a nota (0-100)"),
+        "enterGradeValue":
+            MessageLookupByLibrary.simpleMessage("Insira a nota (0-20)"),
+        "enterGrades": MessageLookupByLibrary.simpleMessage("Inserir Notas"),
+        "error": MessageLookupByLibrary.simpleMessage("Ocorreu um erro"),
+        "errorLabel": m2,
         "evenSemester": MessageLookupByLibrary.simpleMessage("Semestre Par"),
         "fatherName": MessageLookupByLibrary.simpleMessage("Nome do Pai"),
         "fee_payment_management": MessageLookupByLibrary.simpleMessage(
             "Gerenciamento de Pagamento de Taxas"),
         "filterSubjects":
             MessageLookupByLibrary.simpleMessage("Filtrar Disciplinas"),
+        "firstPeriod": MessageLookupByLibrary.simpleMessage("Primeiro Período"),
         "fullName": MessageLookupByLibrary.simpleMessage("Nome completo"),
         "geography": MessageLookupByLibrary.simpleMessage("Geografia"),
         "gpa": MessageLookupByLibrary.simpleMessage("Média"),
         "grade": MessageLookupByLibrary.simpleMessage("Nota"),
         "gradeClass": MessageLookupByLibrary.simpleMessage("Série/Classe"),
+        "gradeValidation": MessageLookupByLibrary.simpleMessage(
+            "A nota deve estar entre 0-20"),
         "grades": MessageLookupByLibrary.simpleMessage("Notas"),
+        "gradesUploaded":
+            MessageLookupByLibrary.simpleMessage("Notas Enviadas"),
         "grades_title": MessageLookupByLibrary.simpleMessage("Suas Notas"),
         "hello": MessageLookupByLibrary.simpleMessage("Olá"),
         "history": MessageLookupByLibrary.simpleMessage("História"),
         "home": MessageLookupByLibrary.simpleMessage("Início"),
+        "inputGrades": m3,
         "invalidEmail": MessageLookupByLibrary.simpleMessage(
             "Por favor, insira um endereço de e-mail válido."),
         "invalidEmailMessage": MessageLookupByLibrary.simpleMessage(
@@ -124,20 +145,25 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Português"),
         "list_of_subjects":
             MessageLookupByLibrary.simpleMessage("Lista de matérias"),
+        "loading": MessageLookupByLibrary.simpleMessage("Carregando..."),
         "loadingLabel":
             MessageLookupByLibrary.simpleMessage("Carregando biblioteca..."),
         "login": MessageLookupByLibrary.simpleMessage("Entrar"),
         "loginButton": MessageLookupByLibrary.simpleMessage("Entrar"),
         "loginFailed": MessageLookupByLibrary.simpleMessage("Falha no login"),
-        "loginFailedMessage": m2,
+        "loginFailedMessage": m4,
         "loginPrompt": MessageLookupByLibrary.simpleMessage(
             "Faça login na sua conta para continuar"),
         "loginSubtitle": MessageLookupByLibrary.simpleMessage(
             "Faça login na sua conta para continuar"),
-        "login_as_role": m3,
+        "login_as_role": m5,
         "logout": MessageLookupByLibrary.simpleMessage("Sair"),
         "materials": MessageLookupByLibrary.simpleMessage("Materiais"),
         "math": MessageLookupByLibrary.simpleMessage("Matemática"),
+        "maxGrade20":
+            MessageLookupByLibrary.simpleMessage("O valor máximo da nota é 20"),
+        "maxGradeValue": MessageLookupByLibrary.simpleMessage("Nota Máxima"),
+        "mother_name": MessageLookupByLibrary.simpleMessage("Nome da Mãe"),
         "music": MessageLookupByLibrary.simpleMessage("Música"),
         "nameNotFound":
             MessageLookupByLibrary.simpleMessage("Nome não encontrado"),
@@ -155,6 +181,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Nenhum dado de perfil encontrado."),
         "noScheduleAvailable": MessageLookupByLibrary.simpleMessage(
             "Nenhum cronograma disponível"),
+        "noStudents":
+            MessageLookupByLibrary.simpleMessage("Nenhum aluno encontrado"),
+        "noSubjects":
+            MessageLookupByLibrary.simpleMessage("Nenhuma matéria disponível"),
         "notifications": MessageLookupByLibrary.simpleMessage("Notificações"),
         "oddSemester": MessageLookupByLibrary.simpleMessage("Semestre Ímpar"),
         "online_learning_04":
@@ -184,14 +214,17 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Local de Nascimento"),
         "pleaseEnterEmailAndPassword": MessageLookupByLibrary.simpleMessage(
             "الرجاء إدخال البريد الإلكتروني وكلمة المرور"),
+        "previouslyGraded":
+            MessageLookupByLibrary.simpleMessage("Avaliado Anteriormente"),
         "profile": MessageLookupByLibrary.simpleMessage("Perfil"),
         "profileTitle": MessageLookupByLibrary.simpleMessage("Perfil"),
         "reports": MessageLookupByLibrary.simpleMessage("Relatórios"),
-        "roleHeader": m4,
+        "roleHeader": m6,
         "schedule": MessageLookupByLibrary.simpleMessage("Agenda"),
         "scheduleTitle": MessageLookupByLibrary.simpleMessage("Cronograma"),
-        "schoolId": MessageLookupByLibrary.simpleMessage("ID da Escola"),
+        "schoolId": m7,
         "science": MessageLookupByLibrary.simpleMessage("Ciência"),
+        "secondPeriod": MessageLookupByLibrary.simpleMessage("Segundo Período"),
         "select_role": MessageLookupByLibrary.simpleMessage("Escolher o papel"),
         "select_your_role":
             MessageLookupByLibrary.simpleMessage("Selecione o seu papel"),
@@ -200,8 +233,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "shortPasswordMessage": MessageLookupByLibrary.simpleMessage(
             "A senha deve ter pelo menos 6 caracteres."),
         "signup": MessageLookupByLibrary.simpleMessage("Cadastrar-se"),
-        "signup_as_role": m5,
+        "signup_as_role": m8,
         "student": MessageLookupByLibrary.simpleMessage("Estudante"),
+        "studentDetails":
+            MessageLookupByLibrary.simpleMessage("Detalhes do Aluno"),
         "studentInfo":
             MessageLookupByLibrary.simpleMessage("Informações do Aluno"),
         "studentName": MessageLookupByLibrary.simpleMessage("Nome do Aluno"),
@@ -221,15 +256,21 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Educação Física"),
         "subject_science": MessageLookupByLibrary.simpleMessage("Ciência"),
         "subjectsTitle": MessageLookupByLibrary.simpleMessage("Disciplinas"),
+        "submitGrades": MessageLookupByLibrary.simpleMessage("Enviar Notas"),
         "teacher": MessageLookupByLibrary.simpleMessage("Professor"),
         "teacherInfo":
             MessageLookupByLibrary.simpleMessage("Informações do Professor"),
+        "teacherSchedule":
+            MessageLookupByLibrary.simpleMessage("Horário do Professor"),
         "teacher_dashboard":
             MessageLookupByLibrary.simpleMessage("Painel do Professor"),
+        "teacher_input_grades": MessageLookupByLibrary.simpleMessage(
+            "Página de Entrada de Notas do Professor"),
+        "thirdPeriod": MessageLookupByLibrary.simpleMessage("Terceiro Período"),
         "todo": MessageLookupByLibrary.simpleMessage("Tarefas:"),
         "todo_assignment1_title":
             MessageLookupByLibrary.simpleMessage("Tarefa 1"),
-        "todo_due_date": m6,
+        "todo_due_date": m9,
         "todo_due_today":
             MessageLookupByLibrary.simpleMessage("Vence hoje, 23:59"),
         "todo_online_learning4":
@@ -246,8 +287,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Função desconhecida"),
         "unknownRoleMessage":
             MessageLookupByLibrary.simpleMessage("Função desconhecida"),
+        "uploading": MessageLookupByLibrary.simpleMessage("Enviando..."),
         "userInfo":
             MessageLookupByLibrary.simpleMessage("Informações do Usuário"),
+        "viewGrades": MessageLookupByLibrary.simpleMessage("Ver Notas"),
         "welcome":
             MessageLookupByLibrary.simpleMessage("Bem-vindo ao aplicativo!"),
         "whatsapp": MessageLookupByLibrary.simpleMessage("WhatsApp"),

@@ -50,6 +50,186 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Grades`
+  String get grades {
+    return Intl.message(
+      'Grades',
+      name: 'grades',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No students found`
+  String get noStudents {
+    return Intl.message(
+      'No students found',
+      name: 'noStudents',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grade`
+  String get grade {
+    return Intl.message(
+      'Grade',
+      name: 'grade',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `First Period`
+  String get firstPeriod {
+    return Intl.message(
+      'First Period',
+      name: 'firstPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Second Period`
+  String get secondPeriod {
+    return Intl.message(
+      'Second Period',
+      name: 'secondPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Third Period`
+  String get thirdPeriod {
+    return Intl.message(
+      'Third Period',
+      name: 'thirdPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grades Uploaded`
+  String get gradesUploaded {
+    return Intl.message(
+      'Grades Uploaded',
+      name: 'gradesUploaded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grade must be between 0-20`
+  String get gradeValidation {
+    return Intl.message(
+      'Grade must be between 0-20',
+      name: 'gradeValidation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Classes Assigned:`
+  String get classesAssigned {
+    return Intl.message(
+      'Classes Assigned:',
+      name: 'classesAssigned',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View Grades`
+  String get viewGrades {
+    return Intl.message(
+      'View Grades',
+      name: 'viewGrades',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter Grades`
+  String get enterGrades {
+    return Intl.message(
+      'Enter Grades',
+      name: 'enterGrades',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Maximum grade value is 20`
+  String get maxGrade20 {
+    return Intl.message(
+      'Maximum grade value is 20',
+      name: 'maxGrade20',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No subjects available`
+  String get noSubjects {
+    return Intl.message(
+      'No subjects available',
+      name: 'noSubjects',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Previously Graded`
+  String get previouslyGraded {
+    return Intl.message(
+      'Previously Graded',
+      name: 'previouslyGraded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter grade (0-20)`
+  String get enterGradeValue {
+    return Intl.message(
+      'Enter grade (0-20)',
+      name: 'enterGradeValue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Maximum Grade`
+  String get maxGradeValue {
+    return Intl.message(
+      'Maximum Grade',
+      name: 'maxGradeValue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Uploading...`
+  String get uploading {
+    return Intl.message(
+      'Uploading...',
+      name: 'uploading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Teacher Schedule`
+  String get teacherSchedule {
+    return Intl.message(
+      'Teacher Schedule',
+      name: 'teacherSchedule',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Mother's Name`
   String get mother_name {
     return Intl.message(
@@ -60,21 +240,11 @@ class S {
     );
   }
 
-  /// `Enter grade (0-100)`
+  /// `Enter grade (0-20)`
   String get enterGrade {
     return Intl.message(
-      'Enter grade (0-100)',
+      'Enter grade (0-20)',
       name: 'enterGrade',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Grades uploaded successfully`
-  String get gradesUploaded {
-    return Intl.message(
-      'Grades uploaded successfully',
-      name: 'gradesUploaded',
       desc: '',
       args: [],
     );
@@ -120,23 +290,13 @@ class S {
     );
   }
 
-  /// `No students found`
-  String get noStudents {
+  /// `School ID: {id}`
+  String schoolId(Object id) {
     return Intl.message(
-      'No students found',
-      name: 'noStudents',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `School ID`
-  String get schoolId {
-    return Intl.message(
-      'School ID',
+      'School ID: $id',
       name: 'schoolId',
       desc: '',
-      args: [],
+      args: [id],
     );
   }
 
@@ -620,16 +780,6 @@ class S {
     );
   }
 
-  /// `Grade`
-  String get grade {
-    return Intl.message(
-      'Grade',
-      name: 'grade',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Year`
   String get year {
     return Intl.message(
@@ -945,16 +1095,6 @@ class S {
     return Intl.message(
       'Materials',
       name: 'materials',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Grades`
-  String get grades {
-    return Intl.message(
-      'Grades',
-      name: 'grades',
       desc: '',
       args: [],
     );

@@ -6,9 +6,8 @@ import 'package:project_aedp/bloc/auth/auth_bloc.dart';
 import 'package:project_aedp/bloc/auth/auth_event.dart';
 import 'package:project_aedp/bloc/auth/auth_state.dart';
 import 'package:project_aedp/generated/l10n.dart';
-import 'dart:developer' as dev;   
+import 'dart:developer' as dev;
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class LoginPageByRole extends StatefulWidget {
   final String role;
@@ -22,15 +21,10 @@ class LoginPageByRole extends StatefulWidget {
 class _LoginPageByRoleState extends State<LoginPageByRole> {
   final TextEditingController idController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
   bool isPasswordObscured = true;
   bool isLoading = false;
-  ScaffoldMessengerState? _scaffoldMessenger;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _scaffoldMessenger = ScaffoldMessenger.of(context);
-  }
 
   void _handleLogin() {
     final String idText = idController.text.trim();
@@ -69,96 +63,104 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
         context.go('/select-role');
         return false;
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('${localization.login} - ${widget.role}'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => context.go('/select-role'),
+      child: ScaffoldMessenger(
+        key: _scaffoldMessengerKey,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('${localization.login} - ${widget.role}'),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => context.go('/select-role'),
+            ),
           ),
-        ),
-        body: BlocConsumer<AuthBloc, AuthState>(
-          listener: (context, state) async {
-            dev.log('Auth state changed: $state');
-            setState(() => isLoading = state is AuthLoading);
+          body: BlocConsumer<AuthBloc, AuthState>(
+            listener: (context, state) async {
+              dev.log('Auth state changed: $state');
+              setState(() => isLoading = state is AuthLoading);
 
-            if (state is AuthLoginSuccess) {
-              dev.log('Login success, saving session');
-              final prefs = await SharedPreferences.getInstance();
-              await prefs.setBool('isLoggedIn', true);
-              await prefs.setString('role', state.role);
-             await prefs.setString('userId', state.userId.toInt().toString());
+             if (state is AuthLoginSuccess) {
+                dev.log('Login success, saving session');
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setBool('isLoggedIn', true);
+                // Jika state.role atau state.userId null, gunakan default value
+                final String role = state.role ?? 'unknown';
+                final String userId = state.userId != null ? state.userId.toInt().toString() : '';
+                await prefs.setString('role', role);
+                await prefs.setString('userId', userId);
 
-
-              switch (state.role.toLowerCase()) {
-                case 'student':
-                  context.go('/student-home');
-                  break;
-                case 'teacher':
-                  context.go('/teacher-dashboard');
-                  break;
-                case 'parent':
-                  context.go('/parent-home');
-                  break;
-                default:
-                  dev.log('Unknown role encountered: ${state.role}');
-                  _showSnackBar(localization.unknownRole);
+                switch (role.toLowerCase()) {
+                  case 'student':
+                    if (!mounted) return;
+                    context.go('/student-home');
+                    break;
+                  case 'teacher':
+                    if (!mounted) return;
+                    context.go('/teacher-dashboard');
+                    break;
+                  case 'parent':
+                    if (!mounted) return;
+                    context.go('/parent-home');
+                    break;
+                  default:
+                    dev.log('Unknown role encountered: $role');
+                    _showSnackBar(localization.unknownRole);
+                }
               }
-            }
-          },
-          builder: (context, state) {
-            return Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 60),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset("assets/logo.png", width: 132, height: 131),
-                    const SizedBox(height: 12),
-                    Text(
-                      widget.role,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+
+            },
+            builder: (context, state) {
+              return Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 60),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset("assets/logo.png", width: 132, height: 131),
+                      const SizedBox(height: 12),
+                      Text(
+                        widget.role,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      localization.loginPrompt,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.blueGrey,
+                      const SizedBox(height: 8),
+                      Text(
+                        localization.loginPrompt,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.blueGrey,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildTextField(
-                      controller: idController,
-                      label: localization.contact_school_id,
-                      icon: Icons.call,
-                    ),
-                    const SizedBox(height: 12),
-                    _buildPasswordField(localization.password),
-                    const SizedBox(height: 26),
-                    if (isLoading)
-                      const CircularProgressIndicator()
-                    else
-                      _buildLoginButton(localization),
-                  ],
+                      const SizedBox(height: 20),
+                      _buildTextField(
+                        controller: idController,
+                        label: localization.contact_school_id,
+                        icon: Icons.call,
+                      ),
+                      const SizedBox(height: 12),
+                      _buildPasswordField(localization.password),
+                      const SizedBox(height: 26),
+                      if (isLoading)
+                        const CircularProgressIndicator()
+                      else
+                        _buildLoginButton(localization),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
   }
 
-
-   Widget _buildLoginButton(S localization) {
+  Widget _buildLoginButton(S localization) {
     return SizedBox(
       width: double.infinity,
       height: 45,
@@ -178,7 +180,7 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
     );
   }
 
-    Widget _buildPasswordField(String label) {
+  Widget _buildPasswordField(String label) {
     return TextField(
       controller: passwordController,
       obscureText: isPasswordObscured,
@@ -201,12 +203,11 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
     );
   }
 
- Widget _buildTextField({
+  Widget _buildTextField({
     required TextEditingController controller,
     required String label,
     required IconData icon,
-    // TextInputType? keyboardType,
-}) {
+  }) {
     return TextField(
       controller: controller,
       keyboardType: TextInputType.number, // Force number keyboard
@@ -219,18 +220,16 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
           borderRadius: BorderRadius.circular(30),
         ),
       ),
-      // Add input validation to ensure only numbers
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
       onSubmitted: (_) => _handleLogin(),
     );
-}
- void _showSnackBar(String message) {
-    if (mounted && _scaffoldMessenger != null) {
-      _scaffoldMessenger!
-        ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void _showSnackBar(String message) {
+    if (mounted) {
+      _scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(content: Text(message)));
     }
   }
 

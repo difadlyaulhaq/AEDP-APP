@@ -134,7 +134,7 @@ class ProfilePage extends StatelessWidget {
         _buildListTile(context, Icons.cake, S.of(context).dateOfBirth, profileData['date_of_birth'] ?? S.of(context).unknown),
         _buildListTile(context, Icons.place, S.of(context).placeOfBirth, profileData['place_of_birth'] ?? S.of(context).unknown),
         _buildListTile(context, Icons.school, S.of(context).gradeClass, profileData['grade_class'] ?? S.of(context).unknown),
-        _buildListTile(context, Icons.badge, S.of(context).schoolId, profileData['school_id'] ?? S.of(context).unknown),
+        _buildListTile(context, Icons.badge, S.of(context).schoolId(''), profileData['school_id'] ?? S.of(context).unknown),
       ],
     );
   }

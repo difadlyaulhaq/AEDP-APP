@@ -67,12 +67,14 @@ class GradesBloc extends Bloc<GradesEvent, GradesState> {
           .map((doc) => {'subject_name': doc['subject_name'], 'score': 0})
           .toList();
 
-      // Data nilai siswa yang akan diunggah
+      // Modify the upload grades function in GradesBloc
       Map<String, dynamic> gradeData = {
         'school_id': event.schoolId,
         'student_name': event.studentName,
         'class': event.gradeClass,
+        'type_grade': event.examType, // Add exam type
         'subjects': subjects,
+        'timestamp': FieldValue.serverTimestamp(),
       };
 
       await _firestore.collection('grades').add(gradeData);

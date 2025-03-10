@@ -5,6 +5,7 @@ import 'package:project_aedp/bloc/load_profile/profile_state.dart';
 import 'package:project_aedp/bloc/schedule/schedule_bloc.dart';
 import 'package:project_aedp/bloc/schedule/schedule_event.dart';
 import 'package:project_aedp/bloc/schedule/schedule_state.dart';
+import 'package:project_aedp/generated/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TeacherSchedule extends StatefulWidget {
@@ -50,7 +51,7 @@ class _TeacherScheduleState extends State<TeacherSchedule> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Teacher Schedule'),
+        title:  Text(S.of(context).teacherSchedule),
         backgroundColor: const Color(0xFF1E71A2),
         centerTitle: true,
       ),
