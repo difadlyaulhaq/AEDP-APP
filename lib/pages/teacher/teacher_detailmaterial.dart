@@ -159,66 +159,224 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
   }
 
   void _showUploadDialog(BuildContext context) {
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
-    File? selectedFile;
-    List<String> availableGrades = ['1', '2', '3','4','5','6','7','8','9','10','11','12'];
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+  File? selectedFile;
+  String? selectedGrade;
+  bool isUploading = false;
+  final List<String> availableGrades = List.generate(12, (index) => (index + 1).toString());
 
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Upload Material'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            DropdownButtonFormField<String>(
-              value: selectedGrade,
-              hint: const Text('Select Grade'),
-              items: availableGrades.map((grade) {
-                return DropdownMenuItem<String>(
-                  value: grade,
-                  child: Text(grade),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedGrade = value;
-                });
-              },
+  showDialog(
+    context: context,
+    builder: (dialogContext) => StatefulBuilder(
+      builder: (context, setState) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(Icons.upload_file, color: Theme.of(context).primaryColor),
+              const SizedBox(width: 12),
+              const Text('Upload Material', style: TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Grade Selection
+                DropdownButtonFormField<String>(
+                  value: selectedGrade,
+                  decoration: InputDecoration(
+                    labelText: 'Class Grade*',
+                    prefixIcon: Icon(Icons.school, color: Theme.of(context).primaryColor),
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  ),
+                  items: availableGrades.map((grade) {
+                    return DropdownMenuItem<String>(
+                      value: grade,
+                      child: Text('Grade $grade'),
+                    );
+                  }).toList(),
+                  onChanged: isUploading
+                      ? null
+                      : (value) => setState(() => selectedGrade = value),
+                ),
+                const SizedBox(height: 16),
+
+                // Title Input
+                TextField(
+                  controller: titleController,
+                  enabled: !isUploading,
+                  decoration: InputDecoration(
+                    labelText: 'Material Title*',
+                    prefixIcon: Icon(Icons.title, color: Theme.of(context).primaryColor),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Description Input
+                TextField(
+                  controller: descriptionController,
+                  enabled: !isUploading,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    labelText: 'Description',
+                    prefixIcon: Icon(Icons.description, color: Theme.of(context).primaryColor),
+                    border: OutlineInputBorder(),
+                    alignLabelWithHint: true,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // File Upload Section
+                OutlinedButton(
+                  onPressed: isUploading
+                      ? null
+                      : () async {
+                          final result = await FilePicker.platform.pickFiles(
+                            type: FileType.custom,
+                            allowedExtensions: ['pdf'],
+                          );
+                          if (result != null) {
+                            setState(() {
+                              selectedFile = File(result.files.single.path!);
+                            });
+                          }
+                        },
+                  style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    side: BorderSide(color: Theme.of(context).primaryColor),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.attach_file, color: Theme.of(context).primaryColor),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Select PDF File',
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                // Selected File Preview
+                if (selectedFile != null)
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.green),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.check_circle, color: Colors.green),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                selectedFile!.path.split('/').last,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.green.shade800,
+                                ),
+                              ),
+                              Text(
+                                '${(selectedFile!.lengthSync() / 1024).toStringAsFixed(2)} KB',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.picture_as_pdf, color: Colors.red),
+                      ],
+                    ),
+                  ),
+              ],
             ),
-            TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
-            const SizedBox(height: 10),
-            TextField(controller: descriptionController, maxLines: 3, decoration: const InputDecoration(labelText: 'Description')),
-            const SizedBox(height: 10),
+          ),
+          actions: [
+            TextButton(
+              onPressed: isUploading ? null : () => Navigator.pop(dialogContext),
+              child: Text('CANCEL', style: TextStyle(color: Colors.grey)),
+            ),
             ElevatedButton(
-              onPressed: () async {
-                final result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
-                if (result != null) {
-                  setState(() {
-                    selectedFile = File(result.files.single.path!);
-                  });
-                }
-              },
-              child: const Text('Select PDF File'),
+              onPressed: isUploading
+                  ? null
+                  : () async {
+                      if (selectedFile == null || selectedGrade == null || titleController.text.isEmpty) {
+                        ScaffoldMessenger.of(dialogContext).showSnackBar(
+                          SnackBar(
+                            content: Text('Please fill all required fields (*)'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        return;
+                      }
+
+                      setState(() => isUploading = true);
+                      
+                      try {
+                        _handleMaterialUpload(
+                          dialogContext,
+                          titleController.text,
+                          descriptionController.text,
+                          selectedFile!,
+                          selectedGrade!,
+                        );
+                        Navigator.pop(dialogContext);
+                        ScaffoldMessenger.of(dialogContext).showSnackBar(
+                          SnackBar(
+                            content: Text('Upload successful!'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(dialogContext).showSnackBar(
+                          SnackBar(
+                            content: Text('Upload failed: $e'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      } finally {
+                        setState(() => isUploading = false);
+                      }
+                    },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: isUploading
+                  ? SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text('UPLOAD', style: TextStyle(color: Colors.white)),
             ),
           ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
-          ElevatedButton(
-            onPressed: () {
-              if (selectedFile != null && selectedGrade != null) {
-                _handleMaterialUpload(dialogContext, titleController.text, descriptionController.text, selectedFile!, selectedGrade!);
-              } else {
-                _showErrorSnackBar(dialogContext, 'Please fill all fields and select a grade.');
-              }
-            },
-            child: const Text('Upload'),
-          ),
-        ],
-      ),
-    );
-  }
+        );
+      },
+    ),
+  );
+}
 
   void _handleMaterialUpload(BuildContext context, String title, String description, File file, String grade) {
     final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
