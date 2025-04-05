@@ -1,5 +1,9 @@
 {
   "@@locale": "en",
+  "filterByClass": "Filter By Class",
+  "allClasses": "All Classes",
+  "class": "Class",
+  "noStudentsInClass": "No students found in this class",
   "grades": "Grades",
   "noStudents": "No students found",
   "grade": "Grade",

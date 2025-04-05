@@ -3,14 +3,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:project_aedp/generated/l10n.dart';
 
-class TeacherGradesPage extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'package:project_aedp/generated/l10n.dart';
+
+class TeacherGradesPage extends StatefulWidget {
   final List<String> teacherClasses;
   const TeacherGradesPage({super.key, required this.teacherClasses});
 
   @override
-  Widget build(BuildContext context) {
-    final List<String> classList = teacherClasses;
+  State<TeacherGradesPage> createState() => _TeacherGradesPageState();
+}
 
+class _TeacherGradesPageState extends State<TeacherGradesPage> {
+  String? selectedClass;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).grades),
@@ -29,6 +39,34 @@ class TeacherGradesPage extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: DropdownButtonFormField<String>(
+                value: selectedClass,
+                decoration: InputDecoration(
+                  // labelText: S.of(context).filterByClass,
+                  filled: true,
+                  fillColor: Colors.white.withOpacity(0.9),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                items: [
+                  DropdownMenuItem(
+                    value: null,
+                    child: Text(S.of(context).classes),
+                  ),
+                  ...widget.teacherClasses.map((cls) {
+                    return DropdownMenuItem(
+                      value: cls,
+                      child: Text(cls),
+                    );
+                  }),
+                ],
+                onChanged: (value) => setState(() => selectedClass = value),
+              ),
+            ),
+            const SizedBox(height: 16),
             Expanded(
               child: Container(
                 padding: const EdgeInsets.only(top: 24, left: 16, right: 16),
@@ -42,70 +80,65 @@ class TeacherGradesPage extends StatelessWidget {
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
                       .collection('students')
-                      .where('grade_class', whereIn: classList)
+                      .where('grade_class', whereIn: selectedClass != null 
+                          ? [selectedClass!] 
+                          : widget.teacherClasses)
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
                         child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF3F51B5)),
-                        ),
-                      );
-                    }
-                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.person_off,
-                              size: 64,
-                              color: Colors.grey[400],
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              S.of(context).noStudents,
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey[600],
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              Color(0xFF3F51B5)),
                         ),
                       );
                     }
 
-                    // Group students by class
-                    var students = snapshot.data!.docs;
-                    Map<String, List<QueryDocumentSnapshot>> classStudents = {};
-                    for (var student in students) {
-                      String gradeClass = student['grade_class'];
+                    final students = snapshot.data?.docs ?? [];
+                    final classStudents = <String, List<QueryDocumentSnapshot>>{};
+
+                    for (final student in students) {
+                      final gradeClass = student['grade_class'];
                       classStudents.putIfAbsent(gradeClass, () => []).add(student);
                     }
 
-                    // Sort classes according to teacherClasses order
-                    List<String> sortedClasses = classList.where((c) => classStudents.containsKey(c)).toList();
+                    List<String> displayClasses = selectedClass != null
+                        ? [selectedClass!]
+                        : widget.teacherClasses;
 
                     return ListView.builder(
-                      itemCount: sortedClasses.length,
+                      itemCount: displayClasses.length,
                       itemBuilder: (context, index) {
-                        String className = sortedClasses[index];
+                        final className = displayClasses[index];
+                        final studentsInClass = classStudents[className] ?? [];
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 16.0, horizontal: 8.0),
                               child: Text(
-                                '${S.of(context).classes} : $className',
+                                '${S.of(context).classes}: $className',
                                 style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF3F51B5),
-                                ),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF3F51B5)),
                               ),
                             ),
-                            ...classStudents[className]!.map((student) => _buildStudentCard(context, student)).toList(),
+                            if (studentsInClass.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  S.of(context).noStudents,
+                                  style: TextStyle(color: Colors.grey[600]),
+                                ),
+                              )
+                            else
+                              ...studentsInClass
+                                  .map((student) =>
+                                      _buildStudentCard(context, student))
+                                  .toList(),
                           ],
                         );
                       },
@@ -172,9 +205,9 @@ class TeacherGradesPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${S.of(context).schoolId(student['school_id'])}',
+                      S.of(context).schoolId(student['school_id']),
                       style: TextStyle(
-                        fontSize: 10,
+                        fontSize: 14,
                         color: Colors.grey[700],
                       ),
                     ),
@@ -190,7 +223,8 @@ class TeacherGradesPage extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: const Color(0xFF3F51B5).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(30),

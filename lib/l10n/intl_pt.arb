@@ -1,5 +1,9 @@
 {
   "@@locale": "pt",
+  "filterByClass": "Filtrar por Turma",
+  "allClasses": "Todas as Turmas",
+  "class": "Turma",
+  "noStudentsInClass": "Nenhum aluno encontrado nesta turma",
   "grades": "Notas",
   "noStudents": "Nenhum aluno encontrado",
   "classes": "Turma:",

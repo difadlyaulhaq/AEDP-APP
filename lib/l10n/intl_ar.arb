@@ -1,5 +1,9 @@
 {
   "@@locale": "ar",
+  "filterByClass": "تصفية حسب الفصل",
+  "allClasses": "جميع الفصول",
+  "class": "الفصل",
+  "noStudentsInClass": "لا يوجد طلاب في هذا الفصل",
   "grades": "الدرجات",
   "noStudents": "لم يتم العثور على طلاب",
 "schoolId": "رقم المدرسة: {id}",
