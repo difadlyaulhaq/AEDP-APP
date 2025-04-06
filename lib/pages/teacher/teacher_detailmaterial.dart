@@ -10,7 +10,9 @@ import 'package:project_aedp/bloc/material_and_subject/material_model.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_event.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_state.dart' as teacher_material_state;
 import 'package:project_aedp/bloc/material_and_subject/teacher_bloc.dart';
+import 'package:project_aedp/generated/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 
 class TeacherDetailMaterial extends StatefulWidget {
   final String subject;
@@ -158,13 +160,29 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
     }
   }
 
-  void _showUploadDialog(BuildContext context) {
+  void _showUploadDialog(BuildContext context) async {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   File? selectedFile;
   String? selectedGrade;
   bool isUploading = false;
-  final List<String> availableGrades = List.generate(12, (index) => (index + 1).toString());
+  List<String> availableGrades = [];
+
+  try {
+    availableGrades = await _materialBloc.fetchGradesForSubject(widget.subjectId);
+    if (availableGrades.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No grades available for this subject.')),
+      );
+      return;
+    }
+  } catch (e) {
+    dev.log("Failed to fetch grades: $e");
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Failed to load class options.')),
+    );
+    return;
+  }
 
   showDialog(
     context: context,
@@ -189,13 +207,13 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
                   decoration: InputDecoration(
                     labelText: 'Class Grade*',
                     prefixIcon: Icon(Icons.school, color: Theme.of(context).primaryColor),
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    border: const OutlineInputBorder(),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   ),
                   items: availableGrades.map((grade) {
                     return DropdownMenuItem<String>(
                       value: grade,
-                      child: Text('Grade $grade'),
+                      child: Text('${S.of(context).classes} : $grade'),
                     );
                   }).toList(),
                   onChanged: isUploading
@@ -211,7 +229,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
                   decoration: InputDecoration(
                     labelText: 'Material Title*',
                     prefixIcon: Icon(Icons.title, color: Theme.of(context).primaryColor),
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -224,7 +242,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
                   decoration: InputDecoration(
                     labelText: 'Description',
                     prefixIcon: Icon(Icons.description, color: Theme.of(context).primaryColor),
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                   ),
                 ),
@@ -246,7 +264,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
                           }
                         },
                   style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     side: BorderSide(color: Theme.of(context).primaryColor),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -269,7 +287,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
                 // Selected File Preview
                 if (selectedFile != null)
                   Container(
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.green.shade50,
                       borderRadius: BorderRadius.circular(8),
@@ -277,7 +295,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.check_circle, color: Colors.green),
+                        const Icon(Icons.check_circle, color: Colors.green),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
@@ -300,7 +318,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
                             ],
                           ),
                         ),
-                        Icon(Icons.picture_as_pdf, color: Colors.red),
+                        const Icon(Icons.picture_as_pdf, color: Colors.red),
                       ],
                     ),
                   ),
@@ -310,7 +328,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
           actions: [
             TextButton(
               onPressed: isUploading ? null : () => Navigator.pop(dialogContext),
-              child: Text('CANCEL', style: TextStyle(color: Colors.grey)),
+              child: const Text('CANCEL', style: TextStyle(color: Colors.grey)),
             ),
             ElevatedButton(
               onPressed: isUploading
@@ -318,7 +336,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
                   : () async {
                       if (selectedFile == null || selectedGrade == null || titleController.text.isEmpty) {
                         ScaffoldMessenger.of(dialogContext).showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                             content: Text('Please fill all required fields (*)'),
                             backgroundColor: Colors.red,
                           ),
@@ -338,7 +356,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
                         );
                         Navigator.pop(dialogContext);
                         ScaffoldMessenger.of(dialogContext).showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                             content: Text('Upload successful!'),
                             backgroundColor: Colors.green,
                           ),
@@ -361,7 +379,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
                 ),
               ),
               child: isUploading
-                  ? SizedBox(
+                  ? const SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(
@@ -369,7 +387,7 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
                         color: Colors.white,
                       ),
                     )
-                  : Text('UPLOAD', style: TextStyle(color: Colors.white)),
+                  : const Text('UPLOAD', style: TextStyle(color: Colors.white)),
             ),
           ],
         );

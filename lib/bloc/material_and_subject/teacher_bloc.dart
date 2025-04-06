@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -102,54 +103,81 @@ class MaterialBloc extends Bloc<MaterialEvent, MaterialState> {
         emit(MaterialError(e.toString()));
       }
     });
+   
 
-    // Fetch subjects with translation & grade filtering
-    on<FetchSubjects>((event, emit) async {
-      try {
-        emit(MaterialLoading());
-        QuerySnapshot snapshot = await firestore.collection('subjects').get();
-        final translator = GoogleTranslator();
-        final List<SubjectModel> subjects = [];
+   on<FetchSubjects>((event, emit) async {
+  try {
+    emit(MaterialLoading());
+    final snapshot = await firestore.collection('subjects').get();
+    final translator = GoogleTranslator();
 
-        for (var doc in snapshot.docs) {
-          var data = doc.data() as Map<String, dynamic>;
-          String subjectName = data['subject_name'] ?? 'Unknown';
-          String grades = data['grade'] ?? '';
+    final List<SubjectModel> subjects = [];
 
-          // Pecah daftar grade menjadi List<String>
-          List<String> subjectGrades = grades.split(',');
+    final List<Future<SubjectModel?>> futures = snapshot.docs.map((doc) async {
+      final data = doc.data() as Map<String, dynamic>;
+      final subjectName = data['subject_name'] ?? 'Unknown';
+      final grades = data['grade'] ?? '';
+      final subjectGrades = grades.split(',');
 
-          // Filter berdasarkan role
-          bool isEligible = false;
-          if (event.isTeacher) {
-            List<String> teacherClasses = event.teacherClasses.split(',');
-            isEligible = subjectGrades.any((grade) => teacherClasses.contains(grade));
-          } else {
-            isEligible = subjectGrades.contains(event.studentGradeClass);
-          }
-
-          if (isEligible) {
-            // Terjemahkan nama subject jika diperlukan
-            String translatedSubject = subjectName;
-            if (event.selectedLanguage == 'ar') {
-              translatedSubject = (await translator.translate(subjectName, to: 'ar')).text;
-            } else if (event.selectedLanguage == 'en') {
-              translatedSubject = (await translator.translate(subjectName, to: 'en')).text;
-            } else if (event.selectedLanguage == 'pt') {
-              translatedSubject = (await translator.translate(subjectName, to: 'pt')).text;
-            }
-
-            subjects.add(SubjectModel(
-              id: doc.id,
-              grade: grades,
-              subjectName: translatedSubject,
-            ));
-          }
-        }
-        emit(SubjectsLoaded(subjects));
-      } catch (e) {
-        emit(MaterialError(e.toString()));
+      bool isEligible = false;
+      if (event.isTeacher) {
+        final teacherClasses = event.teacherClasses.split(',');
+        isEligible = subjectGrades.any((grade) => teacherClasses.contains(grade));
+      } else {
+        isEligible = subjectGrades.contains(event.studentGradeClass);
       }
-    });
+
+      if (!isEligible) return null;
+
+      String translatedSubject = subjectName;
+      if (event.selectedLanguage != 'id') {
+        try {
+          translatedSubject = (await translator.translate(subjectName, to: event.selectedLanguage)).text;
+        } catch (_) {
+          // Fallback in case of translation error
+          translatedSubject = subjectName;
+        }
+      }
+
+      return SubjectModel(
+        id: doc.id,
+        grade: grades,
+        subjectName: translatedSubject,
+      );
+    }).toList();
+
+    final results = await Future.wait(futures);
+    subjects.addAll(results.whereType<SubjectModel>());
+
+    emit(SubjectsLoaded(subjects));
+  } catch (e) {
+    emit(MaterialError(e.toString()));
   }
+});
+
+  }
+     Future<List<String>> fetchGradesForSubject(String subjectId) async {
+  try {
+    final snapshot = await firestore
+        .collection('subjects')
+        .doc(subjectId)
+        .get();
+
+    if (snapshot.exists) {
+      final data = snapshot.data();
+      final grades = data?['grade']; // <- perhatikan singular/plural disesuaikan
+
+      if (grades is List) {
+        return grades.map((grade) => grade.toString()).toList();
+      } else if (grades is String) {
+        return grades.split(',').map((grade) => grade.trim()).toList();
+      }
+    }
+    return [];
+  } catch (e) {
+    log("Error fetching grades: $e");
+    return [];
+  }
+}
+
 }

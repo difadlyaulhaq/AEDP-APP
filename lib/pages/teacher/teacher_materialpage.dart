@@ -6,6 +6,7 @@ import 'package:project_aedp/bloc/material_and_subject/material_state.dart' as c
 import 'package:project_aedp/bloc/material_and_subject/subject_model.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/teacher/teacher_detailmaterial.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../bloc/material_and_subject/teacher_bloc.dart';
 
 class TeacherMaterialPage extends StatefulWidget {
@@ -17,11 +18,16 @@ class TeacherMaterialPage extends StatefulWidget {
 }
 
 class TeacherMaterialPageState extends State<TeacherMaterialPage> {
+  bool _shouldRefresh = false;
+
   @override
   void initState() {
     super.initState();
-    final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
+    _fetchSubjects();
+  }
 
+  void _fetchSubjects() {
+    final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
     context.read<MaterialBloc>().add(
       FetchSubjects(
         isTeacher: true,
@@ -57,7 +63,7 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
       body: BlocBuilder<MaterialBloc, custom.MaterialState>(
         builder: (context, state) {
           if (state is custom.MaterialLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return _buildShimmerPlaceholder(screenWidth, screenHeight);
           } else if (state is custom.SubjectsLoaded) {
             return Padding(
               padding: EdgeInsets.symmetric(
@@ -78,17 +84,7 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
                 children: [
                   Text('Error: ${state.errorMessage}'),
                   ElevatedButton(
-                    onPressed: () {
-                      final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
-                      context.read<MaterialBloc>().add(
-                        FetchSubjects(
-                          isTeacher: true,
-                          teacherClasses: widget.teacherClasses.join(','),
-                          studentGradeClass: '',
-                          selectedLanguage: selectedLanguage,
-                        ),
-                      );
-                    },
+                    onPressed: _fetchSubjects,
                     child: const Text('Retry'),
                   ),
                 ],
@@ -96,6 +92,43 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
             );
           }
           return const Center(child: Text('No subjects available'));
+        },
+      ),
+    );
+  }
+
+  Widget _buildShimmerPlaceholder(double screenWidth, double screenHeight) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: screenWidth * 0.04,
+        vertical: screenHeight * 0.02,
+      ),
+      child: ListView.builder(
+        itemCount: 6,
+        itemBuilder: (context, index) {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Card(
+              elevation: 4,
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(16),
+                leading: const CircleAvatar(
+                  backgroundColor: Colors.grey,
+                ),
+                title: Container(
+                  height: 20,
+                  width: screenWidth * 0.5,
+                  color: Colors.grey,
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+              ),
+            ),
+          );
         },
       ),
     );
@@ -119,8 +152,8 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         trailing: const Icon(Icons.arrow_forward_ios, color: Colors.blueAccent),
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => TeacherDetailMaterial(
@@ -129,17 +162,10 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
                 grade: subject.grade,
               ),
             ),
-          ).then((_) {
-            final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
-            context.read<MaterialBloc>().add(
-              FetchSubjects(
-                isTeacher: true,
-                teacherClasses: widget.teacherClasses.join(','),
-                studentGradeClass: '',
-                selectedLanguage: selectedLanguage,
-              ),
-            );
-          });
+          );
+          if (result == true) {
+            _fetchSubjects();
+          }
         },
       ),
     );
