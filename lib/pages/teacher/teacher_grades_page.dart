@@ -3,11 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:project_aedp/generated/l10n.dart';
 
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
-import 'package:project_aedp/generated/l10n.dart';
-
 class TeacherGradesPage extends StatefulWidget {
   final List<String> teacherClasses;
   const TeacherGradesPage({super.key, required this.teacherClasses});
@@ -255,6 +250,7 @@ class _TeacherGradesPageState extends State<TeacherGradesPage> {
     );
   }
 }
+
 class InputGrade extends StatefulWidget {
   final String studentName;
   final String schoolId;
@@ -280,6 +276,7 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
   final Map<String, String> _existingGrades = {}; // Store existing grade values
   String _selectedExamType = "first_period";
   bool isPrimaryLevel = false;
+  bool isSecondaryLevel = false;
   bool _isLoading = false;
   String _currentDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
@@ -288,8 +285,11 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
     super.initState();
     int grade = int.tryParse(widget.gradeClass) ?? 0;
     isPrimaryLevel = grade >= 1 && grade <= 6;
-    if (isPrimaryLevel) {
-      _tabController = TabController(length: 3, vsync: this);
+    isSecondaryLevel = grade >= 7 && grade <= 12;
+    
+    // Only initialize tab controller for secondary level (grades 7-12)
+    if (isSecondaryLevel) {
+      _tabController = TabController(length: 2, vsync: this);
       _tabController!.addListener(() {
         setState(() {
           _selectedExamType = _getExamType(_tabController!.index);
@@ -297,17 +297,17 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
         });
       });
     }
+    
     _fetchSubjectsAndExistingGrades();
   }
 
   String _getExamType(int index) {
+    // For secondary level (grades 7-12)
     switch (index) {
       case 0:
         return "first_period";
       case 1:
         return "second_period";
-      case 2:
-        return "third_period";
       default:
         return "first_period";
     }
@@ -336,11 +336,22 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
       }
       
       // Fetch existing grades for this student
-      QuerySnapshot gradeDocs = await _firestore
-          .collection('grades')
-          .where('school_id', isEqualTo: widget.schoolId)
-          .where('exam_type', isEqualTo: isPrimaryLevel ? _selectedExamType : null)
-          .get();
+      QuerySnapshot gradeDocs;
+      
+      if (isSecondaryLevel) {
+        // For secondary level, fetch grades with exam_type
+        gradeDocs = await _firestore
+            .collection('grades')
+            .where('school_id', isEqualTo: widget.schoolId)
+            .where('exam_type', isEqualTo: _selectedExamType)
+            .get();
+      } else {
+        // For primary level, fetch grades without exam_type filter
+        gradeDocs = await _firestore
+            .collection('grades')
+            .where('school_id', isEqualTo: widget.schoolId)
+            .get();
+      }
       
       Map<String, String> existingGradeIds = {};
       Map<String, String> existingGrades = {};
@@ -409,16 +420,22 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
             });
           } else {
             // Add new grade
-            await _firestore.collection('grades').add({
+            Map<String, dynamic> gradeData = {
               'school_id': widget.schoolId,
               'student_name': widget.studentName,
               'class': widget.gradeClass,
               'subject': _subjectNames[subjectId],
               'subjectId': subjectId,
               'grade': gradeValue,
-              'exam_type': isPrimaryLevel ? _selectedExamType : null,
               'date_added': _currentDate,
-            });
+            };
+            
+            // Only add exam_type for secondary level
+            if (isSecondaryLevel) {
+              gradeData['exam_type'] = _selectedExamType;
+            }
+            
+            await _firestore.collection('grades').add(gradeData);
           }
         }
       }
@@ -456,7 +473,7 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
         title: Text('${S.of(context).grade}: ${widget.studentName}'),
         backgroundColor: const Color(0xFF3F51B5),
         elevation: 0,
-        bottom: isPrimaryLevel
+        bottom: isSecondaryLevel && _tabController != null
             ? TabBar(
                 controller: _tabController,
                 labelColor: Colors.white,
@@ -467,7 +484,6 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
                 tabs: [
                   Tab(text: S.of(context).firstPeriod),
                   Tab(text: S.of(context).secondPeriod),
-                  Tab(text: S.of(context).thirdPeriod),
                 ],
               )
             : null,

@@ -118,7 +118,7 @@ class ProfilePage extends StatelessWidget {
       S.of(context).teacherInfo,
       [
         _buildListTile(context, Icons.location_on, S.of(context).address, profileData['address'] ?? S.of(context).unknown),
-        _buildListTile(context, Icons.phone, S.of(context).contact, profileData['contact']?.toString() ?? S.of(context).unknown),
+        _buildListTile(context, Icons.phone, S.of(context).id_number, profileData['contact']?.toString() ?? S.of(context).unknown),
         _buildListTile(context, Icons.call, S.of(context).whatsapp, profileData['whatsapp'] ?? S.of(context).unknown),
         _buildListTile(context, Icons.class_, S.of(context).classes, (profileData['classes'] as List<String>).join(', ')),
       ],
@@ -149,7 +149,7 @@ Widget _buildParentSection(BuildContext context, Map<String, dynamic> profileDat
       _buildListTile(context, Icons.person, S.of(context).fatherName, profileData['father_name'] ?? S.of(context).unknown),
       _buildListTile(context, Icons.person, S.of(context).mother_name, profileData['mother_name'] ?? S.of(context).unknown), // Pastikan ini ada
       _buildListTile(context, Icons.person, S.of(context).studentName, profileData['student_name'] ?? S.of(context).unknown),
-      _buildListTile(context, Icons.phone, S.of(context).contact, profileData['contact'] ?? S.of(context).unknown),
+      _buildListTile(context, Icons.phone, S.of(context).id_number, profileData['contact'] ?? S.of(context).unknown),
       _buildListTile(context, Icons.call, S.of(context).whatsapp, profileData['whatsapp'] ?? S.of(context).unknown),
     ],
   );

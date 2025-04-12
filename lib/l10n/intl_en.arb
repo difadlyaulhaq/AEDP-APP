@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "id_number": "ID Number",
   "filterByClass": "Filter By Class",
   "allClasses": "All Classes",
   "class": "Class",

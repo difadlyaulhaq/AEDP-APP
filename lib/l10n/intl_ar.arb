@@ -1,5 +1,6 @@
 {
   "@@locale": "ar",
+  "id_number": "رقم الهوية",
   "filterByClass": "تصفية حسب الفصل",
   "allClasses": "جميع الفصول",
   "class": "الفصل",

@@ -1,5 +1,6 @@
 {
   "@@locale": "pt",
+  "id_number": "Número de Identificação",
   "filterByClass": "Filtrar por Turma",
   "allClasses": "Todas as Turmas",
   "class": "Turma",
