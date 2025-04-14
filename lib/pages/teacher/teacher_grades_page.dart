@@ -270,10 +270,24 @@ class InputGrade extends StatefulWidget {
 class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateMixin {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late TabController? _tabController;
-  final Map<String, TextEditingController> _controllers = {};
+  
+  // Separate controllers by exam type
+  final Map<String, Map<String, TextEditingController>> _controllersByExamType = {
+    "first_period": {},
+    "second_period": {},
+  };
+  
   final Map<String, String> _subjectNames = {};
-  final Map<String, String> _existingGradeIds = {}; // Store existing grade document IDs
-  final Map<String, String> _existingGrades = {}; // Store existing grade values
+  final Map<String, Map<String, String>> _existingGradeIdsByExamType = {
+    "first_period": {},
+    "second_period": {},
+  };
+  
+  final Map<String, Map<String, String>> _existingGradesByExamType = {
+    "first_period": {},
+    "second_period": {},
+  };
+  
   String _selectedExamType = "first_period";
   bool isPrimaryLevel = false;
   bool isSecondaryLevel = false;
@@ -299,6 +313,16 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
     }
     
     _fetchSubjectsAndExistingGrades();
+  }
+
+  @override
+  void dispose() {
+    // Dispose all controllers to prevent memory leaks
+    _controllersByExamType.forEach((examType, controllers) {
+      controllers.forEach((_, controller) => controller.dispose());
+    });
+    _tabController?.dispose();
+    super.dispose();
   }
 
   String _getExamType(int index) {
@@ -327,15 +351,26 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
         return grades.contains(widget.gradeClass);
       }).toList();
       
+      // Initialize controllers for the current exam type if they don't exist yet
+      if (!_controllersByExamType.containsKey(_selectedExamType)) {
+        _controllersByExamType[_selectedExamType] = {};
+      }
+      
       Map<String, TextEditingController> newControllers = {};
       Map<String, String> newSubjectNames = {};
       
       for (var doc in filteredSubjects) {
-        newControllers[doc.id] = _controllers[doc.id] ?? TextEditingController();
-        newSubjectNames[doc.id] = doc['subject_name'];
+        String docId = doc.id;
+        // Create a new controller if it doesn't exist for this subject in this exam type
+        if (!_controllersByExamType[_selectedExamType]!.containsKey(docId)) {
+          _controllersByExamType[_selectedExamType]![docId] = TextEditingController();
+        }
+        
+        newControllers[docId] = _controllersByExamType[_selectedExamType]![docId]!;
+        newSubjectNames[docId] = doc['subject_name'];
       }
       
-      // Fetch existing grades for this student
+      // Fetch existing grades for this student and this exam type
       QuerySnapshot gradeDocs;
       
       if (isSecondaryLevel) {
@@ -361,7 +396,7 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
         if (newSubjectNames.containsKey(subjectId)) {
           existingGradeIds[subjectId] = doc.id;
           existingGrades[subjectId] = doc['grade'];
-          // Set controller text to existing grade
+          // Set controller text to existing grade for the current exam type
           if (newControllers.containsKey(subjectId)) {
             newControllers[subjectId]!.text = doc['grade'];
           }
@@ -369,14 +404,12 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
       }
       
       setState(() {
-        _controllers.clear();
-        _controllers.addAll(newControllers);
         _subjectNames.clear();
         _subjectNames.addAll(newSubjectNames);
-        _existingGradeIds.clear();
-        _existingGradeIds.addAll(existingGradeIds);
-        _existingGrades.clear();
-        _existingGrades.addAll(existingGrades);
+        
+        // Update only the current exam type data
+        _existingGradeIdsByExamType[_selectedExamType] = existingGradeIds;
+        _existingGradesByExamType[_selectedExamType] = existingGrades;
         _isLoading = false;
       });
     } catch (e) {
@@ -395,7 +428,11 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
     });
     
     try {
-      for (var entry in _controllers.entries) {
+      // Get current controllers based on selected exam type
+      Map<String, TextEditingController> currentControllers = _controllersByExamType[_selectedExamType] ?? {};
+      Map<String, String> currentExistingGradeIds = _existingGradeIdsByExamType[_selectedExamType] ?? {};
+      
+      for (var entry in currentControllers.entries) {
         String subjectId = entry.key;
         String gradeValue = entry.value.text;
         
@@ -412,9 +449,9 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
             return;
           }
           
-          if (_existingGradeIds.containsKey(subjectId)) {
+          if (currentExistingGradeIds.containsKey(subjectId)) {
             // Update existing grade
-            await _firestore.collection('grades').doc(_existingGradeIds[subjectId]).update({
+            await _firestore.collection('grades').doc(currentExistingGradeIds[subjectId]).update({
               'grade': gradeValue,
               'date_updated': _currentDate,
             });
@@ -640,7 +677,11 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
   }
 
   Widget _buildSubjectsList() {
-    if (_controllers.isEmpty) {
+    // Get current controllers based on selected exam type
+    Map<String, TextEditingController> currentControllers = _controllersByExamType[_selectedExamType] ?? {};
+    Map<String, String> currentExistingGrades = _existingGradesByExamType[_selectedExamType] ?? {};
+    
+    if (currentControllers.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -665,11 +706,11 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
     }
 
     return ListView.builder(
-      itemCount: _controllers.length,
+      itemCount: currentControllers.length,
       itemBuilder: (context, index) {
-        final entry = _controllers.entries.elementAt(index);
+        final entry = currentControllers.entries.elementAt(index);
         final subjectId = entry.key;
-        final hasExistingGrade = _existingGrades.containsKey(subjectId);
+        final hasExistingGrade = currentExistingGrades.containsKey(subjectId);
         
         return Padding(
           padding: const EdgeInsets.only(bottom: 16),
