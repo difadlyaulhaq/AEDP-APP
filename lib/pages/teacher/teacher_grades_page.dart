@@ -269,23 +269,26 @@ class InputGrade extends StatefulWidget {
 
 class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateMixin {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  late TabController? _tabController;
+  late TabController _tabController;
   
-  // Separate controllers by exam type
+  // Controllers for all three possible periods
   final Map<String, Map<String, TextEditingController>> _controllersByExamType = {
     "first_period": {},
     "second_period": {},
+    "third_period": {},
   };
   
   final Map<String, String> _subjectNames = {};
   final Map<String, Map<String, String>> _existingGradeIdsByExamType = {
     "first_period": {},
     "second_period": {},
+    "third_period": {},
   };
   
   final Map<String, Map<String, String>> _existingGradesByExamType = {
     "first_period": {},
     "second_period": {},
+    "third_period": {},
   };
   
   String _selectedExamType = "first_period";
@@ -293,24 +296,29 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
   bool isSecondaryLevel = false;
   bool _isLoading = false;
   String _currentDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
-
+  int _coefficient = 3; // Default coefficient
+  int _periodCount = 3; // Default period count
+  
   @override
   void initState() {
     super.initState();
-    int grade = int.tryParse(widget.gradeClass) ?? 0;
+    // Determine grade level from class name
+    int grade = int.tryParse(widget.gradeClass.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
     isPrimaryLevel = grade >= 1 && grade <= 6;
     isSecondaryLevel = grade >= 7 && grade <= 12;
     
-    // Only initialize tab controller for secondary level (grades 7-12)
-    if (isSecondaryLevel) {
-      _tabController = TabController(length: 2, vsync: this);
-      _tabController!.addListener(() {
-        setState(() {
-          _selectedExamType = _getExamType(_tabController!.index);
-          _fetchSubjectsAndExistingGrades();
-        });
+    // Set coefficient and period count based on grade level
+    _coefficient = isPrimaryLevel ? 3 : 2;
+    _periodCount = isPrimaryLevel ? 3 : 2;
+    
+    // Initialize tab controller with appropriate number of tabs
+    _tabController = TabController(length: _periodCount, vsync: this);
+    _tabController.addListener(() {
+      setState(() {
+        _selectedExamType = _getExamType(_tabController.index);
+        _fetchSubjectsAndExistingGrades();
       });
-    }
+    });
     
     _fetchSubjectsAndExistingGrades();
   }
@@ -321,17 +329,18 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
     _controllersByExamType.forEach((examType, controllers) {
       controllers.forEach((_, controller) => controller.dispose());
     });
-    _tabController?.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
   String _getExamType(int index) {
-    // For secondary level (grades 7-12)
     switch (index) {
       case 0:
         return "first_period";
       case 1:
         return "second_period";
+      case 2:
+        return "third_period";
       default:
         return "first_period";
     }
@@ -343,7 +352,7 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
     });
     
     try {
-      // Fetch subjects
+      // Fetch subjects for this class
       QuerySnapshot subjectDocs = await _firestore.collection('subjects').get();
       var filteredSubjects = subjectDocs.docs.where((doc) {
         String gradeStr = doc['grade'];
@@ -351,7 +360,7 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
         return grades.contains(widget.gradeClass);
       }).toList();
       
-      // Initialize controllers for the current exam type if they don't exist yet
+      // Ensure controllers exist for current exam type
       if (!_controllersByExamType.containsKey(_selectedExamType)) {
         _controllersByExamType[_selectedExamType] = {};
       }
@@ -361,7 +370,7 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
       
       for (var doc in filteredSubjects) {
         String docId = doc.id;
-        // Create a new controller if it doesn't exist for this subject in this exam type
+        // Create controller if it doesn't exist
         if (!_controllersByExamType[_selectedExamType]!.containsKey(docId)) {
           _controllersByExamType[_selectedExamType]![docId] = TextEditingController();
         }
@@ -370,23 +379,12 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
         newSubjectNames[docId] = doc['subject_name'];
       }
       
-      // Fetch existing grades for this student and this exam type
-      QuerySnapshot gradeDocs;
-      
-      if (isSecondaryLevel) {
-        // For secondary level, fetch grades with exam_type
-        gradeDocs = await _firestore
-            .collection('grades')
-            .where('school_id', isEqualTo: widget.schoolId)
-            .where('exam_type', isEqualTo: _selectedExamType)
-            .get();
-      } else {
-        // For primary level, fetch grades without exam_type filter
-        gradeDocs = await _firestore
-            .collection('grades')
-            .where('school_id', isEqualTo: widget.schoolId)
-            .get();
-      }
+      // Fetch existing grades for this student and current exam type
+      QuerySnapshot gradeDocs = await _firestore
+          .collection('grades')
+          .where('school_id', isEqualTo: widget.schoolId)
+          .where('exam_type', isEqualTo: _selectedExamType)
+          .get();
       
       Map<String, String> existingGradeIds = {};
       Map<String, String> existingGrades = {};
@@ -396,7 +394,7 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
         if (newSubjectNames.containsKey(subjectId)) {
           existingGradeIds[subjectId] = doc.id;
           existingGrades[subjectId] = doc['grade'];
-          // Set controller text to existing grade for the current exam type
+          // Set controller text to existing grade
           if (newControllers.containsKey(subjectId)) {
             newControllers[subjectId]!.text = doc['grade'];
           }
@@ -428,7 +426,7 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
     });
     
     try {
-      // Get current controllers based on selected exam type
+      // Get current controllers and existing grade IDs
       Map<String, TextEditingController> currentControllers = _controllersByExamType[_selectedExamType] ?? {};
       Map<String, String> currentExistingGradeIds = _existingGradeIdsByExamType[_selectedExamType] ?? {};
       
@@ -438,7 +436,7 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
         
         if (gradeValue.isNotEmpty) {
           int? grade = int.tryParse(gradeValue);
-          // Maximum grade set to 20 as requested
+          // Validate grade value (0-20)
           if (grade == null || grade < 0 || grade > 20) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(S.of(context).gradeValidation + ' (0-20)')),
@@ -453,26 +451,22 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
             // Update existing grade
             await _firestore.collection('grades').doc(currentExistingGradeIds[subjectId]).update({
               'grade': gradeValue,
+              'coefficient': _coefficient,
               'date_updated': _currentDate,
             });
           } else {
-            // Add new grade
-            Map<String, dynamic> gradeData = {
+            // Add new grade - always include exam_type for both primary and secondary
+            await _firestore.collection('grades').add({
               'school_id': widget.schoolId,
               'student_name': widget.studentName,
               'class': widget.gradeClass,
               'subject': _subjectNames[subjectId],
               'subjectId': subjectId,
               'grade': gradeValue,
+              'coefficient': _coefficient,
               'date_added': _currentDate,
-            };
-            
-            // Only add exam_type for secondary level
-            if (isSecondaryLevel) {
-              gradeData['exam_type'] = _selectedExamType;
-            }
-            
-            await _firestore.collection('grades').add(gradeData);
+              'exam_type': _selectedExamType,
+            });
           }
         }
       }
@@ -510,20 +504,15 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
         title: Text('${S.of(context).grade}: ${widget.studentName}'),
         backgroundColor: const Color(0xFF3F51B5),
         elevation: 0,
-        bottom: isSecondaryLevel && _tabController != null
-            ? TabBar(
-                controller: _tabController,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.white.withOpacity(0.7),
-                labelStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                indicatorColor: Colors.amber,
-                indicatorWeight: 3,
-                tabs: [
-                  Tab(text: S.of(context).firstPeriod),
-                  Tab(text: S.of(context).secondPeriod),
-                ],
-              )
-            : null,
+        bottom: TabBar(
+          controller: _tabController,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white.withOpacity(0.7),
+          labelStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          indicatorColor: Colors.amber,
+          indicatorWeight: 3,
+          tabs: _buildPeriodTabs(),
+        ),
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -547,126 +536,151 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
                     topRight: Radius.circular(28),
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          S.of(context).studentInfo,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF3F51B5),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.amber,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            'Class ${widget.gradeClass}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Card(
-                      elevation: 0,
-                      color: const Color(0xFFF5F5F5),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: List.generate(_periodCount, (index) {
+                    // We need to wrap the content in a StatefulBuilder to rebuild when tab changes
+                    return StatefulBuilder(
+                      builder: (context, setState) {
+                        return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Icon(Icons.person, color: Color(0xFF3F51B5)),
-                                const SizedBox(width: 8),
                                 Text(
-                                  widget.studentName,
+                                  S.of(context).studentInfo,
                                   style: const TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black87,
+                                    color: Color(0xFF3F51B5),
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    'Class ${widget.gradeClass} (Coef: $_coefficient)',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                const Icon(Icons.badge, color: Color(0xFF3F51B5)),
-                                const SizedBox(width: 8),
-                                Text(
-                                  S.of(context).schoolId(widget.schoolId),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[700],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                const Icon(Icons.calendar_today, color: Color(0xFF3F51B5)),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'Date: $_currentDate',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[700],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      S.of(context).enterGrade,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF3F51B5),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      S.of(context).maxGrade20,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.red,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Expanded(
-                      child: _isLoading
-                          ? const Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF3F51B5)),
+                            Card(
+                              elevation: 0,
+                              color: const Color(0xFFF5F5F5),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                            )
-                          : _buildSubjectsList(),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildSubmitButton(),
-                  ],
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.person, color: Color(0xFF3F51B5)),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          widget.studentName,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.badge, color: Color(0xFF3F51B5)),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          S.of(context).schoolId(widget.schoolId),
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[700],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.calendar_today, color: Color(0xFF3F51B5)),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'Date: $_currentDate',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[700],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.calculate, color: Color(0xFF3F51B5)),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'Coefficient: $_coefficient',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[700],
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              S.of(context).enterGrade,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF3F51B5),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              S.of(context).maxGrade20,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.red,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Expanded(
+                              child: _isLoading
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF3F51B5)),
+                                    ),
+                                  )
+                                : _buildSubjectsList(),
+                            ),
+                            const SizedBox(height: 16),
+                            _buildSubmitButton(),
+                          ],
+                        );  
+                      },
+                    );
+                  }),
                 ),
               ),
             ),
@@ -674,6 +688,21 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
         ),
       ),
     );
+  }
+
+  // Build the appropriate number of period tabs based on grade level
+  List<Widget> _buildPeriodTabs() {
+    final List<Widget> tabs = [
+      Tab(text: S.of(context).firstPeriod),
+      Tab(text: S.of(context).secondPeriod),
+    ];
+    
+    // Add third period tab for primary level only
+    if (isPrimaryLevel) {
+      tabs.add(Tab(text: S.of(context).thirdPeriod));
+    }
+    
+    return tabs;
   }
 
   Widget _buildSubjectsList() {
@@ -721,7 +750,7 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
                 children: [
                   Expanded(
                     child: Text(
-                      _subjectNames[subjectId] ?? '',
+                      '${_subjectNames[subjectId] ?? ''} (Coef: $_coefficient)',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
