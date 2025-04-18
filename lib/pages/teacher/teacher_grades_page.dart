@@ -501,7 +501,7 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${S.of(context).grade}: ${widget.studentName}'),
+        title: Text('${S.of(context).grade}: ${widget.studentName}', style: TextStyle(color: Colors.white)),
         backgroundColor: const Color(0xFF3F51B5),
         elevation: 0,
         bottom: TabBar(
@@ -536,150 +536,11 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
                     topRight: Radius.circular(28),
                   ),
                 ),
+                // Changed this to use TabBarView with a modified content structure
                 child: TabBarView(
                   controller: _tabController,
                   children: List.generate(_periodCount, (index) {
-                    // We need to wrap the content in a StatefulBuilder to rebuild when tab changes
-                    return StatefulBuilder(
-                      builder: (context, setState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  S.of(context).studentInfo,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF3F51B5),
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.amber,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    'Class ${widget.gradeClass} (Coef: $_coefficient)',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Card(
-                              elevation: 0,
-                              color: const Color(0xFFF5F5F5),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.person, color: Color(0xFF3F51B5)),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          widget.studentName,
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black87,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.badge, color: Color(0xFF3F51B5)),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          S.of(context).schoolId(widget.schoolId),
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[700],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.calendar_today, color: Color(0xFF3F51B5)),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          'Date: $_currentDate',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[700],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.calculate, color: Color(0xFF3F51B5)),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          'Coefficient: $_coefficient',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[700],
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              S.of(context).enterGrade,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF3F51B5),
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              S.of(context).maxGrade20,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.red,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Expanded(
-                              child: _isLoading
-                                ? const Center(
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF3F51B5)),
-                                    ),
-                                  )
-                                : _buildSubjectsList(),
-                            ),
-                            const SizedBox(height: 16),
-                            _buildSubmitButton(),
-                          ],
-                        );  
-                      },
-                    );
+                    return _buildTabContent();
                   }),
                 ),
               ),
@@ -687,6 +548,147 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
           ],
         ),
       ),
+    );
+  }
+
+  // Extracted the tab content to a separate method for better organization
+  Widget _buildTabContent() {
+    return Column(
+      children: [
+        // Non-scrollable header part
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              S.of(context).studentInfo,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF3F51B5),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.amber,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                'Class ${widget.gradeClass} ',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        
+        // Scrollable part (main content)
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Student info card
+                Card(
+                  elevation: 0,
+                  color: const Color(0xFFF5F5F5),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.person, color: Color(0xFF3F51B5)),
+                            const SizedBox(width: 8),
+                            Text(
+                              widget.studentName,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(Icons.badge, color: Color(0xFF3F51B5)),
+                            const SizedBox(width: 8),
+                            Text(
+                              S.of(context).schoolId(widget.schoolId),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(Icons.calendar_today, color: Color(0xFF3F51B5)),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Date: $_currentDate',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                
+                // Enter Grade header
+                Text(
+                  S.of(context).enterGrade,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF3F51B5),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  S.of(context).maxGrade20,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.red,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                
+                // Subjects list
+                _isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF3F51B5)),
+                      ),
+                    )
+                  : _buildSubjectsList(),
+              ],
+            ),
+          ),
+        ),
+        
+        // Non-scrollable footer (submit button)
+        const SizedBox(height: 16),
+        _buildSubmitButton(),
+      ],
     );
   }
 
@@ -734,10 +736,8 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
       );
     }
 
-    return ListView.builder(
-      itemCount: currentControllers.length,
-      itemBuilder: (context, index) {
-        final entry = currentControllers.entries.elementAt(index);
+    return Column(
+      children: currentControllers.entries.map((entry) {
         final subjectId = entry.key;
         final hasExistingGrade = currentExistingGrades.containsKey(subjectId);
         
@@ -750,7 +750,7 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
                 children: [
                   Expanded(
                     child: Text(
-                      '${_subjectNames[subjectId] ?? ''} (Coef: $_coefficient)',
+                      '${_subjectNames[subjectId] ?? ''}',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
@@ -812,7 +812,7 @@ class _InputGradeState extends State<InputGrade> with SingleTickerProviderStateM
             ],
           ),
         );
-      },
+      }).toList(),
     );
   }
 

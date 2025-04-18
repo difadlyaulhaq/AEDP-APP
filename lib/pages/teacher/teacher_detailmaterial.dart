@@ -87,6 +87,13 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.pop(context),
           ),
+          actions: [
+            // Refresh button in app bar
+            IconButton(
+              icon: const Icon(Icons.refresh, color: Colors.white),
+              onPressed: () => _refreshMaterials(),
+            ),
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -100,6 +107,39 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
         ),
       ),
     );
+  }
+
+  void _refreshMaterials() {
+    final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
+    final state = _loadprofile.state;
+    if (state is LoadProfileLoaded) {
+      final teacherClassesRaw = state.profileData['classes'];
+      final List<String> teacherClasses = teacherClassesRaw is String
+          ? teacherClassesRaw.split(',').map((e) => e.trim()).toList()
+          : (teacherClassesRaw is List)
+              ? teacherClassesRaw.cast<String>()
+              : [];
+      
+      // Show refreshing indicator
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Refreshing materials...'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      
+      // Fetch latest data
+      _materialBloc.add(
+        FetchMaterials(
+          subjectId: widget.subjectId,
+          grade: widget.grade,
+          selectedLanguage: selectedLanguage,
+          isTeacher: true,
+          teacherClasses: teacherClasses.join(','),
+          studentGradeClass: ''
+        )
+      );
+    }
   }
 
   Widget _buildAddButton(BuildContext context) {
@@ -354,13 +394,6 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
                           selectedFile!,
                           selectedGrade!,
                         );
-                        Navigator.pop(dialogContext);
-                        ScaffoldMessenger.of(dialogContext).showSnackBar(
-                          const SnackBar(
-                            content: Text('Upload successful!'),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
                       } catch (e) {
                         ScaffoldMessenger.of(dialogContext).showSnackBar(
                           SnackBar(
@@ -397,17 +430,6 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
 }
 
   void _handleMaterialUpload(BuildContext context, String title, String description, File file, String grade) {
-    final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
-    final state = _loadprofile.state;
-    List<String> teacherClasses = [];
-    if (state is LoadProfileLoaded) {
-      final teacherClassesRaw = state.profileData['classes'];
-      teacherClasses = teacherClassesRaw is String
-          ? teacherClassesRaw.split(',').map((e) => e.trim()).toList()
-          : (teacherClassesRaw is List)
-              ? teacherClassesRaw.cast<String>()
-              : [];
-    }
     final material = MaterialModel(
       id: DateTime.now().toIso8601String(),
       title: title,
@@ -416,20 +438,28 @@ class _TeacherDetailMaterialState extends State<TeacherDetailMaterial> {
       grade: grade,
       subjectId: widget.subjectId,
     );
+    
+    // Add the material
     _materialBloc.add(AddMaterial(material: material, file: file, grade: grade));
+    
+    // Close dialog
     Navigator.pop(context);
-    _materialBloc.add(
-      FetchMaterials(subjectId: widget.subjectId,
-       grade: widget.grade, 
-       selectedLanguage: selectedLanguage,
-        isTeacher: true, 
-            teacherClasses:
-            teacherClasses.join(','), // Join the list into a string
-         studentGradeClass: ''
-         ));
+    
+    // Show uploading message
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Uploading material...'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+    
+    // Refresh materials after brief delay to allow upload to complete
+    Future.delayed(const Duration(seconds: 2), () {
+      _refreshMaterials();
+    });
   }
 
-  void _showErrorSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-  }
+  // void _showErrorSnackBar(BuildContext context, String message) {
+  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  // }
 }
