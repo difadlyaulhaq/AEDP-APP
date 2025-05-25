@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project_aedp/bloc/auth/auth_bloc.dart';
 import 'package:project_aedp/bloc/auth/auth_repository.dart';
-import 'package:project_aedp/pages/loginbyrole.dart';
+import 'package:project_aedp/pages/select_role/loginbyrole.dart';
 
 void main() async {
   // Initialize Firebase before running tests

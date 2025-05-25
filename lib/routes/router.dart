@@ -6,10 +6,10 @@ import 'package:project_aedp/bloc/auth/auth_state.dart';
 import 'package:project_aedp/pages/parrents/parrent_home.dart';
 import 'package:project_aedp/pages/students/student_home.dart';
 import 'package:project_aedp/pages/teacher/teacher_dashboard.dart';
-import '../pages/loginbyrole.dart';
-import '../pages/notfound.dart';
-import '../pages/selectrole.dart';
-import '../pages/splashscreen_page.dart';
+import '../pages/select_role/loginbyrole.dart';
+import '../pages/common/notfound.dart';
+import '../pages/select_role/selectrole.dart';
+import '../pages/common/splashscreen_page.dart';
 
 part 'router_name.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../theme/theme.dart';
+import '../../theme/theme.dart';
 
 class Splashscreen extends StatefulWidget {
   const Splashscreen({super.key});

@@ -3,7 +3,7 @@
   import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
   import 'package:project_aedp/bloc/load_profile/profile_state.dart';
   import 'package:project_aedp/generated/l10n.dart';
-  import 'package:project_aedp/pages/profile_page.dart';
+  import 'package:project_aedp/pages/common/profile_page.dart';
   import 'package:project_aedp/pages/students/elibrary.dart';
   import 'package:project_aedp/pages/teacher/teacher_grades_page.dart';
   import 'package:project_aedp/pages/teacher/teacher_materialpage.dart';

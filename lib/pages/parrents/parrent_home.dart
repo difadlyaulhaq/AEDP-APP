@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/parrents/parrent_dashboard.dart';
-import '../profile_page.dart';
+import '../common/profile_page.dart';
 import 'invoice_page.dart';
 
 class ParrentHome extends StatefulWidget {
