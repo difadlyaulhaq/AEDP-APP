@@ -47,6 +47,76 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Login to your account to continue`
+  String get loginPrompt {
+    return Intl.message(
+      'Login to your account to continue',
+      name: 'loginPrompt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact / School ID`
+  String get contact_school_id {
+    return Intl.message(
+      'Contact / School ID',
+      name: 'contact_school_id',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password`
+  String get password {
+    return Intl.message(
+      'Password',
+      name: 'password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter your ID and password`
+  String get enterIdAndPassword {
+    return Intl.message(
+      'Please enter your ID and password',
+      name: 'enterIdAndPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid numeric ID`
+  String get invalidNumericId {
+    return Intl.message(
+      'Please enter a valid numeric ID',
+      name: 'invalidNumericId',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid ID or password`
+  String get invalidCredentials {
+    return Intl.message(
+      'Invalid ID or password',
+      name: 'invalidCredentials',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown role`
+  String get unknownRole {
+    return Intl.message(
+      'Unknown role',
+      name: 'unknownRole',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `ID Number`
   String get id_number {
     return Intl.message(
@@ -362,16 +432,6 @@ class S {
     return Intl.message(
       'Submit Grades',
       name: 'submitGrades',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Contact / School ID`
-  String get contact_school_id {
-    return Intl.message(
-      'Contact / School ID',
-      name: 'contact_school_id',
       desc: '',
       args: [],
     );
@@ -1847,16 +1907,6 @@ class S {
     );
   }
 
-  /// `Unknown role`
-  String get unknownRole {
-    return Intl.message(
-      'Unknown role',
-      name: 'unknownRole',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Login failed`
   String get loginFailed {
     return Intl.message(
@@ -1867,31 +1917,11 @@ class S {
     );
   }
 
-  /// `Login to your account to continue`
-  String get loginPrompt {
-    return Intl.message(
-      'Login to your account to continue',
-      name: 'loginPrompt',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Email`
   String get email {
     return Intl.message(
       'Email',
       name: 'email',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Password`
-  String get password {
-    return Intl.message(
-      'Password',
-      name: 'password',
       desc: '',
       args: [],
     );

@@ -1,5 +1,8 @@
 {
   "@@locale": "ar",
+  "enterIdAndPassword": "يرجى إدخال رقم الهوية وكلمة المرور",
+  "invalidNumericId": "يرجى إدخال رقم هوية صالح",
+  "invalidCredentials": "رقم الهوية أو كلمة المرور غير صحيحة",
   "id_number": "رقم الهوية",
   "filterByClass": "تصفية حسب الفصل",
   "allClasses": "جميع الفصول",

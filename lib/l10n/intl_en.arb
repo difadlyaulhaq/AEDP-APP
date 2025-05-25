@@ -1,5 +1,12 @@
 {
   "@@locale": "en",
+  "loginPrompt": "Please log in to continue",
+  "contact_school_id": "School ID",
+  "password": "Password",
+  "enterIdAndPassword": "Please enter your ID and password",
+  "invalidNumericId": "Please enter a valid numeric ID",
+  "invalidCredentials": "Invalid ID or password",
+  "unknownRole": "Unknown role",
   "id_number": "ID Number",
   "filterByClass": "Filter By Class",
   "allClasses": "All Classes",

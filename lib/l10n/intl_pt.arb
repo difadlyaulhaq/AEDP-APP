@@ -1,5 +1,8 @@
 {
   "@@locale": "pt",
+  "enterIdAndPassword": "Por favor, insira seu ID e senha",
+  "invalidNumericId": "Por favor, insira um ID numérico válido",
+  "invalidCredentials": "ID ou senha inválidos",
   "id_number": "Número de Identificação",
   "filterByClass": "Filtrar por Turma",
   "allClasses": "Todas as Turmas",
