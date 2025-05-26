@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:project_aedp/bloc/auth/auth_bloc.dart';
-import 'package:project_aedp/bloc/auth/auth_event.dart';
 import 'package:project_aedp/bloc/auth/auth_state.dart';
 import 'package:project_aedp/bloc/load_profile/load_profile_event.dart';
 import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
