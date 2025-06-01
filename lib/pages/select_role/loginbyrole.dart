@@ -103,7 +103,7 @@ class _LoginPageByRoleState extends State<LoginPageByRole> {
               setState(() => isLoading = state is AuthLoading);
 
               if (state is AuthLoginSuccess) {
-                await _handleAuthSuccess(state.role ?? 'unknown', state.userId);
+                await _handleAuthSuccess(state.role, state.userId);
               } else if (state is AuthFailure) {
                 setState(() => loginError = t.invalidCredentials);
               }
