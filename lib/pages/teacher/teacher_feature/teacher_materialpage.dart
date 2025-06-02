@@ -3,29 +3,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_aedp/bloc/language/language_cubit.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_event.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_state.dart' as custom;
-import 'package:project_aedp/bloc/material_and_subject/subject_model.dart';
+import 'package:project_aedp/bloc/material_and_subject/teacher_bloc.dart';
 import 'package:project_aedp/generated/l10n.dart';
-import 'package:project_aedp/pages/teacher/teacher_feature/teacher_detailmaterial.dart';
-import 'package:shimmer/shimmer.dart';
-import '../../../bloc/material_and_subject/teacher_bloc.dart';
+import '../../../widget/teacher_material/material_card.dart';
+import '../../../widget/teacher_material/material_shimmer.dart';
+
 
 class TeacherMaterialPage extends StatefulWidget {
   final List<String> teacherClasses;
   const TeacherMaterialPage({super.key, required this.teacherClasses});
 
   @override
-  TeacherMaterialPageState createState() => TeacherMaterialPageState();
+  State<TeacherMaterialPage> createState() => _TeacherMaterialPageState();
 }
 
-class TeacherMaterialPageState extends State<TeacherMaterialPage> {
-  bool _shouldRefresh = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchSubjects();
-  }
-
+class _TeacherMaterialPageState extends State<TeacherMaterialPage> {
   void _fetchSubjects() {
     final selectedLanguage = context.read<LanguageCubit>().state.locale.languageCode;
     context.read<MaterialBloc>().add(
@@ -36,6 +28,12 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
         selectedLanguage: selectedLanguage,
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchSubjects();
   }
 
   @override
@@ -63,7 +61,7 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
       body: BlocBuilder<MaterialBloc, custom.MaterialState>(
         builder: (context, state) {
           if (state is custom.MaterialLoading) {
-            return _buildShimmerPlaceholder(screenWidth, screenHeight);
+            return MaterialShimmer(screenWidth: screenWidth, screenHeight: screenHeight);
           } else if (state is custom.SubjectsLoaded) {
             return Padding(
               padding: EdgeInsets.symmetric(
@@ -73,7 +71,10 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
               child: ListView.builder(
                 itemCount: state.subjects.length,
                 itemBuilder: (context, index) {
-                  return _buildCardItem(context, state.subjects[index]);
+                  return MaterialCard(
+                    subject: state.subjects[index],
+                    onRefresh: _fetchSubjects,
+                  );
                 },
               ),
             );
@@ -82,90 +83,22 @@ class TeacherMaterialPageState extends State<TeacherMaterialPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Error: ${state.errorMessage}'),
+                  Text(
+                    state.errorMessage,
+                    style: const TextStyle(color: Colors.red, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: _fetchSubjects,
-                    child: const Text('Retry'),
+                    child: Text("retry".toUpperCase(),
                   ),
+                  )
                 ],
               ),
             );
           }
           return const Center(child: Text('No subjects available'));
-        },
-      ),
-    );
-  }
-
-  Widget _buildShimmerPlaceholder(double screenWidth, double screenHeight) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: screenWidth * 0.04,
-        vertical: screenHeight * 0.02,
-      ),
-      child: ListView.builder(
-        itemCount: 6,
-        itemBuilder: (context, index) {
-          return Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
-            child: Card(
-              elevation: 4,
-              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: ListTile(
-                contentPadding: const EdgeInsets.all(16),
-                leading: const CircleAvatar(
-                  backgroundColor: Colors.grey,
-                ),
-                title: Container(
-                  height: 20,
-                  width: screenWidth * 0.5,
-                  color: Colors.grey,
-                ),
-                trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildCardItem(BuildContext context, SubjectModel subject) {
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(16),
-        leading: const CircleAvatar(
-          backgroundColor: Colors.blueAccent,
-          child: Icon(Icons.book, color: Colors.white),
-        ),
-        title: Text(
-          subject.subjectName,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        trailing: const Icon(Icons.arrow_forward_ios, color: Colors.blueAccent),
-        onTap: () async {
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TeacherDetailMaterial(
-                subject: subject.subjectName,
-                subjectId: subject.id,
-                grade: subject.grade,
-              ),
-            ),
-          );
-          if (result == true) {
-            _fetchSubjects();
-          }
         },
       ),
     );
