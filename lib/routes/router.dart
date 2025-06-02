@@ -5,7 +5,7 @@ import 'package:project_aedp/bloc/auth/auth_bloc.dart';
 import 'package:project_aedp/bloc/auth/auth_state.dart';
 import 'package:project_aedp/pages/parrents/parrent_home.dart';
 import 'package:project_aedp/pages/students/student_home.dart';
-import 'package:project_aedp/pages/teacher/teacher_dashboard.dart';
+import 'package:project_aedp/pages/teacher/teacher_dashboard/teacher_dashboard.dart';
 import '../pages/select_role/loginbyrole.dart';
 import '../pages/common/notfound.dart';
 import '../pages/select_role/selectrole.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/common/profile_page.dart';
-import 'package:project_aedp/pages/teacher/teacher_schedule.dart';
-import 'package:project_aedp/pages/teacher/teacher_home_menu_page.dart';
+import 'package:project_aedp/pages/teacher/teacher_feature/teacher_schedule.dart';
+import 'package:project_aedp/pages/teacher/teacher_dashboard/teacher_home_menu_page.dart';
 import 'dart:developer' as dev;
 
 class TeacherDashboard extends StatefulWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:project_aedp/generated/l10n.dart';
-import 'package:project_aedp/pages/teacher/input_grade_page.dart';
+import 'package:project_aedp/pages/teacher/teacher_feature/input_grade_page.dart';
 
 class TeacherGradesPage extends StatefulWidget {
   final List<String> teacherClasses;

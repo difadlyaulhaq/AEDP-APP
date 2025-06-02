@@ -4,10 +4,10 @@ import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
 import 'package:project_aedp/bloc/load_profile/profile_state.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/pages/students/elibrary.dart';
-import 'package:project_aedp/pages/teacher/teacher_grades_page.dart';
-import 'package:project_aedp/pages/teacher/teacher_materialpage.dart';
-import 'package:project_aedp/pages/teacher/teacher_schedule.dart';
-import 'package:project_aedp/widget/dashboard/dashboard_icon_button.dart';
+import 'package:project_aedp/pages/teacher/teacher_feature/teacher_grades_page.dart';
+import 'package:project_aedp/pages/teacher/teacher_feature/teacher_materialpage.dart';
+import 'package:project_aedp/pages/teacher/teacher_feature/teacher_schedule.dart';
+import 'package:project_aedp/widget/teacher_dashboard_widget/dashboard_icon_button.dart';
 
 class TeacherHomeMenuPage extends StatelessWidget {
   const TeacherHomeMenuPage({super.key});

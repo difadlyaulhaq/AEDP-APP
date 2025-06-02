@@ -5,9 +5,9 @@ import 'package:project_aedp/bloc/material_and_subject/material_event.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_state.dart' as custom;
 import 'package:project_aedp/bloc/material_and_subject/subject_model.dart';
 import 'package:project_aedp/generated/l10n.dart';
-import 'package:project_aedp/pages/teacher/teacher_detailmaterial.dart';
+import 'package:project_aedp/pages/teacher/teacher_feature/teacher_detailmaterial.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../bloc/material_and_subject/teacher_bloc.dart';
+import '../../../bloc/material_and_subject/teacher_bloc.dart';
 
 class TeacherMaterialPage extends StatefulWidget {
   final List<String> teacherClasses;
