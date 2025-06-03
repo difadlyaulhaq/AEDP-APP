@@ -8,7 +8,7 @@ import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
 import 'package:project_aedp/bloc/load_profile/profile_state.dart';
 import 'package:project_aedp/generated/l10n.dart';
 import 'package:project_aedp/widget/dropdown/language_dropdown.dart';
-import 'package:project_aedp/widget/profile/profile_content.dart';
+import 'package:project_aedp/widget/profile_widget/profile_content.dart';
 
 
 class ProfilePage extends StatelessWidget {

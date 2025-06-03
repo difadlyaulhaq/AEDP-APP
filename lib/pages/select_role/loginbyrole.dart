@@ -5,9 +5,9 @@ import 'package:project_aedp/bloc/auth/auth_bloc.dart';
 import 'package:project_aedp/bloc/auth/auth_event.dart';
 import 'package:project_aedp/bloc/auth/auth_state.dart';
 import 'package:project_aedp/generated/l10n.dart';
-import 'package:project_aedp/widget/login/id_input_field.dart';
-import 'package:project_aedp/widget/login/password_field.dart';
-import 'package:project_aedp/widget/login/login_button.dart';
+import 'package:project_aedp/widget/login_widget/id_input_field.dart';
+import 'package:project_aedp/widget/login_widget/password_field.dart';
+import 'package:project_aedp/widget/login_widget/login_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer' as dev;
 
