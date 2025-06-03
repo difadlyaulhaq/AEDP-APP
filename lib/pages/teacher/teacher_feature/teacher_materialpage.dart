@@ -5,8 +5,8 @@ import 'package:project_aedp/bloc/material_and_subject/material_event.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_state.dart' as custom;
 import 'package:project_aedp/bloc/material_and_subject/teacher_bloc.dart';
 import 'package:project_aedp/generated/l10n.dart';
-import '../../../widget/teacher_material/material_card.dart';
-import '../../../widget/teacher_material/material_shimmer.dart';
+import '../../../widget/teacher_material_widget/material_card.dart';
+import '../../../widget/teacher_material_widget/material_shimmer.dart';
 
 
 class TeacherMaterialPage extends StatefulWidget {

@@ -7,11 +7,11 @@ import 'package:project_aedp/bloc/load_profile/profile_bloc.dart';
 import 'package:project_aedp/bloc/load_profile/profile_state.dart';
 import 'package:project_aedp/bloc/material_and_subject/material_event.dart';
 import 'package:project_aedp/bloc/material_and_subject/teacher_bloc.dart';
-import 'package:project_aedp/widget/teacher_detail_material/material_app_bar.dart';
-import 'package:project_aedp/widget/teacher_detail_material/upload_material_dialog.dart';
+import 'package:project_aedp/widget/teacher_detail_material_widget/material_app_bar.dart';
+import 'package:project_aedp/widget/teacher_detail_material_widget/upload_material_dialog.dart';
 
-import '../../../widget/teacher_detail_material/add_button.dart';
-import '../../../widget/teacher_detail_material/material_list.dart';
+import '../../../widget/teacher_detail_material_widget/add_button.dart';
+import '../../../widget/teacher_detail_material_widget/material_list.dart';
 
 
 class TeacherDetailMaterial extends StatefulWidget {
