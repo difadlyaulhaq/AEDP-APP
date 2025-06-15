@@ -16,7 +16,7 @@ class ELibraryPage extends StatefulWidget {
 }
 
 class _ELibraryPageState extends State<ELibraryPage> {
-  bool _isDownloading = false; // Menyimpan status unduhan
+  bool _isDownloading = false; // save the download state
 
   Future<void> _downloadFile(String filePath) async {
     setState(() {
@@ -42,7 +42,7 @@ class _ELibraryPageState extends State<ELibraryPage> {
       );
     } finally {
       setState(() {
-        _isDownloading = false; // Menyembunyikan indikator proses
+        _isDownloading = false; // hiding progress indicator
       });
     }
   }
