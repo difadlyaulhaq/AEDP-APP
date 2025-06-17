@@ -126,7 +126,7 @@ class _StudentMaterialPageState extends State<StudentMaterialPage> {
               builder: (context) => DetailMaterial(
                 subject: subject.subjectName,
                 subjectId: subject.id,
-                grade: subject.grade,
+                grade: widget.studentGradeClass, 
               ),
             ),
           );
