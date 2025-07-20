@@ -18,7 +18,7 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
     emit(LoadProfileLoading());
     try {
       // Ambil data user berdasarkan ID
-      final userId = num.tryParse(event.id);
+      final userId = num.tryParse(event.id)?.toInt();
       if (userId == null) throw Exception('Invalid user ID');
 
       final userDoc = await _firestore
@@ -39,20 +39,21 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
       String? fullName;
       switch (role.toLowerCase()) {
         case 'teacher':
-          roleData = await _fetchTeacherData(userId.toString()); // Konversi userId ke string
-          fullName = roleData?['name']; // Ambil nama dari field 'name'
+          roleData = await _fetchTeacherData(userId.toString());
+          fullName = roleData?['name'];
           break;
         case 'student':
           roleData = await _fetchStudentData(userId);
-          fullName = roleData?['full_name']; // Ambil nama dari field 'full_name'
+          fullName = roleData?['full_name'];
           break;
         case 'parent':
           roleData = await _fetchParentData(userId);
-          fullName = roleData?['father_name']; // Ambil nama dari field 'father_name'
+          fullName = roleData?['father_name'];
           break;
         default:
           throw Exception('Invalid role');
       }
+      
       if (roleData == null) {
         dev.log('Role data not found for role: $role with userId: $userId');
         throw Exception('Role-specific profile data not found');
@@ -76,6 +77,7 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
       emit(LoadProfileLoaded(profileData: profileData));
 
     } catch (e) {
+      dev.log('Error loading profile: $e');
       emit(LoadProfileError(e.toString()));
     }
   }
@@ -83,7 +85,7 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
   Future<Map<String, dynamic>?> _fetchTeacherData(String userId) async {
     final teacherDoc = await _firestore
         .collection('teachers')
-        .where('contact', isEqualTo: userId) // Sesuai dengan kontak user
+        .where('contact', isEqualTo: userId)
         .limit(1)
         .get();
 
@@ -95,16 +97,14 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
       List<String> classesList = [];
       
       if (classes is String) {
-        // Split the string by commas and trim each element
         classesList = classes.split(',').map((e) => e.trim()).toList();
       } else if (classes is List<dynamic>) {
-        // Cast to List<String>
         classesList = classes.cast<String>();
       }
 
       return {
         ...data,
-        'classes': classesList, // Ensure 'classes' is always a List<String>
+        'classes': classesList,
         'contact': data['contact'] ?? '',
         'whatsapp': data['whatsapp'] ?? '',
       };
@@ -115,7 +115,7 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
   Future<Map<String, dynamic>?> _fetchStudentData(num userId) async {
     final studentDoc = await _firestore
         .collection('students')
-        .where('school_id', isEqualTo: userId.toString()) // Sesuaikan dengan tipe data di Firestore
+        .where('school_id', isEqualTo: userId.toString())
         .limit(1)
         .get();
 
@@ -130,23 +130,43 @@ class LoadProfileBloc extends Bloc<LoadProfileEvent, LoadProfileState> {
     return null;
   }
 
- Future<Map<String, dynamic>?> _fetchParentData(num userId) async {
-  final parentDoc = await _firestore
-      .collection('parents')
-      .where('contact', isEqualTo: userId.toString()) // Sesuaikan dengan format di Firestore
-      .limit(1)
-      .get();
+  Future<Map<String, dynamic>?> _fetchParentData(num userId) async {
+    dev.log('Fetching parent data for userId: $userId');
+    
+    // First, try to find by exact contact match
+    var parentDoc = await _firestore
+        .collection('parents')
+        .where('contact', isEqualTo: userId.toString())
+        .limit(1)
+        .get();
 
-  if (parentDoc.docs.isNotEmpty) {
-    final data = parentDoc.docs.first.data();
-    return {
-      ...data,
-      'contact': data['contact'] ?? '',
-      'whatsapp': data['whatsapp'] ?? '',
-      'mother_name': data['mother_name'] ?? 'N/A', // Tambahkan ini
-    };
+    // If not found, try with zero-padded format (000004 for userId 4)
+    if (parentDoc.docs.isEmpty) {
+      String paddedUserId = userId.toString().padLeft(6, '0');
+      dev.log('Trying with padded userId: $paddedUserId');
+      
+      parentDoc = await _firestore
+          .collection('parents')
+          .where('contact', isEqualTo: paddedUserId)
+          .limit(1)
+          .get();
+    }
+
+    if (parentDoc.docs.isNotEmpty) {
+      final data = parentDoc.docs.first.data();
+      dev.log('Found parent data: ${data.keys}');
+      return {
+        ...data,
+        'contact': data['contact'] ?? '',
+        'whatsapp': data['whatsapp'] ?? '',
+        'mother_name': data['mother_name'] ?? 'N/A',
+        'father_name': data['father_name'] ?? 'N/A',
+        'student_name': data['student_name'] ?? 'N/A',
+        'address': data['address'] ?? 'N/A',
+      };
+    }
+    
+    dev.log('Parent data not found for userId: $userId');
+    return null;
   }
-  return null;
-}
-
 }
