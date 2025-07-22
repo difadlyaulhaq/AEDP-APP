@@ -6,6 +6,7 @@ import 'package:project_aedp/bloc/schedule/schedule_bloc.dart';
 import 'package:project_aedp/bloc/schedule/schedule_event.dart';
 import 'package:project_aedp/bloc/schedule/schedule_state.dart';
 import 'package:project_aedp/generated/l10n.dart';
+import 'package:project_aedp/widget/Teacher_schedule_widgets/class_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -87,13 +88,13 @@ class _SchedulePageState extends State<SchedulePage> {
             if (state is ScheduleLoaded) {
               final scheduleData = state.scheduleData;
 
-              return ListView(
+              return ListView.builder(
                 padding: const EdgeInsets.all(16),
-                children: scheduleData.values.expand((daySchedule) {
-                  return daySchedule.map((classInfo) {
-                    return _buildClassCard(classInfo);
-                  }).toList();
-                }).toList(),
+                itemCount: scheduleData.length,
+                itemBuilder: (context, index) {
+                  final classInfo = scheduleData[index];
+                  return ClassCard(classInfo: classInfo);
+                },
               );
             }
 

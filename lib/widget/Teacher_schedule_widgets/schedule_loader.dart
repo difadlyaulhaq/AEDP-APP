@@ -18,12 +18,14 @@ class ScheduleLoader extends StatelessWidget {
         if (state is ScheduleLoaded) {
           final scheduleData = state.scheduleData;
 
-          return ListView(
-            padding: const EdgeInsets.all(16),
-            children: scheduleData.values.expand((daySchedule) {
-              return daySchedule.map((classInfo) => ClassCard(classInfo: classInfo)).toList();
-            }).toList(),
-          );
+          return ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: scheduleData.length,
+              itemBuilder: (context, index) {
+                final classInfo = scheduleData[index];
+                return ClassCard(classInfo: classInfo);
+              },
+            );
         }
 
         if (state is ScheduleError) {

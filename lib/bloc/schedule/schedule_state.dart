@@ -12,9 +12,10 @@ class ScheduleInitial extends ScheduleState {}
 class ScheduleLoading extends ScheduleState {}
 
 class ScheduleLoaded extends ScheduleState {
-  final Map<String, List<Map<String, dynamic>>> scheduleData;
+ final List<Map<String, dynamic>> scheduleData;
 
   const ScheduleLoaded(this.scheduleData);
+
 
   @override
   List<Object?> get props => [scheduleData];
