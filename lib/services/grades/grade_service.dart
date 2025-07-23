@@ -31,10 +31,11 @@ class GradeService {
     }
 
     // Fetch existing grades for this student and exam type
-    final gradeDocs = await _firestore
+      final gradeDocs = await _firestore
         .collection('grades')
         .where('school_id', isEqualTo: schoolId)
         .where('exam_type', isEqualTo: examType)
+        .where('class', isEqualTo: gradeClass) // <-- TAMBAHKAN BARIS INI
         .get();
 
     final existingGradeIds = <String, String>{};
